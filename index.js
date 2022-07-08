@@ -6,7 +6,7 @@ const router = require('express').Router();
 
 router.get('/', async (req, res) => {
 
-    res.send("diocane")
+    res.send("ciao!")
     
 });
 
