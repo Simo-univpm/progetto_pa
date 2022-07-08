@@ -5,8 +5,8 @@ Membri gruppo:
 - Silveri Nicola
 
 Comandi utili docker:
-docker build -t <nomeapplicazione> .
-docker run --rm -it -p 8080:8080 <nomeapplicazione>
+- docker build -t <nomeapplicazione> .
+- docker run --rm -it -p 8080:8080 <nomeapplicazione>
 
 Descrizione progetto:
 
