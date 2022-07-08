@@ -1,0 +1,26 @@
+version: "2.2.3"
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: progettopa
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pa
+    ports: 
+      - '5432:5432'
+    volumes:
+      - ./database/database_seeding.sql:/docker-entrypoint-initdb.d/database_seeding.sql
+
+  progettopa:
+    build: .
+    container_name: progettopa
+    image: progettopa
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    restart: always
