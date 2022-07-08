@@ -4,6 +4,10 @@ Membri gruppo:
 - Francalancia Simone
 - Silveri Nicola
 
+Comandi utili docker:
+docker build -t <nomeapplicazione> .
+docker run --rm -it -p 8080:8080 <nomeapplicazione>
+
 Descrizione progetto:
 
 Si realizzi un sistema che consenta di gestire il processo di compravendita di energia “locale”. Esistono N produttori e M consumatori. Un produttore può mettere a disposizione di un acquirente in una fascia oraria di 1h un certo quantitativo di energia. Il processo di compravendita ha un orizzonte temporale di 1 giorno, ovvero si compra oggi uno o più “slot” per domani.
