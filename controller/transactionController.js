@@ -1,32 +1,39 @@
 //gestisce slot, token e le transazioni tra produttori e consumatori.
 const mqtt = require('mqtt')
 
-/*
-const options_wifi = {
+
+const options_producer = {
   keepalive: 60,
-  clientId: clientId_wifi_status,
+  clientId: "test id",
   protocolId: 'MQTT',
   protocolVersion: 4,
   clean: true,
   reconnectPeriod: 1000,
-  connectTimeout: 30 * 1000,
-  will: {
-    topic: 'WillMsg',
-    payload: '[WEB UI] WIRELESS_CONNECTIONS closed abnormally..!',
-    qos: 0,
-    retain: false
-  },
+  connectTimeout: 30 * 1000
 }
 
-const client_wifi = mqtt.connect(address_mqtt, options_wifi)
-*/
+const client_producer = mqtt.connect("mqtt://localhost:1883", options_producer)
+
+client_producer.on('connect', function () {
+  client_producer.subscribe('test', function (err) {
+    if (!err) {
+      client_producer.publish('presence', 'ciao')
+    }
+  })
+})
+
+client_producer.on('message', function (topic, message) {
+  // message is Buffer
+  console.log(message.toString())
+  client_producer.end()
+})
 
 
 class transactionController {
 
     constructor(){
         
-        client = mqtt.connect('mqtt://localhost:1883')
+        //client = mqtt.connect('mqtt://localhost:1883')
 
     }
     
