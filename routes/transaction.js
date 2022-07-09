@@ -14,7 +14,7 @@ router.get('/ciao', async (req, res) => {
         "period": ["2022-07-22", 18]
     }*/
     
-    var result = await transactionController.reserveSlot();
+    var result = await transactionController.reserveSlot(req.body);
     res.status(result[0]).json(result[1]);
     
 });

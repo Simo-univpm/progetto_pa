@@ -65,14 +65,12 @@ class transactionController {
         */
         //client_producer.subscribe('test_producer', function (err) {
           //if (!err) {
-            client_producer.publish('to_producer', message_from_get.toString(), { qos: 1, retain: false }, (error) => {
-              if (error) {
-                console.error(error)
-              }
-            })
+            //console.log(JSON.stringify(body));
+            //json_to_string = JSON.stringify(body);
+            client_producer.publish('to_producer', JSON.stringify(body), { qos: 1, retain: false })
           //}
 
-
+            return [200, "ok"];
 
 
     
