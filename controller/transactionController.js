@@ -15,9 +15,9 @@ const options_producer = {
 const client_producer = mqtt.connect("mqtt://localhost:1883", options_producer)
 
 client_producer.on('connect', function () {
-  client_producer.subscribe('test', function (err) {
+  client_producer.subscribe('test_producer', function (err) {
     if (!err) {
-      client_producer.publish('presence', 'ciao')
+      client_producer.publish('DEBUG', 'client_producer connected')
     }
   })
 })
@@ -25,7 +25,12 @@ client_producer.on('connect', function () {
 client_producer.on('message', function (topic, message) {
   // message is Buffer
   console.log(message.toString())
-  client_producer.end()
+  client_producer.publish('ack_producer', message.toString(), { qos: 1, retain: false }, (error) => {
+    if (error) {
+      console.error(error)
+    }
+  })
+  //client_producer.end()
 })
 
 
@@ -58,6 +63,14 @@ class transactionController {
         producerController assegna lo slot al consumer che lo ha richiesto
         producerController scalano i soldi al consumer
         */
+        //client_producer.subscribe('test_producer', function (err) {
+          //if (!err) {
+            client_producer.publish('to_producer', message_from_get.toString(), { qos: 1, retain: false }, (error) => {
+              if (error) {
+                console.error(error)
+              }
+            })
+          //}
 
 
 
