@@ -1,6 +1,26 @@
 //gestisce slot, token e le transazioni tra produttori e consumatori.
 const mqtt = require('mqtt')
 
+/*
+const options_wifi = {
+  keepalive: 60,
+  clientId: clientId_wifi_status,
+  protocolId: 'MQTT',
+  protocolVersion: 4,
+  clean: true,
+  reconnectPeriod: 1000,
+  connectTimeout: 30 * 1000,
+  will: {
+    topic: 'WillMsg',
+    payload: '[WEB UI] WIRELESS_CONNECTIONS closed abnormally..!',
+    qos: 0,
+    retain: false
+  },
+}
+
+const client_wifi = mqtt.connect(address_mqtt, options_wifi)
+*/
+
 
 class transactionController {
 
