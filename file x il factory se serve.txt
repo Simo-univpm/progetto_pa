@@ -1,1 +1,0 @@
-contiene la classe per gestire robe con in factory se se ne individua l'utilità
