@@ -45,7 +45,7 @@ CREATE TABLE storico_vendite (
 CREATE TABLE slot (
   idSlot SERIAL PRIMARY KEY,
   idProducer REAL NOT NULL,
-  idConsumer REAL NOT NULL,
+  --idConsumer REAL NOT NULL,
   tetto_massimo REAL NOT NULL,
   kwh REAL NOT NULL,
   costo REAL NOT NULL,
