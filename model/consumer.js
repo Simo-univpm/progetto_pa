@@ -22,17 +22,9 @@ const Consumer = sequelize.define('consumer', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    emissioni_co2: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
     credito: {
         type: Sequelize.REAL,
         allowNull: false
-    },
-    storico_acquisti: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: true
     }
 
 }, { 

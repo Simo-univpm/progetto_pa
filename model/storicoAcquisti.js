@@ -3,13 +3,7 @@ const sequelize = require('./database').sequelize; // corrisponde a database.seq
 
 
 // Definizione del modello Sequelize dell'utente
-const Slot = sequelize.define('storico_slot', {
-    idSlot: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
+const StoricoAcquisti = sequelize.define('storicoAcquisti', {
     idProducer: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -17,17 +11,26 @@ const Slot = sequelize.define('storico_slot', {
     idConsumer: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    idSlot: {
+        type: Sequelize.INTEGER,
         allowNull: false
     },
     data_acquisto: {
-        type: Sequelize.DATE,
-        allowNull: false
-    },
-    kwh_richiesti_consumer: {
-        type: Sequelize.REAL,
+        type: Sequelize.STRING,
         allowNull: false
     },
     emissioni_co2: {
+        type: Sequelize.REAL,
+        allowNull: true
+    },
+    credito: {
+        type: Sequelize.REAL,
+        allowNull: false
+    },
+    costo_transazione: {
         type: Sequelize.REAL,
         allowNull: false
     }
@@ -37,4 +40,4 @@ const Slot = sequelize.define('storico_slot', {
     freezeTableName: true
 });
 
-module.exports = { storico_slot: Storico_slot };
+module.exports = { storicoAcquisti: StoricoAcquisti };

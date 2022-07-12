@@ -3,30 +3,34 @@ const sequelize = require('./database').sequelize; // corrisponde a database.seq
 
 
 // Definizione del modello Sequelize dell'utente
-const Slot = sequelize.define('slot', {
-    idSlot: {
+const StoricoVendite = sequelize.define('storicoVendite', {
+    idProducer: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    idConsumer: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    idProducer: {
+    idSlot: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    tetto_massimo: {
-        type: Sequelize.REAL,
+    data_vendita: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    kwh: {
-        type: Sequelize.REAL,
+    fonte_produzione: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    costo: {
+    emissioni_co2: {
         type: Sequelize.REAL,
-        allowNull: false
+        allowNull: true
     },
-    credito: {
+    costo_transazione: {
         type: Sequelize.REAL,
         allowNull: false
     }
@@ -36,4 +40,4 @@ const Slot = sequelize.define('slot', {
     freezeTableName: true
 });
 
-module.exports = { slot: Slot };
+module.exports = { storicoVendite: StoricoVendite };

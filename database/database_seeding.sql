@@ -3,25 +3,27 @@
 DROP TABLE IF EXISTS consumer;
 DROP TABLE IF EXISTS producer;
 DROP TABLE IF EXISTS slot;
-DROP TABLE IF EXISTS storico_slot;
-DROP TABLE IF EXISTS storico_acquisti;
-DROP TABLE IF EXISTS storico_vendite;
+DROP TABLE IF EXISTS storicoSlot;
+DROP TABLE IF EXISTS storicoAcquisti;
+DROP TABLE IF EXISTS storicoVendite;
 
 
 CREATE TABLE consumer (
   idConsumer SERIAL PRIMARY KEY,
   passwd VARCHAR(255) NOT NULL,
-  mail VARCHAR(255),
+  mail VARCHAR(255) NOT NULL,
   ruolo VARCHAR(50) NOT NULL,
   credito REAL NOT NULL
 );
 
-CREATE TABLE storico_acquisti (
+CREATE TABLE storicoAcquisti (
   idProducer REAL NOT NULL,
   idConsumer REAL NOT NULL,
   idSlot REAL NOT NULL,
-  data_acquisto TIMESTAMP NOT NULL,
-  emissioni_co2 REAL NOT NULL
+  data_acquisto VARCHAR(50) NOT NULL,
+  emissioni_co2 REAL NOT NULL,
+  credito REAL NOT NULL,
+  costo_transazione REAL NOT NULL
 );
 
 CREATE TABLE producer (
@@ -34,19 +36,20 @@ CREATE TABLE producer (
   emissioni_co2 REAL NOT NULL
 );
 
-CREATE TABLE storico_vendite (
+CREATE TABLE storicoVendite (
   idProducer REAL NOT NULL,
   idConsumer REAL NOT NULL,
   idSlot REAL NOT NULL,
-  data_vendita TIMESTAMP NOT NULL,
+  data_vendita VARCHAR(50) NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
-  emissioni_co2 REAL NOT NULL
+  emissioni_co2 REAL NOT NULL,
+  costo_transazione REAL NOT NULL
 );
 
-CREATE TABLE storico_slot (
+CREATE TABLE storicoSlot (
   idSlot SERIAL PRIMARY KEY,
   idConsumer REAL NOT NULL,
-  data_acquisto TIMESTAMP NOT NULL,
+  data_acquisto VARCHAR(50) NOT NULL,
   kwh_richiesti_consumer REAL NOT NULL,
   emissioni_co2 REAL NOT NULL
 );
@@ -62,14 +65,14 @@ CREATE TABLE slot (
 );
 
 
-INSERT INTO consumer (passwd, mail, ruolo, credito, emissioni_co2)
-VALUES 
-    ('passwd', 'consumer@mail.it', 'consumer', 10, 0);
+--INSERT INTO consumer (passwd, mail, credito, emissioni_co2)
+--VALUES 
+--    ('passwd', 'consumer@mail.it', 10, 0);
 
 
-INSERT INTO producer (passwd, mail, ruolo, fonte)
-VALUES 
-    ('passwd', 'producer@mail.it', 'producer', 'eolico');
+--INSERT INTO producer (passwd, mail, fonte)
+--VALUES 
+--    ('passwd', 'producer@mail.it', 'eolico');
 
 
 --INSERT INTO slot (sto, credito)
