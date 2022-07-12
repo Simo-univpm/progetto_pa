@@ -26,10 +26,6 @@ const Consumer = sequelize.define('consumer', {
         type: Sequelize.STRING,
         allowNull: true
     },
-    ruolo: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
     credito: {
         type: Sequelize.REAL,
         allowNull: false
