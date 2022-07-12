@@ -61,7 +61,7 @@ CREATE TABLE slot (
   tetto_massimo REAL NOT NULL,
   kwh REAL NOT NULL,
   costo REAL NOT NULL,
-  credito REAL NOT NULL,
+  credito REAL NOT NULL
 );
 
 
