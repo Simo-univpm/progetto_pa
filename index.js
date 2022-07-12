@@ -1,40 +1,50 @@
 const express = require('express');
 const app = express();
+const database = require('./model/database');
 const dotenv = require('dotenv');
 dotenv.config();
-const cors = require('cors');
-
-
-console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
-
+//const cors = require('cors');
 
 // middlewares
 app.use(express.json());
-app.use(cors());
+//app.use(cors());
 
+console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
 
-// imported routes
-//const authRoute = require('./routes/auth');
-//const adminRoute = require('./routes/admin');
-//const consumerRoute = require('./routes/consumer');
-//const producerRoute = require('./routes/producer');
-const transactionRoute = require('./routes/transaction');
+const rottaTest = require('./routes/test');
+app.use('/api/test', rottaTest);
 
+const transactionRoutes = require('./routes/transactions');
+const usersRoutes = require('./routes/users');
+const authRoutes = require('./routes/auth')
+const adminRoutes = require('./routes/admin')
 
-// route middlewares
-//app.use('/api/auth', authRoute);
-//app.use('/api/admin', adminRoute);
-//app.use('/api/consumer', consumerRoute);
-//app.use('/api/producer', producerRoute);
-app.use('/api/transaction', transactionRoute);
+app.use('/api/transactions', transactionRoutes); // tutte le chiamate per gestire le transazioni tra consumer, producer e slot
+app.use('/api/users', usersRoutes); // tutte le chiamate per manipolare gli utenti (i producer, i consumer e gli admin)
+app.use('/api/auth', authRoutes); // le chiamate per effettuare login e registrazione
+app.use('/api/admin', adminRoutes); // contiene la rotta per effettuare la ricarica del credito del consumer
 
+// connessione al database
+connessioneDB();
 
-// db connection ==================================================================
-
-// vedere se va lasciata qui o se va spostata in model col singleton
-
-// =================================================================================
-
-// server port
+// messa in ascolto del server sulla porta specificata nel file .env
 const port = process.env.PORT;
-app.listen(port, () => console.log('- listening on port ' + port));
+app.listen(port, () => console.log('Listening on port ' + port));
+
+
+
+
+async function connessioneDB(){
+       
+    try {
+
+        await database.sequelize; // aka database.Singleton.creaSingleton.getInstance()
+        // aggiungi effettivo controllo della connessione qui
+        console.log('Connessione stabilita correttamente');
+    
+        await database.sequelize.sync(); // aka database.Singleton.creaSingleton.getInstance().sync()
+        console.log("Sincronizzazione effettuta!"); 
+    } catch (error) {
+        console.error('Impossibile stabilire una connessione, errore: ', error);
+    }
+}
