@@ -13,9 +13,16 @@ router.get('/login', async (req, res) => {
     
 });
 
-router.get('/register', async (req, res) => {
+router.get('/registerProducer', async (req, res) => {
 
-    var result = await authController.register(req.body)
+    var result = await authController.registerProducer(req.body)
+    res.status(result[0]).json(result[1]);
+    
+});
+
+router.get('/registerConsumer', async (req, res) => {
+
+    var result = await authController.registerConsumer(req.body)
     res.status(result[0]).json(result[1]);
     
 });
