@@ -2,7 +2,6 @@ class authController {
 
     constructor(){}
 
-
     async checkReservations(body){}
 
     async checkStats(body){}

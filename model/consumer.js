@@ -2,8 +2,8 @@ const { Sequelize } = require('sequelize');
 const sequelize = require('./database').sequelize; // corrisponde a database.sequelize, ovvero alla connesione singleton di sequelize --> Singleton.creaSingleton.getInstance()
 
 
-// Definizione del modello Sequelize dell'utente
-const Utente = sequelize.define('utente', {
+// Definizione del modello Sequelize del consumer
+const Consumer = sequelize.define('consumer', {
     id_utente: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -48,4 +48,4 @@ const Utente = sequelize.define('utente', {
     freezeTableName: true
 });
 
-module.exports = { utente: Utente };
+module.exports = { consumer: Consumer };

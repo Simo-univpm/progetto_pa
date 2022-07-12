@@ -1,5 +1,5 @@
 //gestisce le operazioni dell'admin
-const DButenti = require('../model/utente').utente; // corrisponde a database.utente.findAll
+const db_consumers = require('../model/consumer').consumer; // corrisponde a database.utente.findAll
 
 class adminController {
 
@@ -8,8 +8,8 @@ class adminController {
     async test_get(){
 
         try{
-            const utenti = await DButenti.findAll();
-            return [200, utenti]
+            const consumers = await db_consumers.findAll();
+            return [200, consumers]
         }catch(err){
             return[500, err]
         }

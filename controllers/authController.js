@@ -4,10 +4,15 @@ class authController {
 
     constructor(){}
 
-
     async login(body){}
 
-    async register(body){}
+    async registerProducer(body){
+
+        
+
+    }
+
+    async registerConsumer(body){}
 
 }
 
