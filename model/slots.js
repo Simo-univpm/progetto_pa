@@ -3,42 +3,33 @@ const sequelize = require('./database').sequelize; // corrisponde a database.seq
 
 
 // Definizione del modello Sequelize dell'utente
-const Producer = sequelize.define('producer', {
-    idProducer: {
+const Slots = sequelize.define('slots', {
+    idSlot: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    passwd: {
-        type: Sequelize.STRING,
+    idProducer: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
         allowNull: false
     },
-    mail: {
-        type: Sequelize.STRING,
-        allowNull: false
+    idConsumer: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
     },
-    ruolo: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    fonte: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    costo_per_kwh: {
+    tetto_massimo: {
         type: Sequelize.REAL,
         allowNull: false
     },
-    emissioni_co2: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    credito: {
+    kwh: {
         type: Sequelize.REAL,
         allowNull: false
     },
-    storico_vendite: {
+    storico_acquisti: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: true
     }
@@ -48,4 +39,4 @@ const Producer = sequelize.define('producer', {
     freezeTableName: true
 });
 
-module.exports = { producer: Producer };
+module.exports = { slot: Slots };

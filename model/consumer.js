@@ -2,31 +2,27 @@ const { Sequelize } = require('sequelize');
 const sequelize = require('./database').sequelize; // corrisponde a database.sequelize, ovvero alla connesione singleton di sequelize --> Singleton.creaSingleton.getInstance()
 
 
-// Definizione del modello Sequelize del consumer
+// Definizione del modello Sequelize dell'utente
 const Consumer = sequelize.define('consumer', {
-    id_utente: {
+    idConsumer: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    username: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
     passwd: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    cognome: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    nome: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
     mail: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    ruolo: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    emissioni_co2: {
         type: Sequelize.STRING,
         allowNull: true
     },
@@ -34,13 +30,13 @@ const Consumer = sequelize.define('consumer', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    indirizzo: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
     credito: {
         type: Sequelize.REAL,
         allowNull: false
+    },
+    storico_acquisti: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: true
     }
 
 }, { 
