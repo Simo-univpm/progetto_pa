@@ -3,6 +3,7 @@
 DROP TABLE IF EXISTS consumer;
 DROP TABLE IF EXISTS producer;
 DROP TABLE IF EXISTS slot;
+DROP TABLE IF EXISTS storico_slot;
 DROP TABLE IF EXISTS storico_acquisti;
 DROP TABLE IF EXISTS storico_vendite;
 
@@ -39,6 +40,14 @@ CREATE TABLE storico_vendite (
   idSlot REAL NOT NULL,
   data_vendita TIMESTAMP NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
+  emissioni_co2 REAL NOT NULL
+);
+
+CREATE TABLE storico_slot (
+  idSlot SERIAL PRIMARY KEY,
+  idConsumer REAL NOT NULL,
+  data_acquisto TIMESTAMP NOT NULL,
+  kwh_richiesti_consumer REAL NOT NULL,
   emissioni_co2 REAL NOT NULL
 );
 
