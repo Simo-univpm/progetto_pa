@@ -1,3 +1,5 @@
+-- mettere quello aggiornato di nicola
+
 \c progettopa
 
 DROP TABLE IF EXISTS utente;
