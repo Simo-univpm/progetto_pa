@@ -12,8 +12,7 @@ CREATE TABLE consumer (
   passwd VARCHAR(255) NOT NULL,
   mail VARCHAR(255),
   ruolo VARCHAR(50) NOT NULL,
-  credito REAL NOT NULL,
-   REAL NOT NULL
+  credito REAL NOT NULL
 );
 
 CREATE TABLE storico_acquisti (
