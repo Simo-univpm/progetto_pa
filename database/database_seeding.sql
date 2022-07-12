@@ -1,8 +1,8 @@
 \c progettopa
 
-DROP TABLE IF EXISTS consumers;
-DROP TABLE IF EXISTS producers;
-DROP TABLE IF EXISTS slots;
+DROP TABLE IF EXISTS consumer;
+DROP TABLE IF EXISTS producer;
+DROP TABLE IF EXISTS slot;
 DROP TABLE IF EXISTS storico_acquisti;
 DROP TABLE IF EXISTS storico_vendite;
 
