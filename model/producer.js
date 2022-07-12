@@ -20,6 +20,7 @@ const Producer = sequelize.define('producer', {
     },
     ruolo: {
         type: Sequelize.STRING,
+        default: "producer",
         allowNull: false
     },
     fonte: {
@@ -28,18 +29,12 @@ const Producer = sequelize.define('producer', {
     },
     costo_per_kwh: {
         type: Sequelize.REAL,
+        default: 0,
         allowNull: false
     },
     emissioni_co2: {
         type: Sequelize.STRING,
-        allowNull: true
-    },
-    credito: {
-        type: Sequelize.REAL,
-        allowNull: false
-    },
-    storico_vendite: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
+        default: 0,
         allowNull: true
     }
 

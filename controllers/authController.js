@@ -16,24 +16,19 @@ class authController {
 
         // lettura
         // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-        const utente = await db_producers.findOne({where: { email: body.email }});
-        if(utente) return [500, "producer is already registered"]
+        const producer = await db_producers.findOne({where: { mail: body.mail }});
+        if(producer) return [500, "producer is already registered"]
 
-        // cripta pw
-        hashed_pw = body.pw
+        // TODO: cripta pw
+        const hashed_passwd = body.passwd
 
         try{
-            // scrittura prodicer a db
+            // scrittura producer a db
             const savedProducer = await db_producers.create({
 
-                //prodotto: datiProdotto.id_prodotto,
-                passwd: hashed_pw,
+                passwd: hashed_passwd,
                 mail: body.mail,
-                ruolo: body.ruolo,
-                fonte: body.fonte,
-                costo_per_kwh: 0, // imposta da altra api
-                emissioni_co2: 0, // imposta da altra api
-                credito: body.credito
+                fonte: body.fonte
 
             });
 
@@ -48,6 +43,8 @@ class authController {
     }
 
     async registerConsumer(body){}
+
+    async registerAdmin(body){}
 
 }
 
