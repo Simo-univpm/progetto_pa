@@ -30,6 +30,8 @@ class authController {
         // controllo tipologia fonte
         let fonte = body.fonte.toLowerCase();
         if(! ["fossile", "eolico", "fotovoltaico"].includes(fonte)) return [400, "ERROR: bad request"];
+
+        let 
         
 
         try{
@@ -39,11 +41,11 @@ class authController {
 
                 passwd: hashed_passwd,
                 mail: body.mail,
-                
                 fonte: fonte,
                 ruolo: "producer",
                 costo_per_kwh: costo_per_kwh,
-                emissioni_co2: costo_per_kwh
+                emissioni_co2: costo_per_kwh,
+                //tettoperslotjsondiocane
 
             });
 

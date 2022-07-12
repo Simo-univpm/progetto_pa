@@ -29,6 +29,10 @@ const Slot = sequelize.define('slot', {
     credito: {
         type: Sequelize.REAL,
         allowNull: false
+    },
+    storico_utenti:{
+        type: Sequelize.STRING,
+        allowNull:false
     }
 
 }, { 

@@ -51,7 +51,8 @@ CREATE TABLE storicoSlot (
   idConsumer REAL NOT NULL,
   data_acquisto VARCHAR(50) NOT NULL,
   kwh_richiesti_consumer REAL NOT NULL,
-  emissioni_co2 REAL NOT NULL
+  emissioni_co2 REAL NOT NULL,
+  storico_utenti VARCHAR
 );
 
 CREATE TABLE slot (
