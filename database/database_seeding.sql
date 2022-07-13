@@ -8,9 +8,9 @@ DROP TABLE IF EXISTS db_storico_produzione;
 
 --DB consumer utilizzato per la registrazione dell'utente consumer
 CREATE TABLE db_consumer(
-  idConsumer SERIAL PRIMARY KEY NOT NULL,
+  id_consumer SERIAL PRIMARY KEY NOT NULL,
   nome VARCHAR(50) NOT NULL,
-  cognome VARCHAR(50) NOT NULL,
+  --cognome VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(50) NOT NULL,
   credito INTEGER NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE db_consumer(
 
 --DB producer utilizzato per la registrazione dei producer
 CREATE TABLE db_producer(
-  idProducer SERIAL PRIMARY KEY NOT NULL,
+  id_producer SERIAL PRIMARY KEY NOT NULL,
   nome VARCHAR(50) NOT NULL,
   codice_fiscale VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
@@ -58,23 +58,23 @@ CREATE TABLE db_producer(
 
 --DB utilizzato per la registrazione degli admin
 CREATE TABLE db_admin(
-  idAdmin SERIAL PRIMARY KEY NOT NULL,
+  id_admin SERIAL PRIMARY KEY NOT NULL,
   nome VARCHAR(50) NOT NULL,
-  cognome VARCHAR(50) NOT NULL,
+  --cognome VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(50) NOT NULL,
   privilegi INTEGER NOT NULL,
-  data_registrazione TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  data_registrazione VARCHAR(50) NOT NULL
 );
 
 --DB utilizzato per le transazioni richiamabile sia dal consumer che dal producer
 CREATE TABLE db_transazioni(
-  idTransazione SERIAL PRIMARY KEY NOT NULL,
-  idConsumer INTEGER NOT NULL,
-  idProducer INTEGER NOT NULL,
+  id_transazione SERIAL PRIMARY KEY NOT NULL,
+  id_consumer INTEGER NOT NULL,
+  id_producer INTEGER NOT NULL,
   emissioni_co2_slot INTEGER NOT NULL,
   costo_slot INTEGER NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
-  data_transazione TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  data_transazione VARCHAR(50) NOT NULL,
   costo INTEGER NOT NULL
 );
