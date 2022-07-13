@@ -1,81 +1,80 @@
 \c progettopa
 
-DROP TABLE IF EXISTS consumer;
-DROP TABLE IF EXISTS producer;
-DROP TABLE IF EXISTS slot;
-DROP TABLE IF EXISTS storicoSlot;
-DROP TABLE IF EXISTS storicoAcquisti;
-DROP TABLE IF EXISTS storicoVendite;
+DROP TABLE IF EXISTS db_consumer;
+DROP TABLE IF EXISTS db_producer;
+DROP TABLE IF EXISTS db_admin;
+DROP TABLE IF EXISTS db_transazioni;
+DROP TABLE IF EXISTS db_storico_produzione;
 
-
-CREATE TABLE consumer (
-  idConsumer SERIAL PRIMARY KEY,
-  passwd VARCHAR(255) NOT NULL,
-  mail VARCHAR(255) NOT NULL,
-  ruolo VARCHAR(50) NOT NULL,
-  credito REAL NOT NULL
+--DB consumer utilizzato per la registrazione dell'utente consumer
+CREATE TABLE db_consumer(
+  id_consumer SERIAL PRIMARY KEY NOT NULL,
+  nome VARCHAR(50) NOT NULL,
+  --cognome VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  passwd VARCHAR(50) NOT NULL,
+  credito INTEGER NOT NULL,
+  privilegi INTEGER NOT NULL,
+  data_registrazione TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE storicoAcquisti (
-  idProducer REAL NOT NULL,
-  idConsumer REAL NOT NULL,
-  idSlot REAL NOT NULL,
-  data_acquisto VARCHAR(50) NOT NULL,
-  emissioni_co2 REAL NOT NULL,
-  credito REAL NOT NULL,
-  costo_transazione REAL NOT NULL
-);
-
-CREATE TABLE producer (
-  idProducer SERIAL PRIMARY KEY,
-  passwd VARCHAR(255) NOT NULL,
-  mail VARCHAR(255) NOT NULL,
-  ruolo VARCHAR(50) NOT NULL,
-  fonte VARCHAR(50) NOT NULL,
-  costo_per_kwh REAL NOT NULL,
-  emissioni_co2 REAL NOT NULL
-);
-
-CREATE TABLE storicoVendite (
-  idProducer REAL NOT NULL,
-  idConsumer REAL NOT NULL,
-  idSlot REAL NOT NULL,
-  data_vendita VARCHAR(50) NOT NULL,
+--DB producer utilizzato per la registrazione dei producer
+CREATE TABLE db_producer(
+  id_producer SERIAL PRIMARY KEY NOT NULL,
+  nome VARCHAR(50) NOT NULL,
+  codice_fiscale VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  passwd VARCHAR(50) NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
-  emissioni_co2 REAL NOT NULL,
-  costo_transazione REAL NOT NULL
+  costo_per_kwh INTEGER NOT NULL,
+  emissioni_co2 INTEGER NOT NULL,
+  privilegi INTEGER NOT NULL,
+  slot_0 VARCHAR(50) NOT NULL,
+  slot_1 VARCHAR(50) NOT NULL,
+  slot_2 VARCHAR(50) NOT NULL,
+  slot_3 VARCHAR(50) NOT NULL,
+  slot_4 VARCHAR(50) NOT NULL,
+  slot_5 VARCHAR(50) NOT NULL,
+  slot_6 VARCHAR(50) NOT NULL,
+  slot_7 VARCHAR(50) NOT NULL,
+  slot_8 VARCHAR(50) NOT NULL,
+  slot_9 VARCHAR(50) NOT NULL,
+  slot_10 VARCHAR(50) NOT NULL,
+  slot_11 VARCHAR(50) NOT NULL,
+  slot_12 VARCHAR(50) NOT NULL,
+  slot_13 VARCHAR(50) NOT NULL,
+  slot_14 VARCHAR(50) NOT NULL,
+  slot_15 VARCHAR(50) NOT NULL,
+  slot_16 VARCHAR(50) NOT NULL,
+  slot_17 VARCHAR(50) NOT NULL,
+  slot_18 VARCHAR(50) NOT NULL,
+  slot_19 VARCHAR(50) NOT NULL,
+  slot_20 VARCHAR(50) NOT NULL,
+  slot_21 VARCHAR(50) NOT NULL,
+  slot_22 VARCHAR(50) NOT NULL,
+  slot_23 VARCHAR(50) NOT NULL,
+  data_registrazione TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE storicoSlot (
-  idSlot SERIAL PRIMARY KEY,
-  idConsumer REAL NOT NULL,
-  data_acquisto VARCHAR(50) NOT NULL,
-  kwh_richiesti_consumer REAL NOT NULL,
-  emissioni_co2 REAL NOT NULL,
-  storico_utenti VARCHAR
+--DB utilizzato per la registrazione degli admin
+CREATE TABLE db_admin(
+  id_admin SERIAL PRIMARY KEY NOT NULL,
+  nome VARCHAR(50) NOT NULL,
+  --cognome VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  passwd VARCHAR(50) NOT NULL,
+  privilegi INTEGER NOT NULL,
+  data_registrazione VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE slot (
-  idSlot SERIAL PRIMARY KEY,
-  idProducer REAL NOT NULL,
-  --idConsumer REAL NOT NULL,
-  tetto_massimo REAL NOT NULL,
-  kwh REAL NOT NULL,
-  costo REAL NOT NULL,
-  credito REAL NOT NULL,
+--DB utilizzato per le transazioni richiamabile sia dal consumer che dal producer
+CREATE TABLE db_transazioni(
+  id_transazione SERIAL PRIMARY KEY NOT NULL,
+  id_consumer INTEGER NOT NULL,
+  id_producer INTEGER NOT NULL,
+  emissioni_co2_slot INTEGER NOT NULL,
+  costo_slot INTEGER NOT NULL,
+  fonte_produzione VARCHAR(50) NOT NULL,
+  data_transazione VARCHAR(50) NOT NULL,
+  costo INTEGER NOT NULL
 );
-
-
---INSERT INTO consumer (passwd, mail, credito, emissioni_co2)
---VALUES 
---    ('passwd', 'consumer@mail.it', 10, 0);
-
-
---INSERT INTO producer (passwd, mail, fonte)
---VALUES 
---    ('passwd', 'producer@mail.it', 'eolico');
-
-
---INSERT INTO slot (sto, credito)
---VALUES 
-    --();

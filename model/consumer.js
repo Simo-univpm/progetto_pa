@@ -4,30 +4,39 @@ const sequelize = require('./database').sequelize; // corrisponde a database.seq
 
 // Definizione del modello Sequelize dell'utente
 const Consumer = sequelize.define('consumer', {
-    idConsumer: {
+    id_consumer: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
+    nome: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     passwd: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    mail: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    ruolo: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
     credito: {
-        type: Sequelize.REAL,
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    privilegi: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    data_registrazione: {
+        type: Sequelize.STRING,
         allowNull: false
     }
 
-}, { 
+}, 
+{ 
     timestamps: false,
     freezeTableName: true
 });
