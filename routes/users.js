@@ -54,7 +54,7 @@ router.get('/checkEarnings', async (req, res) => {
 
 
 // per gli admin ===================================================================
-router.get('/addCredit', async (req, res) => {
+router.get('/admin/addCredit', async (req, res) => {
 
     var result = await adminController.addCredit(req.body)
     res.status(result[0]).json(result[1]);
