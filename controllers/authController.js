@@ -4,35 +4,59 @@
 const db_producers = require('../model/producer').producer;
 const db_consumers = require('../model/consumer').consumer;
 const db_admins = require('../model/admin').admin;
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 class authController {
 
     constructor(){}
 
-    async login(body){}
+    async login(body){
 
-    // factory per la registrazione degli utenti
+        // i campi in comune tra le 3 tabelle sono: id, nome, email, privilegi,
+
+        // verifica utente registrato
+        let user;
+        if(body.privilegi == 0) user = await db_admins.findOne({nome: body.nome});
+        if(body.privilegi == 1) user = await db_producers.findOne({nome: body.nome});
+        if(body.privilegi == 2) user = await db_consumers.findOne({nome: body.nome});
+        if( ! user) return [400, 'wrong username or password'];
+
+        // CONTROLO PASSWORD: compara la pw nel body con quella cripatata nel db tramite bcrypt
+        const validPass = await bcrypt.compare(body.passwd, user.passwd);
+        if( ! validPass) return [400, 'wrong username or password'];
+
+        let id;
+        if(user.privilegi == 0) id = user.id_admin;
+        if(user.privilegi == 1) id = user.id_producer;
+        if(user.privilegi == 2) id = user.id_consumer;
+
+        // CREAZIONE E ASSEGNAZIONE JWT: se l'utente è in possesso del token può accedere alle rotte private (e a quelle pubbliche)
+        const token = jwt.sign({ id: id, privilegi: user.privilegi, nome: user.nome, emai: user.email }, process.env.TOKEN_SECRET);
+
+        return [200, token];
+
+    }
+
     async registerProducer(body){
 
         // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
         const producer = await db_producers.findOne({where: { mail: body.mail }});
         if(producer) return [500, "producer is already registered"]
 
-        // TODO: cripta pw
-        const hashed_passwd = body.passwd
+        // controllo tipologia fonte
+        let fonte = body.fonte.toLowerCase();
+        if(! ["fossile", "eolico", "fotovoltaico"].includes(fonte)) return [400, "ERROR: bad request"];
+
+        // PASSWORD HASHING: tramite hash + salt
+        const salt = await bcrypt.genSalt(10);
+        const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
 
         let costo_per_kwh = body.costo_per_kwh;
         if( ! costo_per_kwh) costo_per_kwh = 0.0;
 
         let emissioni_co2 = body.emissioni_co2;
-        if( ! emissioni_co2) emissioni_co2 = 0.0;
-
-        // controllo tipologia fonte
-        let fonte = body.fonte.toLowerCase();
-        if(! ["fossile", "eolico", "fotovoltaico"].includes(fonte)) return [400, "ERROR: bad request"];
-
-        let 
-        
+        if( ! emissioni_co2) emissioni_co2 = 0.0;        
 
         try{
 
@@ -60,6 +84,7 @@ class authController {
 
     }
 
+    /// DA RIMUOVERE
     async getProducers(){
 
         try{
@@ -104,6 +129,7 @@ class authController {
 
     }
 
+    /// DA RIMUOVERE
     async getConsumers(){
 
         try{
@@ -119,6 +145,8 @@ class authController {
     async registerAdmin(body){}
 
 }
+
+
 
 
 module.exports = authController;

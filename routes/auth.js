@@ -13,6 +13,7 @@ router.get('/login', async (req, res) => {
     
 });
 
+/// DA RIMUOVERE
 router.get('/getProducers', async (req, res) => {
 
     var result = await authController.getProducers()
@@ -34,6 +35,7 @@ router.post('/registerConsumer', async (req, res) => {
     
 });
 
+/// DA RIMUOVERE
 router.get('/getConsumers', async (req, res) => {
 
     var result = await authController.getConsumers()
