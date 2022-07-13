@@ -21,7 +21,45 @@ CREATE TABLE db_consumer(
 --DB producer utilizzato per la registrazione dei producer
 -- RIMETTERE GLI SLOT CON ALLOWNULL A FALSE
 CREATE TABLE db_producer(
-  id_producer SERIAL PRIMARY KEY,
+  id_producer INTEGER NOT NULL,
+  nome VARCHAR(50) NOT NULL,
+  codice_fiscale VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  passwd VARCHAR(50) NOT NULL,
+  fonte_produzione VARCHAR(50) NOT NULL,
+  costo_per_kwh INTEGER NOT NULL,
+  emissioni_co2 INTEGER NOT NULL,
+  privilegi INTEGER NOT NULL,
+  slot_0  VARCHAR(50),
+  slot_1  VARCHAR(50),
+  slot_2  VARCHAR(50),
+  slot_3  VARCHAR(50),
+  slot_4  VARCHAR(50),
+  slot_5  VARCHAR(50),
+  slot_6  VARCHAR(50),
+  slot_7  VARCHAR(50),
+  slot_8  VARCHAR(50),
+  slot_9  VARCHAR(50),
+  slot_10 VARCHAR(50),
+  slot_11 VARCHAR(50),
+  slot_12 VARCHAR(50),
+  slot_13 VARCHAR(50),
+  slot_14 VARCHAR(50),
+  slot_15 VARCHAR(50),
+  slot_16 VARCHAR(50),
+  slot_17 VARCHAR(50),
+  slot_18 VARCHAR(50),
+  slot_19 VARCHAR(50),
+  slot_20 VARCHAR(50),
+  slot_21 VARCHAR(50),
+  slot_22 VARCHAR(50),
+  slot_23 VARCHAR(50),
+  data_registrazione VARCHAR(50) NOT NULL
+);
+
+--DB nel quale vengno duplicate e mantenute (per avere uno storico separato) tutte le registrazione dei produttori
+CREATE TABLE db_storico_produzione(
+  id_producer INTEGER NOT NULL,
   nome VARCHAR(50) NOT NULL,
   codice_fiscale VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
