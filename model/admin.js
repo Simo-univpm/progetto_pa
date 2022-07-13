@@ -10,21 +10,32 @@ const Admin = sequelize.define('admin', {
         allowNull: false,
         primaryKey: true
     },
+    nome: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    cognome: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     passwd: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    mail: {
+    privilegi: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    ruolo: {
-        type: Sequelize.STRING,
-        default: "admin",
+    data_registrazione: {
+        type: Sequelize.DATE,
         allowNull: false
-    }
-
-}, { 
+    }, 
+},    
+{ 
     timestamps: false,
     freezeTableName: true
 });

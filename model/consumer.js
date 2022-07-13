@@ -10,24 +10,37 @@ const Consumer = sequelize.define('consumer', {
         allowNull: false,
         primaryKey: true
     },
+    nome: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    cognome: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     passwd: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    mail: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    ruolo: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
     credito: {
-        type: Sequelize.REAL,
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    privilegi: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    data_registrazione: {
+        type: Sequelize.STRING,
         allowNull: false
     }
 
-}, { 
+}, 
+{ 
     timestamps: false,
     freezeTableName: true
 });

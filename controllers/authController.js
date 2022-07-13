@@ -30,8 +30,6 @@ class authController {
         // controllo tipologia fonte
         let fonte = body.fonte.toLowerCase();
         if(! ["fossile", "eolico", "fotovoltaico"].includes(fonte)) return [400, "ERROR: bad request"];
-
-        let 
         
 
         try{
