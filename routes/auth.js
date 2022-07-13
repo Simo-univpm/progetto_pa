@@ -6,6 +6,7 @@ const authController = new AuthController();
 
 
 // per tutti gli utenti ============================================================
+// inserire bei middleware qui per alleggerire il login
 router.post('/login', async (req, res) => {
 
     var result = await authController.login(req.body)

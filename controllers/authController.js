@@ -19,7 +19,7 @@ class authController {
 
         // verifica utente registrato
         let user;
-        if(body.privilegi == 0) user = await db_admins.findOne({where: {email: body.email}}); //{where: { mail: mailUtente}}
+        if(body.privilegi == 0) user = await db_admins.findOne({where: {email: body.email}});
         if(body.privilegi == 1) user = await db_producers.findOne({where: {email: body.email}});
         if(body.privilegi == 2) user = await db_consumers.findOne({where: {email: body.email}});
         if( ! user) return [400, 'wrong username or password'];
@@ -77,10 +77,109 @@ class authController {
                     costo_per_kwh: costo_per_kwh,
                     emissioni_co2: costo_per_kwh,
                     privilegi: 1,
-                    //slot_0: slot0
-                    //slot_1: slot0
-                    //slot_2: slot0
-                    // ...
+                    slot_0: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_1: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_2: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_3: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_4: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_5: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_6: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_7: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_8: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_9: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_10: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_11: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_12: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_13: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_14: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_15: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_16: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_17: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_18: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_19: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_20: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_21: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_22: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_23: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    data_registrazione: data
+
+                });
+
+                return [200, "SUCCESS: producer with id " + savedProducer.id_producer + " correctly created"]
+
+            }catch(err){
+                console.log(err)
+                return [500, "ERROR: something went wrong"]
+            }
+        }catch(err){
+            console.log("super mega errore: " + err)
+            return [500, "ERROR: something went wrong"]
+        }
+        
+
+    }
+
+    async registerProducerNEW(body){
+
+        // rimuovere questo try più esterno dopo la correzzione dei vari bug
+        try{
+            // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
+            const producer = await db_producers.findOne({where: { email: body.email }});
+            if(producer) return [500, "producer is already registered"]
+
+            // controllo tipologia fonte
+            if(! ["fossile", "eolico", "fotovoltaico"].includes(body.fonte_produzione)) return [400, "ERROR: bad request"];
+
+            // PASSWORD HASHING: tramite hash + salt
+            const salt = await bcrypt.genSalt(10);
+            const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
+
+            let costo_per_kwh = body.costo_per_kwh;
+            if( ! costo_per_kwh) costo_per_kwh = 0.0;
+
+            let emissioni_co2 = body.emissioni_co2;
+            if( ! emissioni_co2) emissioni_co2 = 0.0;
+
+            const data = String(new Date().toLocaleString());
+
+            try{
+
+                // scrittura producer a db
+                // vengono ricevuti dal body: nome, codice_fiscale, email, passwd, fonte_produzione, costo_per_kwh, emissioni_co2
+                const savedProducer = await db_producers.create({
+
+                    nome: body.nome,
+                    codice_fiscale: body.codice_fiscale,
+                    email: body.email,
+                    passwd: hashed_passwd,
+                    fonte_produzione: body.fonte_produzione,
+                    costo_per_kwh: costo_per_kwh,
+                    emissioni_co2: costo_per_kwh,
+                    privilegi: 1,
+                    slot_0: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_1: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_2: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_3: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_4: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_5: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_6: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_7: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_8: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_9: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_10: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_11: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_12: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_13: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_14: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_15: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_16: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_17: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_18: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_19: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_20: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_21: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_22: JSON.stringify({"totale" : 500, "rimanente": 500}),
+                    slot_23: JSON.stringify({"totale" : 500, "rimanente": 500}),
                     data_registrazione: data
 
                 });
@@ -162,6 +261,13 @@ class authController {
 }
 
 
+
+function createSlots(slotNumber, maxEnergyCap){
+
+    arr = Array.apply(null, Array(slotNumber)).map(x => x = maxEnergyCap)
+    arr.forEach(e => { console.log(e)});
+
+}
 
 
 module.exports = authController;
