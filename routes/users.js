@@ -11,14 +11,14 @@ const adminController = new AdminController();
 
 
 // per i consumer ==================================================================
-router.get('/getPurchaseList', async (req, res) => {
+router.get('/consumer/getPurchaseList', async (req, res) => {
 
     var result = await consumerController.getPurchaseList(req.body)
     res.status(result[0]).json(result[1]);
     
 });
 
-router.get('/getEmissions', async (req, res) => {
+router.get('/consumer/getEmissions', async (req, res) => {
 
     var result = await consumerController.getEmissions(req.body)
     res.status(result[0]).json(result[1]);
@@ -28,7 +28,7 @@ router.get('/getEmissions', async (req, res) => {
 
 
 // per i producer ==================================================================
-router.get('/checkReservations', async (req, res) => {
+router.get('/producer/checkReservations', async (req, res) => {
 
     var result = await producerController.checkReservations(req.body)
     res.status(result[0]).json(result[1]);
@@ -36,7 +36,7 @@ router.get('/checkReservations', async (req, res) => {
 });
 
 
-router.get('/checkStats', async (req, res) => {
+router.get('/producer/checkStats', async (req, res) => {
 
     var result = await producerController.checkStats(req.body)
     res.status(result[0]).json(result[1]);
@@ -44,7 +44,7 @@ router.get('/checkStats', async (req, res) => {
 });
 
 
-router.get('/checkEarnings', async (req, res) => {
+router.get('/producer/checkEarnings', async (req, res) => {
 
     var result = await producerController.checkEarnings(req.body)
     res.status(result[0]).json(result[1]);

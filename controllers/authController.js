@@ -40,46 +40,59 @@ class authController {
 
     async registerProducer(body){
 
-        // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-        const producer = await db_producers.findOne({where: { mail: body.mail }});
-        if(producer) return [500, "producer is already registered"]
-
-        // controllo tipologia fonte
-        let fonte = body.fonte.toLowerCase();
-        if(! ["fossile", "eolico", "fotovoltaico"].includes(fonte)) return [400, "ERROR: bad request"];
-
-        // PASSWORD HASHING: tramite hash + salt
-        const salt = await bcrypt.genSalt(10);
-        const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
-
-        let costo_per_kwh = body.costo_per_kwh;
-        if( ! costo_per_kwh) costo_per_kwh = 0.0;
-
-        let emissioni_co2 = body.emissioni_co2;
-        if( ! emissioni_co2) emissioni_co2 = 0.0;        
-
+        
         try{
+            // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
+            const producer = await db_producers.findOne({where: { email: body.email }});
+            if(producer) return [500, "producer is already registered"]
 
-            // scrittura producer a db
-            const savedProducer = await db_producers.create({
+            // controllo tipologia fonte
+            if(! ["fossile", "eolico", "fotovoltaico"].includes(body.fonte_produzione)) return [400, "ERROR: bad request"];
 
-                passwd: hashed_passwd,
-                mail: body.mail,
-                fonte: fonte,
-                ruolo: "producer",
-                costo_per_kwh: costo_per_kwh,
-                emissioni_co2: costo_per_kwh,
-                //tettoperslotjsondiocane
+            // PASSWORD HASHING: tramite hash + salt
+            const salt = await bcrypt.genSalt(10);
+            const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
 
-            });
+            let costo_per_kwh = body.costo_per_kwh;
+            if( ! costo_per_kwh) costo_per_kwh = 0.0;
 
-            return [200, "SUCCESS: producer with id " + savedProducer.idProducer + " correctly created"]
+            let emissioni_co2 = body.emissioni_co2;
+            if( ! emissioni_co2) emissioni_co2 = 0.0;
 
+            const data = new Date().toLocaleDateString()
+
+            try{
+
+                // scrittura producer a db
+                // vengono ricevuti dal body: nome, codice_fiscale, email, passwd, fonte_produzione, costo_per_kwh, emissioni_co2
+                const savedProducer = await db_producers.create({
+
+                    nome: body.nome,
+                    codice_fiscale: body.codice_fiscale,
+                    email: body.email,
+                    passwd: hashed_passwd,
+                    fonte_produzione: body.fonte_produzione,
+                    costo_per_kwh: costo_per_kwh,
+                    emissioni_co2: costo_per_kwh,
+                    privilegi: "producer",
+                    //slot_0: slot0
+                    //slot_1: slot0
+                    //slot_2: slot0
+                    // ...
+                    data_registrazione: data
+
+                });
+
+                return [200, "SUCCESS: producer with id " + savedProducer.idProducer + " correctly created"]
+
+            }catch(err){
+                console.log(err)
+                return [500, "ERROR: something went wrong"]
+            }
         }catch(err){
-            console.log(err)
+            console.log("super mega errore: " + err)
             return [500, "ERROR: something went wrong"]
         }
-        
         
 
     }

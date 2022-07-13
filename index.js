@@ -17,12 +17,10 @@ app.use('/api/test', rottaTest);
 const slotRoutes = require('./routes/slot');
 const usersRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth')
-const adminRoutes = require('./routes/admin')
 
 app.use('/api/slot', slotRoutes); // tutte le chiamate per gestire le transazioni tra consumer, producer e slot
 app.use('/api/users', usersRoutes); // tutte le chiamate per manipolare gli utenti (i producer, i consumer e gli admin)
 app.use('/api/auth', authRoutes); // le chiamate per effettuare login e registrazione
-app.use('/api/admin', adminRoutes); // contiene la rotta per effettuare la ricarica del credito del consumer
 
 // connessione al database
 connessioneDB();
