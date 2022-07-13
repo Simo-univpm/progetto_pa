@@ -15,13 +15,13 @@ CREATE TABLE db_consumer(
   passwd VARCHAR(50) NOT NULL,
   credito INTEGER NOT NULL,
   privilegi INTEGER NOT NULL,
-  data_registrazione VARCHAR(50) NOT NULL
+  data_registrazione VARCHAR(50)
 );
 
 --DB producer utilizzato per la registrazione dei producer
 -- RIMETTERE GLI SLOT CON ALLOWNULL A FALSE
 CREATE TABLE db_producer(
-  id_producer SERIAL PRIMARY KEY NOT NULL,
+  id_producer SERIAL PRIMARY KEY,
   nome VARCHAR(50) NOT NULL,
   codice_fiscale VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
@@ -30,16 +30,16 @@ CREATE TABLE db_producer(
   costo_per_kwh INTEGER NOT NULL,
   emissioni_co2 INTEGER NOT NULL,
   privilegi INTEGER NOT NULL,
-  slot_0 VARCHAR(50) ,
-  slot_1 VARCHAR(50) ,
-  slot_2 VARCHAR(50) ,
-  slot_3 VARCHAR(50) ,
-  slot_4 VARCHAR(50) ,
-  slot_5 VARCHAR(50) ,
-  slot_6 VARCHAR(50) ,
-  slot_7 VARCHAR(50) ,
-  slot_8 VARCHAR(50) ,
-  slot_9 VARCHAR(50) ,
+  slot_0  VARCHAR(50),
+  slot_1  VARCHAR(50),
+  slot_2  VARCHAR(50),
+  slot_3  VARCHAR(50),
+  slot_4  VARCHAR(50),
+  slot_5  VARCHAR(50),
+  slot_6  VARCHAR(50),
+  slot_7  VARCHAR(50),
+  slot_8  VARCHAR(50),
+  slot_9  VARCHAR(50),
   slot_10 VARCHAR(50),
   slot_11 VARCHAR(50),
   slot_12 VARCHAR(50),
@@ -54,7 +54,7 @@ CREATE TABLE db_producer(
   slot_21 VARCHAR(50),
   slot_22 VARCHAR(50),
   slot_23 VARCHAR(50),
-  data_registrazione VARCHAR(150) NOT NULL
+  data_registrazione VARCHAR(50) NOT NULL
 );
 
 --DB utilizzato per la registrazione degli admin

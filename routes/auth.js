@@ -6,7 +6,7 @@ const authController = new AuthController();
 
 
 // per tutti gli utenti ============================================================
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
 
     var result = await authController.login(req.body)
     res.status(result[0]).json(result[1]);

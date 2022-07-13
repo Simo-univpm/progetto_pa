@@ -11,15 +11,17 @@ class authController {
 
     constructor(){}
 
+    // switchare gli utenti tramite middlewares?
     async login(body){
 
         // i campi in comune tra le 3 tabelle sono: id, nome, email, privilegi,
+        // i campi richiesti per il login sono: privilegi, email, passwd
 
         // verifica utente registrato
         let user;
-        if(body.privilegi == 0) user = await db_admins.findOne({nome: body.nome});
-        if(body.privilegi == 1) user = await db_producers.findOne({nome: body.nome});
-        if(body.privilegi == 2) user = await db_consumers.findOne({nome: body.nome});
+        if(body.privilegi == 0) user = await db_admins.findOne({where: {email: body.email}}); //{where: { mail: mailUtente}}
+        if(body.privilegi == 1) user = await db_producers.findOne({where: {email: body.email}});
+        if(body.privilegi == 2) user = await db_consumers.findOne({where: {email: body.email}});
         if( ! user) return [400, 'wrong username or password'];
 
         // CONTROLO PASSWORD: compara la pw nel body con quella cripatata nel db tramite bcrypt
@@ -32,7 +34,7 @@ class authController {
         if(user.privilegi == 2) id = user.id_consumer;
 
         // CREAZIONE E ASSEGNAZIONE JWT: se l'utente è in possesso del token può accedere alle rotte private (e a quelle pubbliche)
-        const token = jwt.sign({ id: id, privilegi: user.privilegi, nome: user.nome, emai: user.email }, process.env.TOKEN_SECRET);
+        const token = jwt.sign({ id: id, privilegi: user.privilegi, nome: user.nome, email: user.email }, process.env.TOKEN_SECRET);
 
         return [200, token];
 
@@ -40,7 +42,7 @@ class authController {
 
     async registerProducer(body){
 
-        
+        // rimuovere questo try più esterno dopo la correzzione dei vari bug
         try{
             // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
             const producer = await db_producers.findOne({where: { email: body.email }});
@@ -59,7 +61,7 @@ class authController {
             let emissioni_co2 = body.emissioni_co2;
             if( ! emissioni_co2) emissioni_co2 = 0.0;
 
-            const data = new Date().toLocaleDateString()
+            const data = String(new Date().toLocaleString());
 
             try{
 
@@ -74,7 +76,7 @@ class authController {
                     fonte_produzione: body.fonte_produzione,
                     costo_per_kwh: costo_per_kwh,
                     emissioni_co2: costo_per_kwh,
-                    privilegi: "producer",
+                    privilegi: 1,
                     //slot_0: slot0
                     //slot_1: slot0
                     //slot_2: slot0
@@ -83,7 +85,7 @@ class authController {
 
                 });
 
-                return [200, "SUCCESS: producer with id " + savedProducer.idProducer + " correctly created"]
+                return [200, "SUCCESS: producer with id " + savedProducer.id_producer + " correctly created"]
 
             }catch(err){
                 console.log(err)

@@ -41,7 +41,7 @@ const Producer = sequelize.define('producer', {
         allowNull: false
     },
     privilegi: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false
     },
     slot_0: {
