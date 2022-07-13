@@ -4,7 +4,7 @@ const sequelize = require('./database').sequelize; // corrisponde a database.seq
 
 // Definizione del modello Sequelize dell'utente
 const Producer = sequelize.define('producer', {
-    idProducer: {
+    id_producer: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,

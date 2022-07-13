@@ -4,17 +4,13 @@ const sequelize = require('./database').sequelize; // corrisponde a database.seq
 
 // Definizione del modello Sequelize dell'utente
 const Consumer = sequelize.define('consumer', {
-    idConsumer: {
+    id_consumer: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
     nome: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    cognome: {
         type: Sequelize.STRING,
         allowNull: false
     },

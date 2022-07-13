@@ -3,18 +3,18 @@ const sequelize = require('./database').sequelize; // corrisponde a database.seq
 
 
 // Definizione del modello Sequelize dell'utente
-const Admin = sequelize.define('transazioni', {
-    idTransaction: {
+const Transazioni = sequelize.define('transazioni', {
+    id_transazione: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    idConsumer: {
+    id_consumer: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    idProducer: {
+    id_producer: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
