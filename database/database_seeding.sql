@@ -15,7 +15,7 @@ CREATE TABLE db_consumer(
   passwd VARCHAR(50) NOT NULL,
   credito INTEGER NOT NULL,
   privilegi INTEGER NOT NULL,
-  data_registrazione TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  data_registrazione VARCHAR(50) NOT NULL
 );
 
 --DB producer utilizzato per la registrazione dei producer
@@ -53,7 +53,7 @@ CREATE TABLE db_producer(
   slot_21 VARCHAR(50) NOT NULL,
   slot_22 VARCHAR(50) NOT NULL,
   slot_23 VARCHAR(50) NOT NULL,
-  data_registrazione TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  data_registrazione VARCHAR(50) NOT NULL
 );
 
 --DB utilizzato per la registrazione degli admin
