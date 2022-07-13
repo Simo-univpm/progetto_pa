@@ -6,6 +6,9 @@ const consumerController = new ConsumerController();
 const ProducerController = require('../controllers/producerController');
 const producerController = new ProducerController();
 
+const AdminController = require('../controllers/adminController');
+const adminController = new AdminController();
+
 
 // per i consumer ==================================================================
 router.get('/getPurchaseList', async (req, res) => {
@@ -44,6 +47,16 @@ router.get('/checkStats', async (req, res) => {
 router.get('/checkEarnings', async (req, res) => {
 
     var result = await producerController.checkEarnings(req.body)
+    res.status(result[0]).json(result[1]);
+    
+});
+
+
+
+// per gli admin ===================================================================
+router.get('/addCredit', async (req, res) => {
+
+    var result = await adminController.addCredit(req.body)
     res.status(result[0]).json(result[1]);
     
 });
