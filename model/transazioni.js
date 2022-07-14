@@ -33,7 +33,7 @@ const Transazioni = sequelize.define('transazioni', {
     slot_selezionato: {
         type: Sequelize.INTEGER,
         allowNull: false
-    }
+    },
     fonte_produzione: {
         type: Sequelize.STRING,
         allowNull: false
