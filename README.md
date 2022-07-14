@@ -7,6 +7,7 @@ Membri gruppo:
 Comandi utili docker:
 - docker build -t nomeapplicazione .
 - docker run --rm -it -p 8080:8080 nomeapplicazione
+- docker compose -f file_docker_compose.yml up
 
 Descrizione progetto:
 
