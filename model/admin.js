@@ -27,7 +27,7 @@ const Admin = sequelize.define('admin', {
         allowNull: false
     },
     data_registrazione: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull: false
     }, 
 },    
