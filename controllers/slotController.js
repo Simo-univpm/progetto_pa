@@ -1,7 +1,7 @@
 const db_producers = require('../model/producer').producer;
 const db_consumers = require('../model/consumer').consumer;
 const db_admins = require('../model/admin').admin;
-const db_storico_transazioni = require('../model/storico_transazioni').transazioni;
+const db_transazioni = require('../model/transazioni').transazioni;
 
 class slotController {
 
@@ -25,9 +25,9 @@ class slotController {
         //data_prenotazione.setDate(data_corrente.getDate()+1);         // si aggiunge un giorno alla data attuale (si può prenotare solo per domani)
         //data_prenotazione = data_prenotazione.getHours() + body.slot; // si aggiungono le ore dello slot per verificare successivamente la validità della richiesta
         
-        let selected_slot;          // è il nome dello slot selezionato: "slot_0"
-        let selected_slot_data;     // è un json {"totale": x, "rimanente": y}
-
+        let selected_slot; // è il nome dello slot selezionato: "slot_0"
+        let slot_totale;
+        let slot_rimanente;
 
 
         // CONTROLLO VALIDITA' RICHIESTA DEL CONSUMER ====================================================================================================
@@ -38,15 +38,15 @@ class slotController {
         // controllo validità dello slot selezionato
         if(req.body.slot >= 0 && req.body.slot <= 23){ 
 
-            selected_slot = "slot_" + String(req.body.slot) // append del numero di slot richiesto alla stringa "slot_" --> slot_ + 15 --> slot_15
-            selected_slot_data = JSON.parse(producer[selected_slot])
+            selected_slot = "slot_" + String(req.body.slot) // ottengo lo slot richiesto dal consumer
+            let selected_slot_data = JSON.parse(producer[selected_slot]) // ottengo i dati dello slot
+
+            slot_totale = selected_slot_data.totale;
+            slot_rimanente = selected_slot_data.rimanente;
 
         } 
         else return [404, "ERROR: requested slot does not exist"]
 
-
-        console.log("data_corrente " + data_corrente)
-        console.log("data_prenotazione " + data_prenotazione)
 
         // controllo validità data della prenotazione
         //if(this.diffHours(data_prenotazione, data_corrente) < 24) return [403, "FORBIDDEN: selected slot must start 24 hours from now"]
@@ -59,29 +59,37 @@ class slotController {
         if(req.body.kw < 0.1) return [403, "FORBIDDEN: consumer must select at least 0.1 kwh"]
 
         // controllo validità energetica richiesta: se un consumatore ne richiede troppa
-        if(req.body.kw > selected_slot_data.totale) return [403, "FORBIDDEN: the demanded energy is exceedes the maximum capacity"]
+        if(req.body.kw > slot_totale) return [403, "FORBIDDEN: the demanded energy is exceedes the maximum capacity"]
         
         // controllo validità energetica richiesta: se un consumatore richiede più di quella disponibile si effettua un taglio tra tutti i consumatori
-        if(req.body.kw > selected_slot_data.rimanente) this.balanceSlotRequests(producer, selected_slot)
+        if(req.body.kw > slot_rimanente) this.balanceSlotRequests(producer, selected_slot)
 
 
         // PRENOTAZIONE DELLO SLOT =======================================================================================================================
         
+        // aggiorno kw rimanenti per lo slot
+        //producer.update({selected_slot: selected_slot_data})
+        //const app = "{\"totale\": " + slot_totale + ", \"rimanente:\": " + slot_rimanente + "}"
+        let app = {"totale": slot_totale, "rimanente": slot_rimanente}
+        app = JSON.stringify(app)
+        producer.update({selected_slot: app})
 
-        selected_slot_data.rimanente -= req.body.kw
-        producer.update({selected_slot: selected_slot_data})
 
-        this.updateCredit(req.user.id, req.body.kw) // scala il credito dell'utente e aggiorna il record
+        // aggiorno credito consumer
+        let credito_aggiornato = consumer.credito - req.body.kw*producer.costo_per_kwh
+        this.updateCredit(req.user.id, credito_aggiornato)
         
         // crea la transazione a db
         try{
 
-            const transazione = await db_storico_transazioni.create({
+            const transazione = await db_transazioni.create({
 
                 id_consumer: consumer.id_consumer,
                 id_producer: producer.id_producer,
                 emissioni_co2_slot: producer.emissioni_co2,
                 costo_slot: producer.costo_per_kwh,
+                kw_acquistati: req.body.kw,
+                slot_selezionato: req.body.slot,
                 fonte_produzione: producer.fonte_produzione,
                 //data_acquisto_transazione: data_corrente,
                 //data_prenotazione_transazione: data_prenotazione

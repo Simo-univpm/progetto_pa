@@ -27,13 +27,13 @@ const Transazioni = sequelize.define('transazioni', {
         allowNull: false
     },
     kw_acquistati: {
-        type: Sequelize.DOUBLE,
+        type: Sequelize.FLOAT,
         allowNull: false
     },
     slot_selezionato: {
         type: Sequelize.INTEGER,
         allowNull: false
-    }
+    },
     fonte_produzione: {
         type: Sequelize.STRING,
         allowNull: false
@@ -42,16 +42,11 @@ const Transazioni = sequelize.define('transazioni', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    data_prenotazione_trasazione: {
+    data_prenotazione_transazione: {
         type: Sequelize.STRING,
         allowNull: false
-    },
-    costo: {
-        type: Sequelize.INTEGER,
-        allowNull: false
     }, 
-},    
-{ 
+},{ 
     timestamps: false,
     freezeTableName: true
 });

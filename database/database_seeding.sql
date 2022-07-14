@@ -113,7 +113,7 @@ CREATE TABLE db_transazioni(
   id_producer INTEGER NOT NULL,
   emissioni_co2_slot INTEGER NOT NULL,
   costo_slot INTEGER NOT NULL,
-  kw_acquistati DOUBLE NOT NULL,
+  kw_acquistati FLOAT NOT NULL,
   slot_selezionato INTEGER NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
   data_acquisto_transazione VARCHAR(50) NOT NULL,
