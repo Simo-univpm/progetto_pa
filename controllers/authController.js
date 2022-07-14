@@ -125,14 +125,14 @@ class authController {
         const existing_producer = await db_producers.findOne({where: { email: body.email }});
         if(existing_producer) return [500, "producer is already registered"]
 
-        // controlla se la tipologia di fonte è corretta
+        // controlla se la tipologia di fonte è ammessa
         if(! ["fossile", "eolico", "fotovoltaico"].includes(body.fonte_produzione)) return [400, "ERROR: bad request"];
 
-        const producer = buildProducer(body) // costruisco oggetto producer in base al body della richiesta
+        const producer = await buildProducer(body) // costruisco oggetto producer in base al body della richiesta
         console.log(producer)
 
         try{
-            const savedProducer = await db_producers.create(producer); // scrivo producer a db
+            const temp = await db_producers.create(producer); // scrivo producer a db
             return [200, "SUCCESS: producer with id " + temp.id_producer + " correctly created"]
         }catch(err){
             console.log(err)
@@ -239,6 +239,7 @@ async function buildProducer(body){
     producer.fonte_produzione = body.fonte_produzione;
     producer.costo_per_kwh = costo_per_kwh;
     producer.emissioni_co2 = emissioni_co2;
+    producer.privilegi = 1;
 
     // impostazione slots
     for(i = 0; i < 24; i++){
