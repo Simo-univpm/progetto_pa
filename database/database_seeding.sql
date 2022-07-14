@@ -116,5 +116,4 @@ CREATE TABLE db_transazioni(
   fonte_produzione VARCHAR(50) NOT NULL,
   data_acquisto_transazione VARCHAR(50) NOT NULL,
   data_prenotazione_transazione VARCHAR(50) NOT NULL,
-  costo INTEGER NOT NULL
 );

@@ -22,11 +22,13 @@ app.use('/api/auth', authRoutes); // le chiamate per effettuare login e registra
 // connessione al database
 connessioneDB();
 
+
+// si verifica se è passato un giorno per salvare lo storico dei producer a db a fine giornata
+
+
 // messa in ascolto del server sulla porta specificata nel file .env
 const port = process.env.PORT;
 app.listen(port, () => console.log('Listening on port ' + port));
-
-
 
 
 async function connessioneDB(){

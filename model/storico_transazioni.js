@@ -30,14 +30,14 @@ const Transazioni = sequelize.define('transazioni', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    data_transazione: {
+    data_acquisto_transazione: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    costo: {
-        type: Sequelize.INTEGER,
+    data_prenotazione_transazione: {
+        type: Sequelize.STRING,
         allowNull: false
-    }, 
+    }
 },    
 { 
     timestamps: false,

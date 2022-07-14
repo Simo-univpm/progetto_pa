@@ -1,7 +1,4 @@
 //verifica se un utente in possesso di token possiede i privilegi di amministratore
-const jwt = require('jsonwebtoken');
-const db_admins = require('../model/admin').admin;
-
 
 async function checkAdmin(req, res, next){
 
