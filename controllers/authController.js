@@ -156,33 +156,41 @@ class authController {
     }
 
     async registerConsumer(body){
-
-        // CONTROLLO CONSUMER REGISTRATO: controlla se la mail è nel db
-        //const consumer = await db_consumers.findOne({where: { mail: body.mail }});
-        //if(consumer) return [500, "consumer is already registered"]
-
-        // TODO: cripta pw
-        const hashed_passwd = body.passwd
         
         try{
+            // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
+            const consumer = await db_consumers.findOne({where: { email: body.email }});
+            if(consumer) return [500, "consumer is already registered"]
 
-            // scrittura consumer a db
-            const savedConsumer = await db_consumers.create({
+            // PASSWORD HASHING: tramite hash + salt
+            const salt = await bcrypt.genSalt(10);
+            const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
 
-                passwd: hashed_passwd,
-                mail: body.mail,
+            const data = String(new Date().toLocaleString());
+
+            try{
+
+                // scrittura consumer a db
+                const savedConsumer = await db_consumer.create({
+
+                    nome: body.nome,
+                    email: body.email,
+                    passwd: hashed_passwd,
+                    credito: body.credito,
+                    privilegi: 2,
+                    data_registrazione: data
+
+                });
+
+                return [200, "SUCCESS: consumer with id " + savedConsumer.id_consumer + " correctly created"]
             
-                ruolo: "consumer",
-                credito: 10.0
-
-            });
-
-            return [200, "SUCCESS: consumer with id " + savedConsumer.idConsumer + " correctly created"]
-
+            }catch(err){
+                console.log("CONSOLE_LOG: " + err)
+                return [500, "ERROR: something went wrong"]
+            }
         }catch(err){
-            console.log(err)
-            //return [500, "ERROR: something went wrong"]
-            return [500, err]
+            console.log("super mega errore: " + err)
+            return [500, "ERROR: something went wrong"]
         }
 
     }
