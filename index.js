@@ -11,9 +11,6 @@ app.use(express.json());
 
 console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
 
-const rottaTest = require('./routes/test');
-app.use('/api/test', rottaTest);
-
 const slotRoutes = require('./routes/slot');
 const usersRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth')
