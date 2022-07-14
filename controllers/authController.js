@@ -41,9 +41,13 @@ class authController {
 
     async registerProducer(body){
 
-        // controlla se l'utente è registrato
-        const existing_producer = await db_producers.findOne({where: { email: body.email }});
-        if(existing_producer) return [500, "producer is already registered"]
+        // controlla se il nome del producer è già registrata
+        const nome = await db_producers.findOne({where: { nome: body.nome }});
+        if(nome) return [500, "producer is already registered"]
+
+        // controlla se la mail del producer è già registrata
+        const email = await db_producers.findOne({where: { email: body.email }});
+        if(email) return [500, "producer is already registered"]
 
         // controlla se la tipologia di fonte è ammessa
         if(! ["fossile", "eolico", "fotovoltaico"].includes(body.fonte_produzione)) return [400, "ERROR: bad request"];
@@ -161,9 +165,11 @@ async function buildProducer(body){
     producer.privilegi = 1;
 
     // impostazione slots
+    const default_slot = JSON.stringify({"totale": body.tetto_max_kwh_init, "rimanente": body.tetto_max_kwh_init});
+
     for(i = 0; i < 24; i++){
-        let app_str = "slot_" + String(i)
-        producer[app_str] = body.tetto_max_kwh_init
+        let app_str = "slot_" + String(i);
+        producer[app_str] = default_slot;
     }
 
     producer.data_registrazione = data;
