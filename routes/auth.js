@@ -1,12 +1,16 @@
 const router = require('express').Router();
 
+
+// DA RIMUOVERE
+const checkLogin = require('../middlewares/checkLogin');
+const checkAdmin = require('../middlewares/checkAdmin');
+
 const AuthController = require('../controllers/authController');
 const authController = new AuthController();
 
 
 
 // per tutti gli utenti ============================================================
-// inserire bei middleware qui per alleggerire il login
 router.post('/login', async (req, res) => {
 
     var result = await authController.login(req.body)
@@ -34,6 +38,24 @@ router.post('/registerAdmin', async (req, res) => {
     res.status(result[0]).json(result[1]);
     
 });
+
+
+
+// DA RIMUOVERE
+router.get('/test_login', checkLogin, async (req, res) => {
+
+    res.status(200).json("utente loggato");
+    console.log(req.user)
+
+});
+
+router.get('/test_admin_login', checkLogin, checkAdmin, async (req, res) => {
+
+    res.status(200).json("utente admin loggato");
+    console.log(req.user)
+
+});
+
 
 
 

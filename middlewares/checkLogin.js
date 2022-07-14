@@ -2,12 +2,12 @@
 const jwt = require('jsonwebtoken');
 
 /*
-Questo è un middleware, possiamo aggiungerlo ad ogni route che vogliamo sia protetta o privta;
+Questo è un middleware, possiamo aggiungerlo ad ogni route che vogliamo sia protetta o privata;
 queste routes non possono essere utilizzate se l'utente non è in possesso del token.
 Il token si ottiene al login.
 */
 
-function verifyToken(req, res, next){
+function checkLogin(req, res, next){
 
     // controllo della presenza del token nell'header
     const token = req.header('auth-token');
@@ -17,7 +17,7 @@ function verifyToken(req, res, next){
 
         // verifica validità token
         const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-        req.user = verified;
+        req.user = verified; // contiene i dati decodificati del token per facilità di sviluppo
 
         next();
 
@@ -28,4 +28,4 @@ function verifyToken(req, res, next){
 }
 
 
-module.exports = verifyToken;
+module.exports = checkLogin;

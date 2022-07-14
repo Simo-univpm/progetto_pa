@@ -1,5 +1,7 @@
 const router = require('express').Router();
 
+const checkLogin = require('../middlewares/checkLogin');
+
 const SlotController = require('../controllers/slotController');
 const slotController = new SlotController();
 
@@ -11,7 +13,7 @@ router.get('/updateSlot', async (req, res) => {
     
 });
 
-router.get('/reserveSlot', async (req, res) => {
+router.post('/reserveSlot', checkLogin, async (req, res) => {
 
     var result = await slotController.reserveSlot(req.body)
     res.status(result[0]).json(result[1]);
@@ -35,13 +37,6 @@ router.get('/cancelReservation', async (req, res) => {
 router.get('/balanceSlotRequests', async (req, res) => {
 
     var result = await slotController.balanceSlotRequests(req.body)
-    res.status(result[0]).json(result[1]);
-    
-});
-
-router.get('/createSlot', async (req, res) => {
-
-    var result = await slotController.createSlot(req.body)
     res.status(result[0]).json(result[1]);
     
 });
