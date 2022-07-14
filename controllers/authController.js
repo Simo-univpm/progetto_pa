@@ -11,7 +11,6 @@ class authController {
 
     constructor(){}
 
-    // switchare gli utenti tramite middlewares?
     async login(body){
 
         // i campi in comune tra le 3 tabelle sono: id, nome, email, privilegi,
@@ -50,7 +49,6 @@ class authController {
         if(! ["fossile", "eolico", "fotovoltaico"].includes(body.fonte_produzione)) return [400, "ERROR: bad request"];
 
         const producer = await buildProducer(body) // costruisco oggetto producer in base al body della richiesta
-        console.log(producer)
 
         try{
             const temp = await db_producers.create(producer); // scrivo producer a db
@@ -64,39 +62,34 @@ class authController {
 
     async registerConsumer(body){
         
+        // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
+        const consumer = await db_consumers.findOne({where: { email: body.email }});
+        if(consumer) return [500, "consumer is already registered"]
+
+        // PASSWORD HASHING: tramite hash + salt
+        const salt = await bcrypt.genSalt(10);
+        const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
+
+        const data = String(new Date().toLocaleString());
+
         try{
-            // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-            const consumer = await db_consumers.findOne({where: { email: body.email }});
-            if(consumer) return [500, "consumer is already registered"]
 
-            // PASSWORD HASHING: tramite hash + salt
-            const salt = await bcrypt.genSalt(10);
-            const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
+            // scrittura consumer a db
+            const savedConsumer = await db_consumers.create({
 
-            const data = String(new Date().toLocaleString());
+                nome: body.nome,
+                email: body.email,
+                passwd: hashed_passwd,
+                credito: body.credito,
+                privilegi: 2,
+                data_registrazione: data
 
-            try{
+            });
 
-                // scrittura consumer a db
-                const savedConsumer = await db_consumers.create({
-
-                    nome: body.nome,
-                    email: body.email,
-                    passwd: hashed_passwd,
-                    credito: body.credito,
-                    privilegi: 2,
-                    data_registrazione: data
-
-                });
-
-                return [200, "SUCCESS: consumer with id " + savedConsumer.id_consumer + " correctly created"]
-            
-            }catch(err){
-                console.log("CONSOLE_LOG: " + err)
-                return [500, "ERROR: something went wrong"]
-            }
+            return [200, "SUCCESS: consumer with id " + savedConsumer.id_consumer + " correctly created"]
+        
         }catch(err){
-            console.log("super mega errore: " + err)
+            console.log("CONSOLE_LOG: " + err)
             return [500, "ERROR: something went wrong"]
         }
 
@@ -104,38 +97,33 @@ class authController {
 
     async registerAdmin(body){
 
+        // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
+        const admin = await db_admins.findOne({where: { email: body.email }});
+        if(admin) return [500, "consumer is already registered"]
+
+        // PASSWORD HASHING: tramite hash + salt
+        const salt = await bcrypt.genSalt(10);
+        const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
+
+        const data = String(new Date().toLocaleString());
+
         try{
-            // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-            const admin = await db_admins.findOne({where: { email: body.email }});
-            if(admin) return [500, "consumer is already registered"]
 
-            // PASSWORD HASHING: tramite hash + salt
-            const salt = await bcrypt.genSalt(10);
-            const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
+            // scrittura admin a db
+            const savedAdmin = await db_admins.create({
 
-            const data = String(new Date().toLocaleString());
+                nome: body.nome,
+                email: body.email,
+                passwd: hashed_passwd,
+                privilegi: 0,
+                data_registrazione: data
 
-            try{
+            });
 
-                // scrittura consumer a db
-                const savedAdmin = await db_admins.create({
-
-                    nome: body.nome,
-                    email: body.email,
-                    passwd: hashed_passwd,
-                    privilegi: 1,
-                    data_registrazione: data
-
-                });
-
-                return [200, "SUCCESS: admin with id " + savedAdmin.id_admin + " correctly created"]
-            
-            }catch(err){
-                console.log("CONSOLE_LOG: " + err)
-                return [500, "ERROR: something went wrong"]
-            }
+            return [200, "SUCCESS: admin with id " + savedAdmin.id_admin + " correctly created"]
+        
         }catch(err){
-            console.log("super mega errore: " + err)
+            console.log("CONSOLE_LOG: " + err)
             return [500, "ERROR: something went wrong"]
         }
 
