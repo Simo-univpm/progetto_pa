@@ -102,7 +102,44 @@ class authController {
 
     }
 
-    async registerAdmin(body){}
+    async registerAdmin(body){
+
+        try{
+            // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
+            const admin = await db_admins.findOne({where: { email: body.email }});
+            if(admin) return [500, "consumer is already registered"]
+
+            // PASSWORD HASHING: tramite hash + salt
+            const salt = await bcrypt.genSalt(10);
+            const hashed_passwd  = await bcrypt.hash(body.passwd, salt); // hashing pw with salt
+
+            const data = String(new Date().toLocaleString());
+
+            try{
+
+                // scrittura consumer a db
+                const savedAdmin = await db_admins.create({
+
+                    nome: body.nome,
+                    email: body.email,
+                    passwd: hashed_passwd,
+                    privilegi: 1,
+                    data_registrazione: data
+
+                });
+
+                return [200, "SUCCESS: admin with id " + savedAdmin.id_admin + " correctly created"]
+            
+            }catch(err){
+                console.log("CONSOLE_LOG: " + err)
+                return [500, "ERROR: something went wrong"]
+            }
+        }catch(err){
+            console.log("super mega errore: " + err)
+            return [500, "ERROR: something went wrong"]
+        }
+
+    }
 
 }
 
