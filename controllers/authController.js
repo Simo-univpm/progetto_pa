@@ -62,19 +62,6 @@ class authController {
 
     }
 
-    /// DA RIMUOVERE
-    async getProducers(){
-
-        try{
-            const producers = await db_producers.findAll();
-            return [200, producers]
-
-        }catch(err){
-            return [500, "ERROR: something went wrong"]
-        }
-
-    }
-
     async registerConsumer(body){
         
         try{
@@ -110,19 +97,6 @@ class authController {
             }
         }catch(err){
             console.log("super mega errore: " + err)
-            return [500, "ERROR: something went wrong"]
-        }
-
-    }
-
-    /// DA RIMUOVERE
-    async getConsumers(){
-
-        try{
-            const consumers = await db_consumers.findAll();
-            return [200, consumers]
-
-        }catch(err){
             return [500, "ERROR: something went wrong"]
         }
 

@@ -14,14 +14,6 @@ router.post('/login', async (req, res) => {
     
 });
 
-/// DA RIMUOVERE
-router.get('/getProducers', async (req, res) => {
-
-    var result = await authController.getProducers()
-    res.status(result[0]).json(result[1]);
-    
-});
-
 router.post('/registerProducer', async (req, res) => {
 
     var result = await authController.registerProducer(req.body)
@@ -32,14 +24,6 @@ router.post('/registerProducer', async (req, res) => {
 router.post('/registerConsumer', async (req, res) => {
 
     var result = await authController.registerConsumer(req.body)
-    res.status(result[0]).json(result[1]);
-    
-});
-
-/// DA RIMUOVERE
-router.get('/getConsumers', async (req, res) => {
-
-    var result = await authController.getConsumers()
     res.status(result[0]).json(result[1]);
     
 });
