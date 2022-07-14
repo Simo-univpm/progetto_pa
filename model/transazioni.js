@@ -26,6 +26,14 @@ const Transazioni = sequelize.define('transazioni', {
         type: Sequelize.INTEGER,
         allowNull: false
     },
+    kw_acquistati: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
+    },
+    slot_selezionato: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
     fonte_produzione: {
         type: Sequelize.STRING,
         allowNull: false
