@@ -171,7 +171,7 @@ class authController {
             try{
 
                 // scrittura consumer a db
-                const savedConsumer = await db_consumer.create({
+                const savedConsumer = await db_consumers.create({
 
                     nome: body.nome,
                     email: body.email,
