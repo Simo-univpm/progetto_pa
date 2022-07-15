@@ -139,7 +139,7 @@ const Producer = sequelize.define('producer', {
         allowNull: true
     },
     data_registrazione: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
         allowNull: false
     }
 }, 

@@ -31,7 +31,7 @@ const Consumer = sequelize.define('consumer', {
         allowNull: false
     },
     data_registrazione: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
         allowNull: false
     }
 

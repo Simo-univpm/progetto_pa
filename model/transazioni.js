@@ -39,11 +39,11 @@ const Transazioni = sequelize.define('transazioni', {
         allowNull: false
     },
     data_acquisto_transazione: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
         allowNull: false
     },
     data_prenotazione_transazione: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
         allowNull: false
     }, 
 },{ 
