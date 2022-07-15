@@ -11,6 +11,19 @@ app.use(express.json());
 
 console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
 
+
+// test CRUD
+const consumersRoute = require('./routes/consumers');
+const producersRoute = require('./routes/producers');
+app.use('/api/consumers', consumersRoute);
+app.use('/api/producers', producersRoute);
+
+
+
+
+
+
+
 const slotRoutes = require('./routes/slot');
 const usersRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth')

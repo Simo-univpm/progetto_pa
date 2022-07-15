@@ -1,13 +1,124 @@
-class authController {
+const db_consumers = require('../model/consumer').consumer;
+const bcrypt = require('bcryptjs');
+
+class consumerController {
 
     constructor(){}
 
+    // CRUD =================================================
+    async getConsumer(req){
 
-    async getPurchaseList(body){}
+        //nel body serve: id
 
-    async getEmissions(body){}
+        const id = req.body.id
+
+        try{
+
+           const consumer = await db_consumers.findOne({where: { id_consumer: id }});
+           if( ! consumer) return [404, "consumer not found"]
+
+           return [200, consumer]
+
+        }catch(err){
+            return [500, "something went wrong " + err]
+        }
+
+    }
+
+    async createConsumer(req){
+
+        //nel body servono: nome, email, passwd, credito, privilegi, data_registrazione
+
+        const data = req.body
+
+        // PASSWORD HASHING: tramite hash + salt
+        const salt = await bcrypt.genSalt(10);
+        const hashed_passwd  = await bcrypt.hash(data.passwd, salt); // hashing pw with salt
+
+        const data_registrazione = String(new Date().toLocaleString());
+
+        try{
+
+            // scrittura consumer a db
+            const consumer = await db_consumers.create({
+
+                nome: data.nome,
+                email: data.email,
+                passwd: hashed_passwd,
+                credito: data.credito,
+                privilegi: 2,
+                data_registrazione: data_registrazione
+
+            });
+
+            return [200, "SUCCESS: consumer with id " + consumer.id_consumer + " created"]
+        
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+    }
+
+    async editConsumerCredit(req){
+
+        // nel body servono: id, credito
+
+        let nuovo_credito = req.body.credito;
+
+        try{
+
+            let result = await this.getConsumer(req)
+            result[1].update({credito: nuovo_credito})
+
+            return [200, "SUCCESS: credit updated"]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+    }
+
+    // non è un api
+    async decreaseConsumerCredit(id, nuovo_credito){
+
+        try{
+            let consumer = this.getConsumer(id)[1] // finds consumer by id
+
+            if(nuovo_credito > consumer.credito) return [500, "ERROR: nuovo credito superiore all'attuale"]
+            
+            consumer.update({credito: nuovo_credito})
+            return [200, "SUCCESS: credit updated"]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+
+    }
+
+    async delete(req){
+
+        // nel body serve: id
+
+        let id  = req.body.id;
+
+        try{
+
+            await db_consumers.destroy({ where: { id_consumer: id } });
+            return [200, "SUCCESS: deleted consumer with id: " + id]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+    }
+
+    // consegna ==============================================
+    async getPurchaseList(time_period){}
+
+    async getEmissions(time_period){}
 
 }
 
 
-module.exports = authController;
+module.exports = consumerController;
