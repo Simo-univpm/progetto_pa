@@ -11,6 +11,22 @@ const adminController = new AdminController();
 
 
 // per i consumer ==================================================================
+
+router.get('/consumer/getConsumers', async (req, res) => {
+
+    var result = await consumerController.getConsumers(req.body)
+    res.status(result[0]).json(result[1]);
+    
+});
+
+router.get('/consumer/getConsumer/:id', async (req, res) => {
+
+    var result = await consumerController.getConsumer(id)
+    res.status(result[0]).json(result[1]);
+    
+});
+
+
 router.get('/consumer/getPurchaseList', async (req, res) => {
 
     var result = await consumerController.getPurchaseList(req.body)
