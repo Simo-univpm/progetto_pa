@@ -41,6 +41,14 @@ function diff_hours(dt2, dt1) {
     return Math.abs(diff);
 
 }
+//funzione per estrarre la data in formato ISO da una stringa
+function getDateFromString(dateString){
+
+    let date = new Date(dateString);
+    return date;
+
+}
+
 
 // Add 1 Day
 tomorrow.setDate(today.getDate() + 1);
@@ -51,3 +59,9 @@ if(Math.round(diff_hours(tomorrow, today)) < 24){
     console.log("Slot non prenotabile");
 }else { console.log("Slot prenotabile"); }
 console.log(Math.round(diff_hours(tomorrow, today)));
+
+data_string = tomorrow.toISOString().split('T')
+console.log("DATA STRING: " + data_string);
+
+console.log("DATA GET: " + getDateFromString(data_string));
+
