@@ -101,8 +101,6 @@ class consumerController {
             let result_c = await this.getConsumerById(id);
             let consumer = result_c[1]
 
-            console.log(consumer)
-
             if(nuovo_credito > consumer.credito) return [500, "ERROR: nuovo credito superiore all'attuale"]
             
             consumer.update({credito: nuovo_credito})

@@ -44,10 +44,10 @@ function diff_hours(dt2, dt1) {
 
 // Add 1 Day
 tomorrow.setDate(today.getDate() + 1);
-tomorrow.setHours(18, 0, 0);
+tomorrow.setHours(16, 0, 0);
 console.log(today);
 console.log(tomorrow);
-if(Math.round(diff_hours(tomorrow, today)) <= 24){
+if(Math.round(diff_hours(tomorrow, today)) < 24){
     console.log("Slot non prenotabile");
 }else { console.log("Slot prenotabile"); }
 console.log(Math.round(diff_hours(tomorrow, today)));

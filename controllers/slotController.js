@@ -19,11 +19,10 @@ class slotController {
     */
     async reserveSlot(req){
 
-        //let data_corrente = new Date();
-        //let data_prenotazione = new Date();
-        //data_prenotazione.setDate(data_corrente.getDate()+1);         // si aggiunge un giorno alla data attuale (si può prenotare solo per domani)
-        //data_prenotazione = data_prenotazione.getHours() + body.slot; // si aggiungono le ore dello slot per verificare successivamente la validità della richiesta
-        
+        const today = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+        tomorrow.setHours(req.body.slot, 0, 0);
 
         let selected_slot; // è il nome dello slot selezionato: "slot_0"
         let slot_costo;    // è il costo per kw dello slot
@@ -52,7 +51,8 @@ class slotController {
         } else return [404, "ERROR: requested slot does not exist"]
 
         // controllo validità data della prenotazione
-        //if(this.diffHours(data_prenotazione, data_corrente) < 24) return [403, "FORBIDDEN: selected slot must start 24 hours from now"]
+        console.log(this.diff_hours(tomorrow, today))
+        if(this.diff_hours(tomorrow, today) < 24) return [403, "FORBIDDEN: selected slot must start 24 hours from now"]
 
         // controllo credito disponibile del consumer
         if(! (consumer.credito >= (slot_costo*req.body.kw)) ) return [403, "FORBIDDEN: insufficient credit to buy the slot"]
@@ -78,13 +78,13 @@ class slotController {
         await consumerController.decreaseConsumerCredit(req.user.id, consumer.credito - (req.body.kw*slot_costo))
         
         // crea la transazione a db
-        await this.createTransaction(consumer, producer, req, slot_costo);
+        await this.createTransaction(consumer, producer, req, slot_costo, today, tomorrow);
 
         return [200, "Transazione tra [producer " + producer.id_producer + "] e [consumer "+ consumer.id_consumer + "] registrata con successo"]
 
     }
 
-    async createTransaction(consumer, producer, req, slot_costo){
+    async createTransaction(consumer, producer, req, slot_costo, data_acquisto, data_prenotata){
 
         // let data 1
         // let data 2
@@ -103,10 +103,8 @@ class slotController {
                 kw_acquistati: req.body.kw,
                 slot_selezionato: req.body.slot,
                 fonte_produzione: producer.fonte_produzione,
-                //data_acquisto_transazione: data_corrente,
-                //data_prenotazione_transazione: data_prenotazione
-                data_acquisto_transazione: "ciao",
-                data_prenotazione_transazione: "ciao"
+                data_acquisto_transazione: String(data_acquisto),
+                data_prenotazione_transazione: String(data_prenotata)
 
             });
 
@@ -119,15 +117,17 @@ class slotController {
 
     }
 
-/*
-    //calcola la differenza di almeno 24 ore tra 2 date
-    diffHours(date1, date2) {
-        var diff = (date2.getTime() - date1.getTime()) / 1000;
-        diff /= 60 * 60;
-        return Math.abs(Math.round(diff));
-    }
-*/
     async balanceSlotRequests(producer, selected_slot){}
+
+    //funzione per calcolare la differenza di ore tra 2 date
+    diff_hours(dt2, dt1) {
+
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= 60 * 60;
+    return Math.round(Math.abs(diff));
+
+    }
+
 
 }
 

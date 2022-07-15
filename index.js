@@ -12,12 +12,14 @@ app.use(cors());
 
 console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
 
+// rendi disponibili solo per l'admin
 //const consumersRoute = require('./routes/consumers');
 //const producersRoute = require('./routes/producers');
 //const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth')
 const slotRoutes = require('./routes/slot');
 
+// rendi disponibili solo per l'admin
 //app.use('/api/consumers', consumersRoute);
 //app.use('/api/producers', producersRoute);
 //app.use('/api/admin', adminRoutes);
