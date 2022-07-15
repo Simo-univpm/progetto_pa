@@ -27,6 +27,8 @@ class consumerController {
 
     async getConsumerById(id){
 
+        // per gettare il consumer tramite l'id del token invece del body della request
+
         try{
 
            const consumer = await db_consumers.findOne({where: { id_consumer: id }});
@@ -93,11 +95,13 @@ class consumerController {
 
     }
 
-    // non è un api
     async decreaseConsumerCredit(id, nuovo_credito){
 
         try{
-            let consumer = this.getConsumer(id)[1] // finds consumer by id
+            let result_c = await this.getConsumerById(id);
+            let consumer = result_c[1]
+
+            console.log(consumer)
 
             if(nuovo_credito > consumer.credito) return [500, "ERROR: nuovo credito superiore all'attuale"]
             

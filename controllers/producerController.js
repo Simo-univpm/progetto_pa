@@ -25,11 +25,24 @@ class producerController {
 
     }
 
+    async getProducerById(id){
+
+        try{
+
+           const producer = await db_producers.findOne({where: { id_producer: id }});
+           if( ! producer) return [404, "producer not found"]
+
+           return [200, producer]
+
+        }catch(err){
+            return [500, "something went wrong " + err]
+        }
+
+    }
+
     async getProducerByName(req){
 
-        //nel body serve: id
-
-        const id = req.body.id
+        //nel body serve: nome
 
         try{
 
@@ -61,7 +74,7 @@ class producerController {
 
     }
 
-        // non è un api
+    // non è un api
     async buildProducer(data){
 
         let producer = {}
@@ -176,13 +189,13 @@ class producerController {
 
     }
 
-    async editSlot(slot_number, campo, valore){
+    async editSlot(id_producer, slot_number, campo, valore){
 
         let slot_to_edit = "slot_" + slot_number
 
         try{
 
-            let producer = await this.getProducer(req)
+            let producer = await this.getProducerById(id_producer)
 
             let slot = producer[1][slot_to_edit]
             slot = JSON.parse(slot)
