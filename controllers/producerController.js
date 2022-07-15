@@ -25,6 +25,25 @@ class producerController {
 
     }
 
+    async getProducerByName(req){
+
+        //nel body serve: id
+
+        const id = req.body.id
+
+        try{
+
+           const producer = await db_producers.findOne({where: { nome: req.body.nome }});
+           if( ! producer) return [404, "producer not found"]
+
+           return [200, producer]
+
+        }catch(err){
+            return [500, "something went wrong " + err]
+        }
+
+    }
+
     async createProducer(req){
 
         //nel body servono: nome, codice_fiscale, email, passwd, fonte_produzione, costo_per_kwh, emissioni_co2, tetto_max_kwh_init
@@ -85,6 +104,8 @@ class producerController {
 
     async editSlotKwLimit(req){
 
+        // nel body servono: id (del producer), slot (da editare), kw (da aggiornare)
+
         let slot_to_edit = "slot_" + req.body.slot // 15 --> slot_15
         let new_value = req.body.kw                // 10 kw
 
@@ -106,19 +127,81 @@ class producerController {
 
     }
 
+    async editSlotKwRemaining(req){
+
+        // nel body servono: id (del producer), slot (da editare), kw (da aggiornare)
+        let slot_to_edit = "slot_" + req.body.slot // 15 --> slot_15
+        let new_value = req.body.kw                // 10 kw
+
+        try{
+
+            let result = await this.getProducer(req)
+
+            let slot = result[1][slot_to_edit] // prendo json da aggiornare a db, stringa
+            slot = JSON.parse(slot)            // trasformo il json in oggetto --> {"totale": slot_totale, "rimanente": slot_rimanente}
+            slot.rimanente = new_value            // aggiorno l'oggetto
+            slot = JSON.stringify(slot)        // trasformo l'oggetto in stringa per scriverlo a db
+
+            result[1].update({[slot_to_edit]: slot})
+            return [200, "SUCCESS: slot updated"]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+    }
+
     async editSlotPrice(req){
 
-        // !! TODO !! 
+        // nel body servono: id (del producer), slot (da editare), costo (da aggiornare)
+
+        let slot_to_edit = "slot_" + req.body.slot // 15 --> slot_15
+        let new_value = req.body.costo             // 666
+
+        try{
+
+            let result = await this.getProducer(req)
+
+            let slot = result[1][slot_to_edit] // prendo json da aggiornare a db, stringa
+            slot = JSON.parse(slot)            // trasformo il json in oggetto --> {"totale": slot_totale, "rimanente": slot_rimanente}
+            slot.costo = new_value            // aggiorno l'oggetto
+            slot = JSON.stringify(slot)        // trasformo l'oggetto in stringa per scriverlo a db
+
+            result[1].update({[slot_to_edit]: slot})
+            return [200, "SUCCESS: slot updated"]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
 
     }
 
+    async editSlot(slot_number, campo, valore){
 
-    async editSlotEmission(req){
+        let slot_to_edit = "slot_" + slot_number
 
-        // !! TODO !! 
+        try{
+
+            let producer = await this.getProducer(req)
+
+            let slot = producer[1][slot_to_edit]
+            slot = JSON.parse(slot)
+
+            if(campo === "costo") slot.costo = valore
+            else if(campo === "totale") slot.totale = valore
+            else if(campo === "rimanente") slot.rimanente = valore
+            else return [500, "ERROR: something went wrong " + err]
+
+            slot = JSON.stringify(slot)
+
+            producer[1].update({[slot_to_edit]: slot})
+            return [200, "SUCCESS: slot updated"]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
 
     }
-
 
     async delete(req){
 

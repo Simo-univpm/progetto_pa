@@ -37,15 +37,6 @@ router.patch('/price', async (req, res) => {
     
 });
 
-// edit producer's slot emissions
-router.patch('/emissions', async (req, res) => {
-
-    var result = await producerController.editSlotEmission(req)
-    res.status(result[0]).json(result[1]);
-    
-});
-
-
 // delete one producer
 router.delete('/', async (req, res) => {
 

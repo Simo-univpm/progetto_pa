@@ -1,7 +1,13 @@
 const db_producers = require('../model/producer').producer;
 const db_consumers = require('../model/consumer').consumer;
-const db_admins = require('../model/admin').admin;
 const db_transazioni = require('../model/transazioni').transazioni;
+
+const ConsumerController = require('../controllers/consumerController');
+const consumerController = new ConsumerController();
+
+const ProducerController = require('../controllers/producerController');
+const consumer = require('../model/consumer');
+const producerController = new ProducerController();
 
 class slotController {
 
@@ -11,38 +17,37 @@ class slotController {
 
         /*
         {
-            "nome": "asd", // nome del producer verso il quale si vuole opzionare lo slot
+            "id": 0,       // id del producer verso il quale si vuole opzionare lo slot
             "slot": 0-23,  // fascia oraria che si desidera opzionare. lo slot 0 va da 00:00 a 00:59
             "kw": 15       // numero di kw che si vogliono prenotare per quello specifico slot
         }
         */
 
-                                        /////// INSERIRE PIPELINE DI VALIDAZIONE PER FAVORE ///////
-
         let data_corrente = new Date();
         let data_prenotazione = new Date();
-
         //data_prenotazione.setDate(data_corrente.getDate()+1);         // si aggiunge un giorno alla data attuale (si può prenotare solo per domani)
         //data_prenotazione = data_prenotazione.getHours() + body.slot; // si aggiungono le ore dello slot per verificare successivamente la validità della richiesta
         
+
         let selected_slot; // è il nome dello slot selezionato: "slot_0"
-        let slot_totale;
-        let slot_rimanente;
+        let slot_totale;   // è il quantitativo totale di energia messo a disposizione dal produttore
+        let slot_rimanente;// è il quantitativo di energia messo a disposizione - quantitativo di energia opzionata
+        let slot_costo;    // è il costo per kw dello slot
 
 
         // CONTROLLO VALIDITA' RICHIESTA DEL CONSUMER ====================================================================================================
         // controllo esistenza produttore di energia
-        let producer = await db_producers.findOne({where: { nome: req.body.nome }});
-        if( ! producer) return [404, "producer not found"]
+        let producer = await producerController.getProducer(req);
 
         // controllo validità dello slot selezionato
         if(req.body.slot >= 0 && req.body.slot <= 23){ 
 
-            selected_slot = "slot_" + String(req.body.slot) // ottengo lo slot richiesto dal consumer
+            selected_slot = "slot_" + String(req.body.slot)              // ottengo lo slot richiesto dal consumer
             let selected_slot_data = JSON.parse(producer[selected_slot]) // ottengo i dati dello slot
 
             slot_totale = selected_slot_data.totale;
             slot_rimanente = selected_slot_data.rimanente;
+            slot_costo = selected_slot_data.costo;
 
         } 
         else return [404, "ERROR: requested slot does not exist"]
@@ -52,8 +57,8 @@ class slotController {
         //if(this.diffHours(data_prenotazione, data_corrente) < 24) return [403, "FORBIDDEN: selected slot must start 24 hours from now"]
 
         // controllo credito disponibile del consumer
-        let consumer = await db_consumers.findOne({where: { id_consumer: req.user.id }});
-        if(! (consumer.credito >= producer.costo_per_kwh) ) return [403, "FORBIDDEN: insufficient credit to buy the slot"]
+        let consumer = await consumerController.getConsumerById(req.user.id);
+        if(! (consumer.credito >= slot_costo) ) return [403, "FORBIDDEN: insufficient credit to buy the slot"]
 
         // controllo validità energetica richiesta: se un consumatore richiede troppa poca energia
         if(req.body.kw < 0.1) return [403, "FORBIDDEN: consumer must select at least 0.1 kwh"]
@@ -68,11 +73,8 @@ class slotController {
         // PRENOTAZIONE DELLO SLOT =======================================================================================================================
         
         // aggiorno kw rimanenti per lo slot
-        //producer.update({selected_slot: selected_slot_data})
-        //const app = "{\"totale\": " + slot_totale + ", \"rimanente:\": " + slot_rimanente + "}"
-        let app = {"totale": slot_totale, "rimanente": slot_rimanente}
-        app = JSON.stringify(app)
-        producer.update({selected_slot: app})
+        
+        await producerController.editSlotKwRemaining(req)
 
 
         // aggiorno credito consumer

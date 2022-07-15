@@ -25,6 +25,21 @@ class consumerController {
 
     }
 
+    async getConsumerById(id){
+
+        try{
+
+           const consumer = await db_consumers.findOne({where: { id_consumer: id }});
+           if( ! consumer) return [404, "consumer not found"]
+
+           return [200, consumer]
+
+        }catch(err){
+            return [500, "something went wrong " + err]
+        }
+
+    }
+
     async createConsumer(req){
 
         //nel body servono: nome, email, passwd, credito, privilegi, data_registrazione
