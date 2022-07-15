@@ -32,10 +32,10 @@ const Producer = sequelize.define('producer', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    costo_per_kwh: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
+    //costo_per_kwh: {
+    //    type: Sequelize.INTEGER,
+    //    allowNull: false
+    //},
     emissioni_co2: {
         type: Sequelize.INTEGER,
         allowNull: false

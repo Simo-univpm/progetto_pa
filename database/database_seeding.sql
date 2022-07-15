@@ -27,7 +27,7 @@ CREATE TABLE db_producer(
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(50) NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
-  costo_per_kwh INTEGER NOT NULL,
+  --costo_per_kwh INTEGER NOT NULL,
   emissioni_co2 INTEGER NOT NULL,
   privilegi INTEGER NOT NULL,
   slot_0  VARCHAR(50),
