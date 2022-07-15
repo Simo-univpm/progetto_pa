@@ -1,12 +1,11 @@
-/*
 var slot_totale = 500
 var slot_rimanente = 500 
 let app = "totale: " + String(slot_totale) + ", rimanente: " + String(slot_rimanente)
 app = JSON.stringify(app)
 console.log(app)
-*/
 
-/*
+
+
 
 const ProducerController = require('./controllers/producerController');
 const producerController = new ProducerController();
@@ -41,6 +40,10 @@ function diff_hours(dt2, dt1) {
     return Math.abs(diff);
 
 }
+
+
+
+
 //funzione per estrarre la data in formato ISO da una stringa
 function getDateFromString(dateString){
 
@@ -60,8 +63,11 @@ if(Math.round(diff_hours(tomorrow, today)) < 24){
 }else { console.log("Slot prenotabile"); }
 console.log(Math.round(diff_hours(tomorrow, today)));
 
+
+
+
+
 data_string = tomorrow.toISOString().split('T')
 console.log("DATA STRING: " + data_string);
 
 console.log("DATA GET: " + getDateFromString(data_string));
-
