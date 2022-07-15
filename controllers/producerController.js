@@ -74,7 +74,6 @@ class producerController {
 
     }
 
-    // non è un api
     async buildProducer(data){
 
         let producer = {}

@@ -1,16 +1,16 @@
 const express = require('express');
 const app = express();
 const database = require('./model/database');
+const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 //const cors = require('cors');
 
 // middlewares
 app.use(express.json());
-//app.use(cors());
+app.use(cors());
 
 console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
-
 
 //const consumersRoute = require('./routes/consumers');
 //const producersRoute = require('./routes/producers');
