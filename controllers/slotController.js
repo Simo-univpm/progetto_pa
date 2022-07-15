@@ -22,7 +22,7 @@ class slotController {
         const today = new Date();
         const tomorrow = new Date();
         tomorrow.setDate(today.getDate() + 1);
-        tomorrow.setHours(req.body.slot, 0, 0);
+        tomorrow.setHours(req.body.slot, 0, 0, 0);
 
         let selected_slot; // è il nome dello slot selezionato: "slot_0"
         let slot_costo;    // è il costo per kw dello slot
