@@ -4,9 +4,9 @@ var slot_rimanente = 500
 let app = "totale: " + String(slot_totale) + ", rimanente: " + String(slot_rimanente)
 app = JSON.stringify(app)
 console.log(app)
-*/
 
-/*
+
+
 
 const ProducerController = require('./controllers/producerController');
 const producerController = new ProducerController();
@@ -42,6 +42,7 @@ function saveDate(date){
     let minute = date.getMinutes();
     let second = date.getSeconds();
     let string_date = String(day) + "-" + String(month) + "-" + String(year) + " " + String(hour) + ":" + String(minute) + ":" + String(second);
+    console.log(string_date)
     return string_date;
 }
 
@@ -53,5 +54,9 @@ function extractDate(string_date){
 
 //saveDate(today);
 extractDate(today);
+<<<<<<< HEAD
+console.log(today);
+=======
 
 console.log(extractDate(today));
+>>>>>>> acd7e40eba04e3ae96207a25ff456564a3a67533
