@@ -1,3 +1,4 @@
+/*
 var slot_totale = 500
 var slot_rimanente = 500 
 let app = "totale: " + String(slot_totale) + ", rimanente: " + String(slot_rimanente)
@@ -28,46 +29,29 @@ async function test_edit_slot(){
 
 test_edit_slot()
 
-
+*/
 const today = new Date();
 const tomorrow = new Date();
 
-//funzione per calcolare la differenza di ore tra 2 date
-function diff_hours(dt2, dt1) {
-
-    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
-    diff /= 60 * 60;
-    return Math.abs(diff);
-
+//funzione per salvare la data in una stringa
+function saveDate(date){
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+    let string_date = String(day) + "-" + String(month) + "-" + String(year) + " " + String(hour) + ":" + String(minute) + ":" + String(second);
+    console.log(string_date)
+    return string_date;
 }
 
-
-
-
-//funzione per estrarre la data in formato ISO da una stringa
-function getDateFromString(dateString){
-
-    let date = new Date(dateString);
+//funzione per estrarre la data da una stringa in un oggetto Date
+function extractDate(string_date){
+    let date = new Date(string_date);
     return date;
-
 }
 
-
-// Add 1 Day
-tomorrow.setDate(today.getDate() + 1);
-tomorrow.setHours(16, 0, 0);
+saveDate(today);
+extractDate(today);
 console.log(today);
-console.log(tomorrow);
-if(Math.round(diff_hours(tomorrow, today)) < 24){
-    console.log("Slot non prenotabile");
-}else { console.log("Slot prenotabile"); }
-console.log(Math.round(diff_hours(tomorrow, today)));
-
-
-
-
-
-data_string = tomorrow.toISOString().split('T')
-console.log("DATA STRING: " + data_string);
-
-console.log("DATA GET: " + getDateFromString(data_string));
