@@ -66,12 +66,11 @@ class producerController {
         producer.email = data.email;
         producer.passwd = hashed_passwd;
         producer.fonte_produzione = data.fonte_produzione;
-        producer.costo_per_kwh = costo_per_kwh;
         producer.emissioni_co2 = emissioni_co2;
         producer.privilegi = 1;
     
         // impostazione slots
-        const default_slot = JSON.stringify({"totale": data.tetto_max_kwh_init, "rimanente": data.tetto_max_kwh_init});
+        const default_slot = JSON.stringify({"costo": data.costo, "totale": data.tetto_max_kwh_init, "rimanente": data.tetto_max_kwh_init});
     
         for(let i = 0; i < 24; i++){
             let app_str = "slot_" + String(i);
@@ -86,30 +85,19 @@ class producerController {
 
     async editSlotKwLimit(req){
 
-        // !! TODO !! 
         let slot_to_edit = "slot_" + req.body.slot // 15 --> slot_15
         let new_value = req.body.kw                // 10 kw
-
-        // piglia slot stringa
-        // trasforma in oggetto
-        // aggiorna oggetto
-        // trasforma in stringa
-        // sovrascrivi a db
 
         try{
 
             let result = await this.getProducer(req)
 
-            let slot = result[1][slot_to_edit] // stringa --> producer["slot_0"]
-            slot = JSON.parse(slot)            // oggetto --> {"totale": slot_totale, "rimanente": slot_rimanente}
+            let slot = result[1][slot_to_edit] // prendo json da aggiornare a db, stringa
+            slot = JSON.parse(slot)            // trasformo il json in oggetto --> {"totale": slot_totale, "rimanente": slot_rimanente}
+            slot.totale = new_value            // aggiorno l'oggetto
+            slot = JSON.stringify(slot)        // trasformo l'oggetto in stringa per scriverlo a db
 
-            slot.rimanente = new_value         // oggetto
-
-            slot = JSON.stringify(slot)        // stringa
-
-            result[1].update({})
-
-
+            result[1].update({[slot_to_edit]: slot})
             return [200, "SUCCESS: slot updated"]
 
         }catch(err){
