@@ -1,0 +1,69 @@
+register producer:
+POST
+http://localhost:8080/api/auth/registerProducer
+{
+    "nome": "producer_1",
+    "codice_fiscale": "1234567890",
+    "email": "producer_1",
+    "passwd": "producer_1",
+    "fonte_produzione": "eolico",
+    "emissioni_co2": 1,
+    "costo": 1,
+    "tetto_max_kwh_init": 1000
+}
+
+-----------------------------------------------------------------------------
+
+register consumer:
+POST
+http://localhost:8080/api/auth/registerConsumer
+{
+    "nome": "consumer_1",
+    "email": "consumer_1",
+    "passwd": "consumer_1",
+    "credito": 100000
+}
+
+-----------------------------------------------------------------------------
+
+login:
+POST
+http://localhost:8080/api/auth/login
+{
+    "privilegi": 2,
+    "email": "consumer_1",
+    "passwd": "consumer_1"
+}
+
+ritorna l'auth-token (da usare per ogni rotta protetta da checklogin): eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicHJpdmlsZWdpIjoiMiIsIm5vbWUiOiJjb25zdW1lcl8xIiwiZW1haWwiOiJjb25zdW1lcl8xIiwiaWF0IjoxNjU3OTA0NzIwfQ.quGroRJxD1-TsgcQXhCzCu7kqZTHyXNYEK-ap6XEMfg
+
+-----------------------------------------------------------------------------
+prenota uno slot con un utente registrato e loggato:
+
+POST
+http://localhost:8080/api/slot/reserveSlot
+{
+    "id": 5,
+    "slot": 18,
+    "kw": 5
+}
+
+-----------------------------------------------------------------------------
+registra un admin
+
+POST
+http://localhost:8080/api/auth/registerAdmin
+{
+    "nome": "admin",
+    "email": "admin",
+    "passwd": "admin"
+}
+
+-----------------------------------------------------------------------------
+ricarica un consumer
+POST
+http://localhost:8080/api/admin/ricarica
+{
+    "id": 1,
+    "credito": 666
+}
