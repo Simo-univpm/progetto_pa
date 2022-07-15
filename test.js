@@ -51,6 +51,7 @@ function extractDate(string_date){
     return date;
 }
 
-saveDate(today);
+//saveDate(today);
 extractDate(today);
-console.log(today);
+
+console.log(extractDate(today));
