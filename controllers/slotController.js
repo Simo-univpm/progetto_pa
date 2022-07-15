@@ -102,30 +102,35 @@ class slotController {
         o uguale alle 24 viene addebitato l’intero costo.
 
         per modificare una prenotazione si deve:
-        modificare lo slot interessato del producer interessato rimettendo l'energia a posto
+        modificare lo slot interessato del producer interessato rimettendo l'energia e i consumi a posto
         trovare la transazione nel db delle transazioni ed aggiornarla in base alla data (se la richiesta avviene prima dopo le 24 ore il costo non si aggiorna, altrimenti si resetta)
         controllare la data e restituire o meno il credito all'utente
 
         */
         
-        let result_p = await producerController.getProducer(req);
+        let result_p = await producerController.getProducerById(req.body.id);
         let producer = result_p[1];
     
         let result_c = await consumerController.getConsumerById(req.user.id);
         let consumer = result_c[1];
 
-        let result_t = await this.getTransaction(producer.id_producer, consumer.id_consumer, req.body.slot)
+        let result_t = await this.getTransaction(req.body.id, req.user.id, req.body.slot)
         let transaction = result_t[1]
 
 
-        // 3 casi: compra meno kw, compra più kw, cancella la prenotazione
+        // 2 casi: compra meno kw, cancella la prenotazione (compra più kw no perché no)
 
 
         // caso kw == 0
         // controlla data
         const now_time = new Date();
-        const transaction_time = new Date(transaction.data_acquisto_transazione);
-        transaction.update({kw_acquistati: req.body.kw})
+        const transaction_time = transaction.data_acquisto_transazione;
+
+        console.log(now_time)
+        console.log(transaction_time)
+
+
+
 
 
 
@@ -205,6 +210,14 @@ class slotController {
     var diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60 * 60;
     return Math.round(Math.abs(diff));
+
+    }
+
+    //funzione per estrarre la data da una stringa in un oggetto Date
+    extractDate(string_date){
+
+        let date = new Date(string_date);
+        return date;
 
     }
 
