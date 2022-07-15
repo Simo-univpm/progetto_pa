@@ -13,7 +13,6 @@ http://localhost:8080/api/auth/registerProducer
 }
 
 -----------------------------------------------------------------------------
-
 register consumer:
 POST
 http://localhost:8080/api/auth/registerConsumer
@@ -25,7 +24,6 @@ http://localhost:8080/api/auth/registerConsumer
 }
 
 -----------------------------------------------------------------------------
-
 login:
 POST
 http://localhost:8080/api/auth/login
@@ -39,7 +37,6 @@ ritorna l'auth-token (da usare per ogni rotta protetta da checklogin): eyJhbGciO
 
 -----------------------------------------------------------------------------
 prenota uno slot con un utente registrato e loggato:
-
 POST
 http://localhost:8080/api/slot/reserveSlot
 {
@@ -50,7 +47,6 @@ http://localhost:8080/api/slot/reserveSlot
 
 -----------------------------------------------------------------------------
 registra un admin
-
 POST
 http://localhost:8080/api/auth/registerAdmin
 {
