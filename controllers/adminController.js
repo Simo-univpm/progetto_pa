@@ -1,6 +1,9 @@
 const db_admins = require('../model/admin').admin;
 const bcrypt = require('bcryptjs');
 
+const ConsumerController = require('../controllers/consumerController');
+const consumerController = new ConsumerController();
+
 class adminController {
 
     constructor(){}
@@ -76,7 +79,11 @@ class adminController {
     }
 
     // consegna =============================================
-    async addCredit(body){}
+    async ricarica(req){
+
+        return await consumerController.editConsumerCredit(req.body.id, req.body.credito);
+
+    }
 
 }
 

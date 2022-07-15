@@ -187,8 +187,10 @@ class slotController {
                 kw_acquistati: req.body.kw,
                 slot_selezionato: req.body.slot,
                 fonte_produzione: producer.fonte_produzione,
-                data_acquisto_transazione: String(data_acquisto),
-                data_prenotazione_transazione: String(data_prenotata)
+                //data_acquisto_transazione: String(data_acquisto),
+                //data_prenotazione_transazione: String(data_prenotata)
+                data_acquisto_transazione: data_acquisto,
+                data_prenotazione_transazione: data_prenotata
 
             });
 

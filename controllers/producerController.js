@@ -61,8 +61,7 @@ class producerController {
 
         //nel body servono: nome, codice_fiscale, email, passwd, fonte_produzione, costo_per_kwh, emissioni_co2, tetto_max_kwh_init
         
-        const data = req.body
-        const temp = await this.buildProducer(data) // costruisco oggetto producer in base al body della richiesta
+        const temp = await this.buildProducer(req.body) // costruisco oggetto producer in base al body della richiesta
 
         try{
             const producer = await db_producers.create(temp); // scrivo producer a db
@@ -90,7 +89,8 @@ class producerController {
         let emissioni_co2 = data.emissioni_co2;
         if( ! emissioni_co2) emissioni_co2 = 0.0;
     
-        const data_registrazione = String(new Date().toLocaleString());
+        //const data_registrazione = String(new Date().toLocaleString());
+        const data_registrazione = new Date().toLocaleString();
     
         producer.nome = data.nome;
         producer.codice_fiscale = data.codice_fiscale;

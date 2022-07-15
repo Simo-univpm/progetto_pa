@@ -52,7 +52,8 @@ class consumerController {
         const salt = await bcrypt.genSalt(10);
         const hashed_passwd  = await bcrypt.hash(data.passwd, salt); // hashing pw with salt
 
-        const data_registrazione = String(new Date().toLocaleString());
+        //const data_registrazione = String(new Date().toLocaleString());
+        const data_registrazione = new Date();
 
         try{
 
@@ -76,16 +77,16 @@ class consumerController {
 
     }
 
-    async editConsumerCredit(req){
+    async editConsumerCredit(id, credito){
 
         // nel body servono: id, credito
 
-        let nuovo_credito = req.body.credito;
-
         try{
 
-            let result = await this.getConsumer(req)
-            result[1].update({credito: nuovo_credito})
+            if(credito < 0) return [400, "ERRORE: il credito non puo' essere inferiore di 0"]
+
+            let result = await this.getConsumerById(id)
+            result[1].update({credito: credito})
 
             return [200, "SUCCESS: credit updated"]
 

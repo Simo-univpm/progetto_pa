@@ -15,14 +15,14 @@ console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
 // rendi disponibili solo per l'admin
 //const consumersRoute = require('./routes/consumers');
 //const producersRoute = require('./routes/producers');
-//const adminRoutes = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth')
 const slotRoutes = require('./routes/slot');
 
 // rendi disponibili solo per l'admin
 //app.use('/api/consumers', consumersRoute);
 //app.use('/api/producers', producersRoute);
-//app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/slot', slotRoutes); // tutte le chiamate per gestire le transazioni tra consumer, producer e slot
 app.use('/api/auth', authRoutes); // le chiamate per effettuare login e registrazione
 
