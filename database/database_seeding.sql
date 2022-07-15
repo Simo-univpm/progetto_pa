@@ -15,7 +15,7 @@ CREATE TABLE db_consumer(
   passwd VARCHAR(50) NOT NULL,
   credito INTEGER NOT NULL,
   privilegi INTEGER NOT NULL,
-  data_registrazione VARCHAR(50)
+  data_registrazione DATETIME NOT NULL
 );
 
 --DB producer utilizzato per la registrazione dei producer
@@ -54,7 +54,7 @@ CREATE TABLE db_producer(
   slot_21 VARCHAR(50),
   slot_22 VARCHAR(50),
   slot_23 VARCHAR(50),
-  data_registrazione VARCHAR(50) NOT NULL
+  data_registrazione DATETIME NOT NULL
 );
 
 --DB nel quale vengno duplicate e mantenute (per avere uno storico separato) tutte le registrazione dei produttori
@@ -92,7 +92,7 @@ CREATE TABLE db_storico_produzione(
   slot_21 VARCHAR(50),
   slot_22 VARCHAR(50),
   slot_23 VARCHAR(50),
-  data_registrazione VARCHAR(50) NOT NULL
+  data_registrazione DATETIME NOT NULL
 );
 
 --DB utilizzato per la registrazione degli admin
@@ -103,7 +103,7 @@ CREATE TABLE db_admin(
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(50) NOT NULL,
   privilegi INTEGER NOT NULL,
-  data_registrazione VARCHAR(50) NOT NULL
+  data_registrazione DATETIME NOT NULL
 );
 
 --DB utilizzato per le transazioni richiamabile sia dal consumer che dal producer
@@ -116,6 +116,6 @@ CREATE TABLE db_transazioni(
   kw_acquistati FLOAT NOT NULL,
   slot_selezionato INTEGER NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
-  data_acquisto_transazione VARCHAR(50) NOT NULL,
-  data_prenotazione_transazione VARCHAR(50) NOT NULL,
+  data_acquisto_transazione DATETIME NOT NULL,
+  data_prenotazione_transazione DATETIME NOT NULL,
 );
