@@ -202,7 +202,7 @@ class producerController {
             if(campo === "costo") slot.costo = valore
             else if(campo === "totale") slot.totale = valore
             else if(campo === "rimanente") slot.rimanente = valore
-            else return [500, "ERROR: something went wrong " + err]
+            else return [500, "ERRORE: campo non modificabile"]
 
             slot = JSON.stringify(slot)
 

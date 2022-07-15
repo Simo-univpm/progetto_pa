@@ -10,14 +10,15 @@ class slotController {
 
     constructor(){}
 
-    /*
-    {
-        "id": 0,       // id del producer verso il quale si vuole opzionare lo slot
-        "slot": 0-23,  // fascia oraria che si desidera opzionare. lo slot 0 va da 00:00 a 00:59
-        "kw": 15       // numero di kw che si vogliono prenotare per quello specifico slot
-    }
-    */
     async reserveSlot(req){
+
+        /*
+        {
+            "id": 0,       // id del producer verso il quale si vuole opzionare lo slot
+            "slot": 0-23,  // fascia oraria che si desidera opzionare. lo slot 0 va da 00:00 a 00:59
+            "kw": 15       // numero di kw che si vogliono prenotare per quello specifico slot
+        }
+        */
 
         const today = new Date();
         const tomorrow = new Date();
@@ -84,6 +85,84 @@ class slotController {
 
     }
 
+    async editSlot(req){
+
+        /*
+
+        {
+            "id": 1,    // id producer
+            "slot": 15, // numero dello slot da editare
+            "kw": 0     // quantitativo di kw da modificare --> se 0 si "cancella" la richiesta (controllare data)
+        }
+
+        Dare la possibilità ad un consumatore di modificare 
+        (anche cancellare, ovvero imponendo una quantità parti a zero) 
+        i quantitativi richiesti per uno o più slot. Se la cancellazione avviene prima 
+        delle 24h allora non vi sono costi; se avviene in un periodo temporale inferiore 
+        o uguale alle 24 viene addebitato l’intero costo.
+
+        per modificare una prenotazione si deve:
+        modificare lo slot interessato del producer interessato rimettendo l'energia a posto
+        trovare la transazione nel db delle transazioni ed aggiornarla in base alla data (se la richiesta avviene prima dopo le 24 ore il costo non si aggiorna, altrimenti si resetta)
+        controllare la data e restituire o meno il credito all'utente
+
+        */
+        
+        let result_p = await producerController.getProducer(req);
+        let producer = result_p[1];
+    
+        let result_c = await consumerController.getConsumerById(req.user.id);
+        let consumer = result_c[1];
+
+        let result_t = await this.getTransaction(producer.id_producer, consumer.id_consumer, req.body.slot)
+        let transaction = result_t[1]
+
+
+        // 3 casi: compra meno kw, compra più kw, cancella la prenotazione
+
+
+        // caso kw == 0
+        // controlla data
+        const now_time = new Date();
+        const transaction_time = new Date(transaction.data_acquisto_transazione);
+        transaction.update({kw_acquistati: req.body.kw})
+
+
+
+    }
+
+    async getTransaction(id_producer, id_consumer, slot){
+
+        try{
+
+            const transaction = await db_transazioni.findOne({where: { id_producer: id_producer} && {id_consumer: id_consumer} && {slot_selezionato: slot}});
+            if( ! transaction) return [404, "transaction not found"]
+
+            return [200, transaction]
+
+        }catch(err){
+            return [500, "something went wrong " + err]
+        }
+
+    }
+
+    async editTransactionFields(transazione, campo, valore){
+
+        try{
+
+            if(campo === "kw") transazione.update({kw_acquistati: valore});
+            else if(campo === "costo") transazione.update({costo_slot: valore});
+            else if(campo === "emissioni") transazione.update({emissioni_co2_slot: valore});
+            else if(campo === "data_acquisto") transazione.update({data_acquisto_transazione: valore});
+            else if(campo === "data_prenotazione") transazione.update({data_prenotazione_transazione: valore});
+            else return [500, "ERRORE: campo non modificabile"]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+    }
+
     async createTransaction(consumer, producer, req, slot_costo, data_acquisto, data_prenotata){
 
         // let data 1
@@ -119,8 +198,9 @@ class slotController {
 
     async balanceSlotRequests(producer, selected_slot){}
 
-    //funzione per calcolare la differenza di ore tra 2 date
     diff_hours(dt2, dt1) {
+
+    //funzione per calcolare la differenza di ore tra 2 date
 
     var diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60 * 60;

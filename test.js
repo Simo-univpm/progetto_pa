@@ -29,7 +29,7 @@ async function test_edit_slot(){
 
 test_edit_slot()
 
-*/
+
 const today = new Date();
 const tomorrow = new Date();
 
@@ -51,3 +51,8 @@ if(Math.round(diff_hours(tomorrow, today)) < 24){
     console.log("Slot non prenotabile");
 }else { console.log("Slot prenotabile"); }
 console.log(Math.round(diff_hours(tomorrow, today)));
+
+*/
+
+//const SlotController = require('../controllers/slotController');
+//const slotController = new SlotController();
