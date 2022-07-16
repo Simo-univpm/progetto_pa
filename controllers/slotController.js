@@ -147,7 +147,7 @@ class slotController {
                 let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
                 
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
-                await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer ]
+                await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer
                 await this.delete(transaction.id_transazione) // si cancella la transazione
 
                 return [200, "SUCCESS: transazione [consumer " + req.user.id + "] verso [ producer " + req.body.id + "] annullata. Transazione cancellata dal db, kw restituiti al producer, credito restituto al consumer (tempo >= 24 ore)"]
@@ -158,35 +158,29 @@ class slotController {
 
 
         // caso kw > 0 con un acquisto di slot già prenotato
-        // controlla data
         
         if(req.body.kw > 0){
             //controllare se esiste già una transazione per lo slot con lo stesso id_producer e id_consumer
 
-            if(this.diff_hours(transaction.data_prenotazione_transazione, new Date()) > 24)
+            if(this.diff_hours(date_2, date_1) >= 24)
             {
-                // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
-                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
-                //si riassegnano i crediti al consumer
-                await consumerController.increaseConsumerCredit(req.user.id, consumer.credito + (transaction.costo*req.body.kw))
-                //si cancella la transazione
-                await this.delete(transaction.id_transazione)
+                // se ci sono almeno 24 ore: 
+                let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
+                let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
+                
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
+                await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer
+                await this.delete(transaction.id_transazione) // si cancella la transazione
+
                 //si crea una nuova transazione con i nuovi kw
-                await this.reserveSlot(req)
+                const result = await this.reserveSlot(req)
+                return [result[0], result[1]]
 
             }else return [500, "ERROR: la transazione non può essere modificata prima delle 24 ore"]
 
-
-            const now_time = new Date();
-            const transaction_time = transaction.data_acquisto_transazione;
-
-            console.log(now_time)
-            console.log(transaction_time)
-
         }
         
-
-        
+        /// rimuovi
         return [500, "ERROR: hai beccato il caso base"]
 
     }

@@ -22,9 +22,4 @@ router.patch('/editSlot', checkLogin, async (req, res) => {
 
 
 
-
-
-
-
-
 module.exports = router;
