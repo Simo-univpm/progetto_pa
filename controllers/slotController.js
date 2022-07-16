@@ -127,34 +127,38 @@ class slotController {
 
         //FATTO CON COPILOT, DA RICONTROLLARE TUTTO
         if(req.body.kw == 0){
-            if(this.diff_hours(transaction.data_fine, new Date()) < 24)
+            if(this.diff_hours(transaction.data_prenotazione_transazione, new Date()) < 24)
             {
-                // se non ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
+                // se non ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer, annullare le emissioni
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
-                
+                //si azzerano le emissioni_co2
+                await producerController.editSlot(req.body.id, req.body.slot, "emissioni_co2", 0)
+
             }else {
-                //
-                // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
+                // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi allo slot del producer
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
+                //si riassegna il credito al consumer
                 await consumerController.increaseConsumerCredit(req.user.id, consumer.credito + (transaction.costo*req.body.kw))
-                await this.deleteTransaction(req.body.id, req.user.id, req.body.slot)
+                //si cancella la transazione
+                await this.delete(transaction.id_transazione)
         }
 
         // caso kw > 0 con un acquisto di slot già prenotato
         // controlla data
         if(req.body.kw > 0){
             //controllare se esiste già una transazione per lo slot con lo stesso id_producer e id_consumer
-            
-            if(this.diff_hours(transaction.data_fine, new Date()) > 24)
+
+            if(this.diff_hours(transaction.data_prenotazione_transazione, new Date()) > 24)
             {
                 // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
                 //si riassegnano i crediti al consumer
                 await consumerController.increaseConsumerCredit(req.user.id, consumer.credito + (transaction.costo*req.body.kw))
                 //si cancella la transazione
-                await this.deleteTransaction(req.body.id, req.user.id, req.body.slot)
+                await this.delete(transaction.id_transazione)
                 //si crea una nuova transazione con i nuovi kw
-                await this.createTransaction(consumer, producer, req, transaction.costo, transaction.data_fine, transaction.data_fine)
+                await this.reserveSlot(req)
+
             }else return [500, "ERROR: la transazione non può essere modificata prima delle 24 ore"]
 
 
@@ -172,10 +176,11 @@ class slotController {
 
 
 
-
+        }
 
 
     }
+}
 
     async getTransaction(id_producer, id_consumer, slot){
 
@@ -264,11 +269,25 @@ class slotController {
 
     }
 
+    //funzione per cancellare la transazione dal db
+    async delete(id){
+
+        try{
+
+            await db_transazioni.destroy({ where: { id_transazione: id } });
+            return [200, "SUCCESS: deleted transaction with id: " + id]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+    }
+
+
+
+
 
 }
-
-
-
 
 
 module.exports = slotController;
