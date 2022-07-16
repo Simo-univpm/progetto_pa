@@ -133,12 +133,16 @@ class slotController {
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
                 //si azzerano le emissioni_co2
                 await producerController.editSlot(req.body.id, req.body.slot, "emissioni_co2", 0)
+                //si aggiorna la transazione
+                await this.editTransactionFields(transaction, "emissioni_co2", 0)
+                //si aggiornano i kw rimanenti
+                await this.editTransactionFields(transaction, "kw", 0)
 
             }else {
                 // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi allo slot del producer
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
                 //si riassegna il credito al consumer
-                await consumerController.increaseConsumerCredit(req.user.id, consumer.credito + (transaction.costo*req.body.kw))
+                await consumerController.editConsumerCredit(req.user.id, consumer.credito + (req.body.kw*transaction.costo_slot))
                 //si cancella la transazione
                 await this.delete(transaction.id_transazione)
         }
