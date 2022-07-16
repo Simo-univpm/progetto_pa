@@ -123,6 +123,47 @@ class slotController {
 
         // caso kw == 0
         // controlla data
+        //funzione che controlla se tra l'ora attuale e la prenotazione ci sono almeno 24 ore
+
+        //FATTO CON COPILOT, DA RICONTROLLARE TUTTO
+        if(req.body.kw == 0){
+            if(this.diff_hours(transaction.data_fine, new Date()) < 24)
+            {
+                // se non ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
+                
+            }else {
+                //
+                // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
+                await consumerController.increaseConsumerCredit(req.user.id, consumer.credito + (transaction.costo*req.body.kw))
+                await this.deleteTransaction(req.body.id, req.user.id, req.body.slot)
+        }
+
+        // caso kw > 0 con un acquisto di slot già prenotato
+        // controlla data
+        if(req.body.kw > 0){
+            //controllare se esiste già una transazione per lo slot con lo stesso id_producer e id_consumer
+            
+            if(this.diff_hours(transaction.data_fine, new Date()) > 24)
+            {
+                // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
+                //si riassegnano i crediti al consumer
+                await consumerController.increaseConsumerCredit(req.user.id, consumer.credito + (transaction.costo*req.body.kw))
+                //si cancella la transazione
+                await this.deleteTransaction(req.body.id, req.user.id, req.body.slot)
+                //si crea una nuova transazione con i nuovi kw
+                await this.createTransaction(consumer, producer, req, transaction.costo, transaction.data_fine, transaction.data_fine)
+            }else return [500, "ERROR: la transazione non può essere modificata prima delle 24 ore"]
+
+
+            //FINE CODICE CREATO CON L'AIUTO DI COPILOT [DA RICONTROLLARE]
+
+
+
+
+
         const now_time = new Date();
         const transaction_time = transaction.data_acquisto_transazione;
 
