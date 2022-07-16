@@ -125,12 +125,21 @@ class slotController {
         // controlla data
         //funzione che controlla se tra l'ora attuale e la prenotazione ci sono almeno 24 ore
 
+        let date_2 = new Date(transaction.data_prenotazione_transazione)
+        let date_1 = new Date()
+
         //FATTO CON COPILOT, DA RICONTROLLARE TUTTO
         if(req.body.kw == 0){
-            if(this.diff_hours(transaction.data_prenotazione_transazione, new Date()) < 24)
+            if(this.diff_hours(date_2, date_1) < 24)
             {
                 // se non ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer, annullare le emissioni
-                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
+
+                let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
+                let valore_aggiornato = valore_slot[1] + req.body.kw
+                
+                console.log("valore_aggiornato: ",valore_aggiornato)
+
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato)
                 //si azzerano le emissioni_co2
                 await producerController.editSlot(req.body.id, req.body.slot, "emissioni_co2", 0)
                 //si aggiorna la transazione
@@ -145,8 +154,12 @@ class slotController {
                 await consumerController.editConsumerCredit(req.user.id, consumer.credito + (req.body.kw*transaction.costo_slot))
                 //si cancella la transazione
                 await this.delete(transaction.id_transazione)
-        }
+            }
 
+
+
+
+        }
         // caso kw > 0 con un acquisto di slot già prenotato
         // controlla data
         if(req.body.kw > 0){
@@ -166,25 +179,16 @@ class slotController {
             }else return [500, "ERROR: la transazione non può essere modificata prima delle 24 ore"]
 
 
-            //FINE CODICE CREATO CON L'AIUTO DI COPILOT [DA RICONTROLLARE]
+            const now_time = new Date();
+            const transaction_time = transaction.data_acquisto_transazione;
 
-
-
-
-
-        const now_time = new Date();
-        const transaction_time = transaction.data_acquisto_transazione;
-
-        console.log(now_time)
-        console.log(transaction_time)
-
-
+            console.log(now_time)
+            console.log(transaction_time)
 
         }
 
-
+        return [200, "Transazione sborata sui sedili"]
     }
-}
 
     async getTransaction(id_producer, id_consumer, slot){
 

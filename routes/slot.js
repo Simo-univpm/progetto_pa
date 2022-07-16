@@ -15,7 +15,7 @@ router.post('/reserveSlot', checkLogin, async (req, res) => {
 
 router.patch('/editSlot', checkLogin, async (req, res) => {
 
-    var result = await slotController.editSlot(req.body)
+    var result = await slotController.editSlot(req)
     res.status(result[0]).json(result[1]);
     
 });

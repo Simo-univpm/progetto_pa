@@ -194,21 +194,44 @@ class producerController {
 
         try{
 
-            let producer = await this.getProducerById(id_producer)
+            let result_p = await this.getProducerById(id_producer);
+            let producer = result_p[1];
 
-            let slot = producer[1][slot_to_edit]
+            let slot = producer[slot_to_edit]
             slot = JSON.parse(slot)
 
             if(campo === "costo") slot.costo = valore
             else if(campo === "totale") slot.totale = valore
             else if(campo === "rimanente") slot.rimanente = valore
-            else if(campo === "emissioni_co2") slot.emissioni_co2 = valore
-            else return [500, "ERRORE: campo non modificabile"]
+            else return [404, "ERRORE: campo non esistente"]
 
             slot = JSON.stringify(slot)
 
-            producer[1].update({[slot_to_edit]: slot})
+            producer.update({[slot_to_edit]: slot})
             return [200, "SUCCESS: slot updated"]
+
+        }catch(err){
+            return [500, "ERROR: something went wrong " + err]
+        }
+
+    }
+
+    async getSlotValue(id_producer, slot_number, campo){
+
+        let slot_to_read = "slot_" + slot_number;
+
+        try{
+
+            let result_p = await this.getProducerById(id_producer);
+            let producer = result_p[1];
+            
+            let slot = producer[slot_to_read]
+            slot = JSON.parse(slot)
+
+            if(campo === "costo") return [200, slot.costo]
+            else if(campo === "totale") return [200, slot.totale]
+            else if(campo === "rimanente")return [200, slot.rimanente]
+            else return [404, "ERRORE: campo non esistente"]
 
         }catch(err){
             return [500, "ERROR: something went wrong " + err]
