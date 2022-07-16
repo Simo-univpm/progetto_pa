@@ -127,10 +127,12 @@ class slotController {
 
         //FATTO CON COPILOT, DA RICONTROLLARE TUTTO
         if(req.body.kw == 0){
-            if(this.diff_hours(transaction.data_fine, new Date()) < 24)
+            if(this.diff_hours(transaction.data_prenotazione_transazione, new Date()) < 24)
             {
-                // se non ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
+                // se non ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer, annullare le emissioni
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
+                //si azzerano le emissioni_co2
+                await producerController.editSlot(req.body.id, req.body.slot, "emissioni_co2", 0)
                 
             }else {
                 //
@@ -144,8 +146,8 @@ class slotController {
         // controlla data
         if(req.body.kw > 0){
             //controllare se esiste già una transazione per lo slot con lo stesso id_producer e id_consumer
-            
-            if(this.diff_hours(transaction.data_fine, new Date()) > 24)
+
+            if(this.diff_hours(transaction.data_prenotazione_transazione, new Date()) > 24)
             {
                 // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
