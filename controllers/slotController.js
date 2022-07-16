@@ -118,50 +118,48 @@ class slotController {
         let transaction = result_t[1]
 
 
-        // 2 casi: compra meno kw, cancella la prenotazione (compra più kw no perché no)
-
-
-        // caso kw == 0
-        // controlla data
-        //funzione che controlla se tra l'ora attuale e la prenotazione ci sono almeno 24 ore
-
         let date_2 = new Date(transaction.data_prenotazione_transazione)
         let date_1 = new Date()
 
-        //FATTO CON COPILOT, DA RICONTROLLARE TUTTO
         if(req.body.kw == 0){
+            
+            // caso testato e funzionante
             if(this.diff_hours(date_2, date_1) < 24)
             {
-                // se non ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi slot al producer, annullare le emissioni
+                // se non ci sono almeno 24 ore:
 
                 let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
-                let valore_aggiornato = valore_slot[1] + req.body.kw
+                let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
                 
-                console.log("valore_aggiornato: ",valore_aggiornato)
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
+                await this.editTransactionFields(transaction, "emissioni_co2_slot", 0) // si azzerano le emissioni della transazione
+                await this.editTransactionFields(transaction, "kw_acquistati", 0) // si azzerano i kw acquistati della transazione
 
-                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato)
-                //si azzerano le emissioni_co2
-                await producerController.editSlot(req.body.id, req.body.slot, "emissioni_co2", 0)
-                //si aggiorna la transazione
-                await this.editTransactionFields(transaction, "emissioni_co2", 0)
-                //si aggiornano i kw rimanenti
-                await this.editTransactionFields(transaction, "kw", 0)
+                return [200, "SUCCESS: transazione [consumer " + req.user.id + "] verso [ producer " + req.body.id + "] annullata. Emissioni e kw della transazione azzerati, credito restituito al producer, credito NON restituto al consumer (tempo < 24 ore)"]
 
-            }else {
-                // se ci sono almeno 24 ore, si cancellano i kw assegnati al consumer, e si riassegnano gli stessi allo slot del producer
-                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", producer.slot.rimanente + req.body.kw)
-                //si riassegna il credito al consumer
-                await consumerController.editConsumerCredit(req.user.id, consumer.credito + (req.body.kw*transaction.costo_slot))
-                //si cancella la transazione
-                await this.delete(transaction.id_transazione)
             }
 
+            // caso testato e funzionante
+            if(this.diff_hours(date_2, date_1) >= 24) {
+
+                // se ci sono almeno 24 ore: 
+                let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
+                let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
+                
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
+                await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer ]
+                await this.delete(transaction.id_transazione) // si cancella la transazione
+
+                return [200, "SUCCESS: transazione [consumer " + req.user.id + "] verso [ producer " + req.body.id + "] annullata. Transazione cancellata dal db, kw restituiti al producer, credito restituto al consumer (tempo >= 24 ore)"]
+
+            }
+
+        } // fine caso kw richiesti = 0 --> body.kw == 0
 
 
-
-        }
         // caso kw > 0 con un acquisto di slot già prenotato
         // controlla data
+        
         if(req.body.kw > 0){
             //controllare se esiste già una transazione per lo slot con lo stesso id_producer e id_consumer
 
@@ -186,8 +184,11 @@ class slotController {
             console.log(transaction_time)
 
         }
+        
 
-        return [200, "Transazione sborata sui sedili"]
+        
+        return [500, "ERROR: hai beccato il caso base"]
+
     }
 
     async getTransaction(id_producer, id_consumer, slot){
@@ -209,11 +210,11 @@ class slotController {
 
         try{
 
-            if(campo === "kw") transazione.update({kw_acquistati: valore});
-            else if(campo === "costo") transazione.update({costo_slot: valore});
-            else if(campo === "emissioni") transazione.update({emissioni_co2_slot: valore});
-            else if(campo === "data_acquisto") transazione.update({data_acquisto_transazione: valore});
-            else if(campo === "data_prenotazione") transazione.update({data_prenotazione_transazione: valore});
+            if(campo === "kw_acquistati") transazione.update({kw_acquistati: valore});
+            else if(campo === "costo_slot") transazione.update({costo_slot: valore});
+            else if(campo === "emissioni_co2_slot") transazione.update({emissioni_co2_slot: valore});
+            else if(campo === "data_acquisto_transazione") transazione.update({data_acquisto_transazione: valore});
+            else if(campo === "data_prenotazione_transazione") transazione.update({data_prenotazione_transazione: valore});
             else return [500, "ERRORE: campo non modificabile"]
 
         }catch(err){
