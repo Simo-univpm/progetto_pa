@@ -1,12 +1,5 @@
 node_modules/**/*
 .env
-<<<<<<< HEAD
-<<<<<<< HEAD
 documenti/
-documenti/consegna progetto.docx
-=======
-documenti/
->>>>>>> a27160fa150402e3a19097f73b03225562654fae
-=======
-documenti/
->>>>>>> a27160fa150402e3a19097f73b03225562654fae
+
+
