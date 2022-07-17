@@ -29,11 +29,11 @@ function sum(array) {
 
 // 200 + 400 + 500 = 1100
 //per i consumer le cui transazioni sono già all'interno dello slot richiesto
-let consumer_1 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo);
-let consumer_2 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo);
+let consumer_1 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo); //-> editSlot
+let consumer_2 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo);//-> editSlot
 
 //per la nuova richiesta di "X"
-let X_consumer = createRemap(kw_richiesti, 0, tetteo_teorico, 0, tetto_massimo);
+let X_consumer = createRemap(kw_richiesti, 0, tetteo_teorico, 0, tetto_massimo);//-> reserveSlot
 
 
 
