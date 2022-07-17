@@ -1,62 +1,18 @@
-/*
-var slot_totale = 500
-var slot_rimanente = 500 
-let app = "totale: " + String(slot_totale) + ", rimanente: " + String(slot_rimanente)
-app = JSON.stringify(app)
-console.log(app)
+function createRemap(x, inMin, inMax, outMin, outMax) {
 
-
-
-
-const ProducerController = require('./controllers/producerController');
-const producerController = new ProducerController();
-
-
-// aggiorno kw rimanenti per lo slot
-async function test_edit_slot(){
-
-    try{
-        await producerController.editSlot(4, 2, "totale", 250)
-        console.log("OK")
-    }catch(err){
-        console.log(err)
-    }
-
-    return 0
-
+    return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    
 }
 
 
-test_edit_slot()
+// 200 + 400 + 500 = 1100
+let nigiri_percentuale = createRemap(200, 0, 1100, 0, 1000);
+let mima_percentuale = createRemap(400, 0, 1100, 0, 1000);
+let noodles_percentuale = createRemap(500, 0, 1100, 0, 1000);
 
-*/
-const today = new Date();
-const tomorrow = new Date();
+console.log("nigiri_percentuale: ", nigiri_percentuale)
+console.log("mima_percentuale: ", mima_percentuale)
+console.log("noodles_percentuale: ", noodles_percentuale)
 
-//funzione per salvare la data in una stringa
-function saveDate(date){
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let hour = date.getHours();
-    let minute = date.getMinutes();
-    let second = date.getSeconds();
-    let string_date = String(day) + "-" + String(month) + "-" + String(year) + " " + String(hour) + ":" + String(minute) + ":" + String(second);
-    console.log(string_date)
-    return string_date;
-}
-
-//funzione per estrarre la data da una stringa in un oggetto Date
-function extractDate(string_date){
-    let date = new Date(string_date);
-    return date;
-}
-
-//saveDate(today);
-extractDate(today);
-<<<<<<< HEAD
-console.log(today);
-=======
-
-console.log(extractDate(today));
->>>>>>> acd7e40eba04e3ae96207a25ff456564a3a67533
+let somma = nigiri_percentuale + mima_percentuale + noodles_percentuale
+console.log(somma)
