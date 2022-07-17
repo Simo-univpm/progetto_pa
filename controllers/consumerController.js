@@ -6,53 +6,29 @@ class consumerController {
     constructor(){}
 
     // CRUD =================================================
-    async getConsumer(req){
-
-        //nel body serve: id
-
-        const id = req.body.id
+    async getConsumer(id){
 
         try{
 
            const consumer = await db_consumers.findOne({where: { id_consumer: id }});
-           if( ! consumer) return [404, "consumer not found"]
+           if( ! consumer) return [404, "ERRORE: [consumer " + id + "] non trovato."]
 
            return [200, consumer]
 
         }catch(err){
-            return [500, "something went wrong " + err]
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
     }
 
-    async getConsumerById(id){
-
-        // per gettare il consumer tramite l'id del token invece del body della request
-
-        try{
-
-           const consumer = await db_consumers.findOne({where: { id_consumer: id }});
-           if( ! consumer) return [404, "consumer not found"]
-
-           return [200, consumer]
-
-        }catch(err){
-            return [500, "something went wrong " + err]
-        }
-
-    }
-
-    async createConsumer(req){
+    async createConsumer(data){
 
         //nel body servono: nome, email, passwd, credito, privilegi, data_registrazione
-
-        const data = req.body
 
         // PASSWORD HASHING: tramite hash + salt
         const salt = await bcrypt.genSalt(10);
         const hashed_passwd  = await bcrypt.hash(data.passwd, salt); // hashing pw with salt
 
-        //const data_registrazione = String(new Date().toLocaleString());
         const data_registrazione = new Date();
 
         try{
@@ -69,64 +45,41 @@ class consumerController {
 
             });
 
-            return [200, "SUCCESS: consumer with id " + consumer.id_consumer + " created"]
+            return [200, "OK: [consumer " + consumer.id_consumer + "] creato."]
         
         }catch(err){
-            return [500, "ERROR: something went wrong " + err]
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
     }
 
     async editConsumerCredit(id, credito){
 
-        // nel body servono: id, credito
-
         try{
-
-            if(credito < 0) return [400, "ERRORE: il credito non puo' essere inferiore di 0"]
-
-            let result = await this.getConsumerById(id)
-            result[1].update({credito: credito})
-
-            return [200, "SUCCESS: credit updated"]
-
-        }catch(err){
-            return [500, "ERROR: something went wrong " + err]
-        }
-
-    }
-
-    async decreaseConsumerCredit(id, nuovo_credito){
-
-        try{
-            let result_c = await this.getConsumerById(id);
+            let result_c = await this.getConsumer(id);
             let consumer = result_c[1]
 
-            if(nuovo_credito > consumer.credito) return [500, "ERROR: nuovo credito superiore all'attuale"]
+            if(credito <= 0) return [500, "ERRORE: inserire un credito valido"]
             
-            consumer.update({credito: nuovo_credito})
-            return [200, "SUCCESS: credit updated"]
+            consumer.update({credito: credito})
+            return [200, "OK: credito di [consumer " + id + "] aggiornato."]
 
         }catch(err){
-            return [500, "ERROR: something went wrong " + err]
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
 
     }
 
-    async delete(req){
-
-        // nel body serve: id
-
-        let id  = req.body.id;
+    async delete(id){
 
         try{
 
             await db_consumers.destroy({ where: { id_consumer: id } });
-            return [200, "SUCCESS: deleted consumer with id: " + id]
+            return [200, "OK: [consumer " + id + "] eliminato."]
 
         }catch(err){
-            return [500, "ERROR: something went wrong " + err]
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
     }

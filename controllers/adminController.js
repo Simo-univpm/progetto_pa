@@ -9,29 +9,24 @@ class adminController {
     constructor(){}
 
     // CRUD =================================================
-    async getAdmin(req){
-
-        //nel body serve: id
-
-        const id = req.body.id
+    async getAdmin(id){
 
         try{
 
             const admin = await db_admins.findOne({where: { id_admin: id }});
-            if( ! admin) return [404, "admin not found"]
+            if( ! admin) return [404, "ERRORE: [admin " + id + "] non trovato."]
 
             return [200, admin]
 
         }catch(err){
-            return [500, "something went wrong " + err]
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
     }
 
-    async createAdmin(req){
+    async createAdmin(data){
 
         //nel body servono: nome, email, passwd
-        const data = req.body
 
         // PASSWORD HASHING: tramite hash + salt
         const salt = await bcrypt.genSalt(10);
@@ -52,36 +47,31 @@ class adminController {
 
             });
 
-            return [200, "SUCCESS: admin with id " + savedAdmin.id_admin + " correctly created"]
+            return [200, "OK: [admin " + savedAdmin.id_admin + "] creato."]
         
         }catch(err){
-            console.log("CONSOLE_LOG: " + err)
-            return [500, "ERROR: something went wrong"]
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
     }
 
-    async delete(req){
-
-        // nel body serve: id
-
-        let id  = req.body.id;
+    async delete(id){
 
         try{
 
             await db_admins.destroy({ where: { id_admin: id } });
-            return [200, "SUCCESS: deleted admin with id: " + id]
+            return [200, "OK: [admin " + id + "] eliminato."]
 
         }catch(err){
-            return [500, "ERROR: something went wrong " + err]
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
     }
 
     // consegna =============================================
-    async ricarica(req){
+    async ricarica(id, credito){
 
-        return await consumerController.editConsumerCredit(req.body.id, req.body.credito);
+        return await consumerController.editConsumerCredit(id, credito);
 
     }
 

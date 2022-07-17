@@ -18,21 +18,21 @@ class authController {
 
     constructor(){}
 
-    async login(req){
+    async login(data){
 
         // i campi in comune tra le 3 tabelle sono: id, nome, email, privilegi,
         // i campi richiesti per il login sono: privilegi, email, passwd
 
         // verifica utente registrato
         let user;
-        if(req.body.privilegi == 0) user = await db_admins.findOne({where: {email: req.body.email}});
-        if(req.body.privilegi == 1) user = await db_producers.findOne({where: {email: req.body.email}});
-        if(req.body.privilegi == 2) user = await db_consumers.findOne({where: {email: req.body.email}});
-        if( ! user) return [400, 'wrong username or password'];
+        if(data.privilegi == 0) user = await db_admins.findOne({where: {email: data.email}});
+        if(data.privilegi == 1) user = await db_producers.findOne({where: {email: data.email}});
+        if(data.privilegi == 2) user = await db_consumers.findOne({where: {email: data.email}});
+        if( ! user) return [400, 'ERRORE: username o password errati.'];
 
         // CONTROLO PASSWORD: compara la pw nel body con quella cripatata nel db tramite bcrypt
-        const validPass = await bcrypt.compare(req.body.passwd, user.passwd);
-        if( ! validPass) return [400, 'wrong username or password'];
+        const validPass = await bcrypt.compare(data.passwd, user.passwd);
+        if( ! validPass) return [400, 'ERRORE: username o password errati.'];
 
         let id;
         if(user.privilegi == 0) id = user.id_admin;
@@ -46,40 +46,36 @@ class authController {
 
     }
 
-    async registerProducer(req){
-
-        // controlla se il nome del producer è già registrata
-        const nome = await db_producers.findOne({where: { nome: req.body.nome }});
-        if(nome) return [500, "producer is already registered"]
+    async registerProducer(data){
 
         // controlla se la mail del producer è già registrata
-        const email = await db_producers.findOne({where: { email: req.body.email }});
-        if(email) return [500, "producer is already registered"]
+        const producer = await db_producers.findOne({where: { email: data.email }});
+        if(producer) return [500, "ERRORE: [producer " + producer.id_producer + "] e' gia' registrato."]
 
         // controlla se la tipologia di fonte è ammessa
-        if(! ["fossile", "eolico", "fotovoltaico"].includes(req.body.fonte_produzione)) return [400, "ERROR: bad request"];
+        if(! ["fossile", "eolico", "fotovoltaico"].includes(data.fonte_produzione)) return [400, "ERRORE: fonte specificata non ammessa."];
 
-        return await producerController.createProducer(req);
+        return await producerController.createProducer(data);
 
     }
 
-    async registerConsumer(req){
+    async registerConsumer(data){
         
         // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-        const consumer = await db_consumers.findOne({where: { email: req.body.email }});
-        if(consumer) return [500, "consumer is already registered"]
+        const consumer = await db_consumers.findOne({where: { email: data.email }});
+        if(consumer) return [500, "ERRORE: [consumer " + consumer.id_consumer + "] e' gia' registrato."]
 
-        return await consumerController.createConsumer(req)
+        return await consumerController.createConsumer(data)
 
     }
 
-    async registerAdmin(req){
+    async registerAdmin(data){
 
         // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-        const admin = await db_admins.findOne({where: { email: req.body.email }});
-        if(admin) return [500, "consumer is already registered"]
+        const admin = await db_admins.findOne({where: { email: data.email }});
+        if(admin) return [500, "ERRORE: [admin " + admin.id_admin + "] e' gia' registrato."]
 
-        return await adminController.createAdmin(req);
+        return await adminController.createAdmin(data);
 
     }
 

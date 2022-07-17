@@ -28,7 +28,7 @@ router.post('/registerConsumer', async (req, res) => {
 
 router.post('/registerAdmin', async (req, res) => {
 
-    var result = await authController.registerAdmin(req)
+    var result = await authController.registerAdmin(req.body)
     res.status(result[0]).json(result[1]);
     
 });
