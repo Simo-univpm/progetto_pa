@@ -143,20 +143,13 @@ class producerController {
     }
 
     // consegna =======================================================================
-    async checkReservations(body){}
+    async checkReservations(data){}
 
-    async checkStats(body){}
+    async checkStats(data){}
 
-    async checkEarnings(body){}
+    async checkEarnings(data){}
 
 }
 
 
 module.exports = producerController;
-
-
-
-// ok edita il campo
-// poi fai crud per admin
-// poi fai la prenotazione dello slot usanto i crud freschi freschi
-// dormi

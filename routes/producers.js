@@ -8,7 +8,7 @@ const producerController = new ProducerController();
 // get one specific producer
 router.get('/', async (req, res) => {
 
-    var result = await producerController.getProducer(req)
+    var result = await producerController.getProducer(req.body.id)
     res.status(result[0]).json(result[1]);
     
 });
@@ -16,23 +16,15 @@ router.get('/', async (req, res) => {
 // create one producer
 router.post('/', async (req, res) => {
 
-    var result = await producerController.createProducer(req)
+    var result = await producerController.createProducer(req.body)
     res.status(result[0]).json(result[1]);
     
 });
 
-// edit producer's slot kw limit
-router.patch('/kw', async (req, res) => {
+// edit producer field
+router.patch('/', async (req, res) => {
 
-    var result = await producerController.editSlotKwLimit(req)
-    res.status(result[0]).json(result[1]);
-    
-});
-
-// edit producer's slot price
-router.patch('/price', async (req, res) => {
-
-    var result = await producerController.editSlotPrice(req)
+    var result = await producerController.editSlotKwLimit(req.body)
     res.status(result[0]).json(result[1]);
     
 });
@@ -40,7 +32,7 @@ router.patch('/price', async (req, res) => {
 // delete one producer
 router.delete('/', async (req, res) => {
 
-    var result = await producerController.delete(req)
+    var result = await producerController.delete(req.body.id)
     res.status(result[0]).json(result[1]);
     
 });

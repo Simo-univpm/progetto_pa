@@ -10,7 +10,7 @@ const consumerController = new ConsumerController();
 // get one specific consumer
 router.get('/', async (req, res) => {
 
-    var result = await consumerController.getConsumer(req)
+    var result = await consumerController.getConsumer(req.body.id)
     res.status(result[0]).json(result[1]);
     
 });
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 // create one consumer
 router.post('/', async (req, res) => {
 
-    var result = await consumerController.createConsumer(req)
+    var result = await consumerController.createConsumer(req.body)
     res.status(result[0]).json(result[1]);
     
 });
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
 // edit consumer's credit field
 router.patch('/', async (req, res) => {
 
-    var result = await consumerController.editConsumerCredit(req)
+    var result = await consumerController.editConsumerCredit(req.user.id, req.body.credito)
     res.status(result[0]).json(result[1]);
     
 });
@@ -35,7 +35,7 @@ router.patch('/', async (req, res) => {
 // delete one consumer
 router.delete('/', async (req, res) => {
 
-    var result = await consumerController.delete(req)
+    var result = await consumerController.delete(req.body.id)
     res.status(result[0]).json(result[1]);
     
 });
