@@ -28,9 +28,6 @@ class slotController {
 
     async createTransaction(consumer, producer, req, slot_costo, data_acquisto, data_prenotata){
 
-        // let data 1
-        // let data 2
-
         let costo_transazione = req.body.kw*slot_costo;
         let emissioni_co2_slot = producer.emissioni_co2*req.body.kw;
 
@@ -115,6 +112,12 @@ class slotController {
         
         let result_c = await consumerController.getConsumerById(req.user.id);
         let consumer = result_c[1]
+        
+        let result_t = await this.getTransaction(req.body.id, req.user.id, req.body.slot)
+        let transaction = result_t[1]
+
+        // controlla l'esistenza della transazione
+        if(transaction.id_transazione) return [400, "ERRORE: [slot " + req.body.slot + "] gia' acquistato: possibile la modifica, non la prenotazione."]
 
         // CONTROLLO VALIDITA' RICHIESTA DEL CONSUMER ====================================================================================================
         // controllo esistenza produttore di energia
@@ -129,20 +132,19 @@ class slotController {
             slot_totale = selected_slot_data.totale;
             slot_rimanente = selected_slot_data.rimanente;
 
-        } else return [404, "ERRORE: [slot " + data.slot + "] non esistente."]
+        } else return [404, "ERRORE: [slot " + req.body.slot + "] non esistente."]
 
         // controllo validità data della prenotazione
-        console.log(this.diff_hours(tomorrow, today))
         if(this.diff_hours(tomorrow, today) < 24) return [403, "PROIBITO: selezionare uno slot ad una distanza di 24 ore."]
 
         // controllo credito disponibile del consumer
-        if(! (consumer.credito >= (slot_costo*req.body.kw)) ) return [403, "PROIBITO: [consumer " + id_consumer + "] non dispone di credito sufficiente."]
+        if(! (consumer.credito >= (slot_costo*req.body.kw)) ) return [403, "PROIBITO: [consumer " + req.user.id + "] non dispone di credito sufficiente."]
 
         // controllo validità energetica richiesta: se un consumatore richiede troppa poca energia
-        if(req.body.kw < 0.1) return [403, "PROIBITO: [consumer "+ id_consumer +" deve selezionare almeno 0.1 kw."]
+        if(req.body.kw < 0.1) return [403, "PROIBITO: [consumer "+ req.user.id +" deve selezionare almeno 0.1 kw."]
 
         // controllo validità energetica richiesta: se un consumatore ne richiede troppa
-        if(req.body.kw > slot_totale) return [403, "PROIBITO: [slot " + slot + "non dispone di energia a sufficienza per soddisfare la richiesta."]
+        if(req.body.kw > slot_totale) return [403, "PROIBITO: [slot " + req.body.slot + "non dispone di energia a sufficienza per soddisfare la richiesta."]
         
         // controllo validità energetica richiesta: se un consumatore richiede più di quella disponibile si effettua un taglio tra tutti i consumatori
         //if(req.body.kw > slot_rimanente) this.balanceSlotRequests(producer, selected_slot)
@@ -215,7 +217,7 @@ class slotController {
                 await this.editTransactionFields(transaction, "emissioni_co2_slot", 0) // si azzerano le emissioni della transazione
                 await this.editTransactionFields(transaction, "kw_acquistati", 0) // si azzerano i kw acquistati della transazione
 
-                return [200, "OK: transazione [consumer " + id_consumer + "] verso [ producer " + data.id + "] annullata. Emissioni e kw della transazione azzerati, kw restituiti a [producer " + data.id + "], credito NON restituto a [consumer " + id_consumer + "] (tempo < 24 ore)"]
+                return [200, "OK: transazione [consumer " + req.user.id + "] verso [ producer " + req.body.id + "] annullata. Emissioni e kw della transazione azzerati, kw restituiti a [producer " + req.body.id + "], credito NON restituto a [consumer " + req.user.id + "] (tempo < 24 ore)"]
 
             }
 
@@ -230,7 +232,7 @@ class slotController {
                 await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer
                 await this.delete(transaction.id_transazione) // si cancella la transazione
 
-                return [200, "OK: transazione [consumer " + id_consumer + "] verso [ producer " + data.id + "] annullata. Transazione cancellata dal db, kw restituiti a [producer " + data.id + "], credito restituto a [consumer " + id_consumer + " (tempo >= 24 ore)"]
+                return [200, "OK: transazione [consumer " + req.user.id + "] verso [ producer " + req.body.id + "] annullata. Transazione cancellata dal db, kw restituiti a [producer " + req.body.id + "], credito restituto a [consumer " + req.user.id + " (tempo >= 24 ore)"]
 
             }
 
