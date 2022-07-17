@@ -9,7 +9,11 @@ class adminController {
     constructor(){}
 
     // CRUD =================================================
-    async getAdmin(id){
+    async getAdmin(req){
+
+        //nel body serve: id
+
+        const id = req.body.id
 
         try{
 
@@ -24,9 +28,10 @@ class adminController {
 
     }
 
-    async createAdmin(data){
+    async createAdmin(req){
 
         //nel body servono: nome, email, passwd
+        const data = req.body
 
         // PASSWORD HASHING: tramite hash + salt
         const salt = await bcrypt.genSalt(10);
@@ -50,12 +55,17 @@ class adminController {
             return [200, "OK: [admin " + savedAdmin.id_admin + "] creato."]
         
         }catch(err){
+            console.log("CONSOLE_LOG: " + err)
             return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
     }
 
-    async delete(id){
+    async delete(req){
+
+        // nel body serve: id
+
+        let id  = req.body.id;
 
         try{
 
@@ -69,9 +79,9 @@ class adminController {
     }
 
     // consegna =============================================
-    async ricarica(id, credito){
+    async ricarica(req){
 
-        return await consumerController.editConsumerCredit(id, credito);
+        return await consumerController.editConsumerCredit(req.body.id, req.body.credito);
 
     }
 

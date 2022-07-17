@@ -18,20 +18,20 @@ class authController {
 
     constructor(){}
 
-    async login(data){
+    async login(req){
 
         // i campi in comune tra le 3 tabelle sono: id, nome, email, privilegi,
         // i campi richiesti per il login sono: privilegi, email, passwd
 
         // verifica utente registrato
         let user;
-        if(data.privilegi == 0) user = await db_admins.findOne({where: {email: data.email}});
-        if(data.privilegi == 1) user = await db_producers.findOne({where: {email: data.email}});
-        if(data.privilegi == 2) user = await db_consumers.findOne({where: {email: data.email}});
+        if(req.body.privilegi == 0) user = await db_admins.findOne({where: {email: req.body.email}});
+        if(req.body.privilegi == 1) user = await db_producers.findOne({where: {email: req.body.email}});
+        if(req.body.privilegi == 2) user = await db_consumers.findOne({where: {email: req.body.email}});
         if( ! user) return [400, 'ERRORE: username o password errati.'];
 
         // CONTROLO PASSWORD: compara la pw nel body con quella cripatata nel db tramite bcrypt
-        const validPass = await bcrypt.compare(data.passwd, user.passwd);
+        const validPass = await bcrypt.compare(req.body.passwd, user.passwd);
         if( ! validPass) return [400, 'ERRORE: username o password errati.'];
 
         let id;
@@ -46,36 +46,36 @@ class authController {
 
     }
 
-    async registerProducer(data){
+    async registerProducer(req){
 
         // controlla se la mail del producer è già registrata
         const producer = await db_producers.findOne({where: { email: data.email }});
         if(producer) return [500, "ERRORE: [producer " + producer.id_producer + "] e' gia' registrato."]
 
         // controlla se la tipologia di fonte è ammessa
-        if(! ["fossile", "eolico", "fotovoltaico"].includes(data.fonte_produzione)) return [400, "ERRORE: fonte specificata non ammessa."];
+        if(! ["fossile", "eolico", "fotovoltaico"].includes(req.body.fonte_produzione)) return [400, "ERRORE: fonte specificata non ammessa."];
 
-        return await producerController.createProducer(data);
+        return await producerController.createProducer(req);
 
     }
 
-    async registerConsumer(data){
+    async registerConsumer(req){
         
         // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-        const consumer = await db_consumers.findOne({where: { email: data.email }});
+        const consumer = await db_consumers.findOne({where: { email: req.body.email }});
         if(consumer) return [500, "ERRORE: [consumer " + consumer.id_consumer + "] e' gia' registrato."]
 
-        return await consumerController.createConsumer(data)
+        return await consumerController.createConsumer(req)
 
     }
 
-    async registerAdmin(data){
+    async registerAdmin(req){
 
         // CONTROLLO UTENTE REGISTRATO: controlla se l'username è nel db
-        const admin = await db_admins.findOne({where: { email: data.email }});
+        const admin = await db_admins.findOne({where: { email: req.body.email }});
         if(admin) return [500, "ERRORE: [admin " + admin.id_admin + "] e' gia' registrato."]
 
-        return await adminController.createAdmin(data);
+        return await adminController.createAdmin(req);
 
     }
 

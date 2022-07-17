@@ -6,7 +6,11 @@ class producerController {
     constructor(){}
 
     // CRUD =================================================
-    async getProducer(id){
+    async getProducer(req){
+
+        //nel body serve: id
+
+        const id = req.body.id
 
         try{
 
@@ -21,11 +25,26 @@ class producerController {
 
     }
 
-    async createProducer(data){
+    async getProducerById(id){
+
+        try{
+
+           const producer = await db_producers.findOne({where: { id_producer: id }});
+           if( ! producer) return [404, "ERRORE: [producer " + id + "] non trovato."]
+
+           return [200, producer]
+
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
+        }
+
+    }
+
+    async createProducer(req){
 
         //nel body servono: nome, codice_fiscale, email, passwd, fonte_produzione, costo_per_kwh, emissioni_co2, tetto_max_kwh_init
         
-        const temp = await this.buildProducer(data) // costruisco oggetto producer in base al body della richiesta
+        const temp = await this.buildProducer(req.body) // costruisco oggetto producer in base al body della richiesta
 
         try{
             const producer = await db_producers.create(temp); // scrivo producer a db
@@ -64,7 +83,7 @@ class producerController {
         producer.emissioni_co2 = emissioni_co2;
         producer.privilegi = 1;
     
-        // impostazione slots con valori default
+        // impostazione slots
         const default_slot = JSON.stringify({"costo": data.costo, "totale": data.tetto_max_kwh_init, "rimanente": data.tetto_max_kwh_init});
     
         for(let i = 0; i < 24; i++){
@@ -80,20 +99,20 @@ class producerController {
 
     async editSlot(id_producer, slot_number, campo, valore){
 
-        const slot_to_edit = "slot_" + slot_number
+        let slot_to_edit = "slot_" + slot_number
 
         try{
 
-            let result_p = await this.getProducer(id_producer);
+            let result_p = await this.getProducerById(id_producer);
             let producer = result_p[1];
 
             let slot = producer[slot_to_edit]
             slot = JSON.parse(slot)
 
-            if(campo === "costo") slot.costo = valore;
-            else if(campo === "totale") slot.totale = valore;
-            else if(campo === "rimanente") slot.rimanente = valore;
-            else return [404, "ERRORE: campo non esistente"];
+            if(campo === "costo") slot.costo = valore
+            else if(campo === "totale") slot.totale = valore
+            else if(campo === "rimanente") slot.rimanente = valore
+            else return [404, "ERRORE: campo non esistente"]
 
             slot = JSON.stringify(slot)
 
@@ -112,7 +131,7 @@ class producerController {
 
         try{
 
-            let result_p = await this.getProducer(id_producer);
+            let result_p = await this.getProducerById(id_producer);
             let producer = result_p[1];
             
             let slot = producer[slot_to_read]
@@ -129,7 +148,11 @@ class producerController {
 
     }
 
-    async delete(id){
+    async delete(req){
+
+        // nel body serve: id
+
+        let id  = req.body.id;
 
         try{
 
@@ -143,13 +166,20 @@ class producerController {
     }
 
     // consegna =======================================================================
-    async checkReservations(data){}
+    async checkReservations(body){}
 
-    async checkStats(data){}
+    async checkStats(body){}
 
-    async checkEarnings(data){}
+    async checkEarnings(body){}
 
 }
 
 
 module.exports = producerController;
+
+
+
+// ok edita il campo
+// poi fai crud per admin
+// poi fai la prenotazione dello slot usanto i crud freschi freschi
+// dormi

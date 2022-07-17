@@ -10,7 +10,7 @@ const adminController = new AdminController();
 // get one specific admin
 router.get('/', async (req, res) => {
 
-    var result = await adminController.getAdmin(req.body.id)
+    var result = await adminController.getAdmin(req)
     res.status(result[0]).json(result[1]);
     
 });
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 // create one admin
 router.post('/', async (req, res) => {
 
-    var result = await adminController.createAdmin(req.body)
+    var result = await adminController.createAdmin(req)
     res.status(result[0]).json(result[1]);
     
 });
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 // delete one admin
 router.delete('/', async (req, res) => {
 
-    var result = await adminController.delete(req.body.id)
+    var result = await adminController.delete(req)
     res.status(result[0]).json(result[1]);
     
 });
@@ -35,7 +35,7 @@ router.delete('/', async (req, res) => {
 // consegna =========================================================================
 router.post('/ricarica', checkLogin, checkAdmin, async (req, res) => {
 
-    var result = await adminController.ricarica(req.body.id, req.body.credito)
+    var result = await adminController.ricarica(req)
     res.status(result[0]).json(result[1]);
     
 });

@@ -8,14 +8,14 @@ const slotController = new SlotController();
 
 router.post('/reserveSlot', checkLogin, async (req, res) => {
 
-    var result = await slotController.reserveSlot(req.body, req.user.id)
+    var result = await slotController.reserveSlot(req)
     res.status(result[0]).json(result[1]);
     
 });
 
 router.patch('/editSlot', checkLogin, async (req, res) => {
 
-    var result = await slotController.editSlot(req.body, req.user.id)
+    var result = await slotController.editSlot(req)
     res.status(result[0]).json(result[1]);
     
 });
