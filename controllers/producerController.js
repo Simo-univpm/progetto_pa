@@ -72,8 +72,7 @@ class producerController {
         let emissioni_co2 = data.emissioni_co2;
         if( ! emissioni_co2) emissioni_co2 = 0.0;
     
-        //const data_registrazione = String(new Date().toLocaleString());
-        const data_registrazione = new Date().toLocaleString();
+        const data_registrazione = new Date();
     
         producer.nome = data.nome;
         producer.codice_fiscale = data.codice_fiscale;

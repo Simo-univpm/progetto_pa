@@ -37,7 +37,7 @@ class adminController {
         const salt = await bcrypt.genSalt(10);
         const hashed_passwd  = await bcrypt.hash(data.passwd, salt); // hashing pw with salt
 
-        const data_registrazione = String(new Date().toLocaleString());
+        const data_registrazione = new Date();
 
         try{
 
