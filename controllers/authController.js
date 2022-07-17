@@ -49,7 +49,7 @@ class authController {
     async registerProducer(req){
 
         // controlla se la mail del producer è già registrata
-        const producer = await db_producers.findOne({where: { email: data.email }});
+        const producer = await db_producers.findOne({where: { email: req.body.email }});
         if(producer) return [500, "ERRORE: [producer " + producer.id_producer + "] e' gia' registrato."]
 
         // controlla se la tipologia di fonte è ammessa

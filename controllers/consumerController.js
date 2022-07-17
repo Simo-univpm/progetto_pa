@@ -83,9 +83,8 @@ class consumerController {
 
         try{
 
-            if(credito <= 0) return [500, "ERRORE: inserire un credito valido"]
-
             let result = await this.getConsumerById(id)
+            console.log(result)
             result[1].update({credito: credito})
 
             return [200, "OK: credito di [consumer " + id + "] aggiornato."]

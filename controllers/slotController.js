@@ -156,7 +156,7 @@ class slotController {
         else await producerController.editSlot(req.body.id, req.body.slot, "rimanente", kw_rimanenti)
 
         // aggiorno credito consumer
-        await consumerController.decreaseConsumerCredit(req.user.id, consumer.credito - (req.body.kw*slot_costo))
+        await consumerController.editConsumerCredit(req.user.id, consumer.credito - (req.body.kw*slot_costo))
         
         // crea la transazione a db
         await this.createTransaction(consumer, producer, req, slot_costo, today, tomorrow);
