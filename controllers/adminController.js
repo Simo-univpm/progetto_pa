@@ -55,7 +55,6 @@ class adminController {
             return [200, "OK: [admin " + savedAdmin.id_admin + "] creato."]
         
         }catch(err){
-            console.log("CONSOLE_LOG: " + err)
             return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 

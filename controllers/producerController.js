@@ -50,7 +50,6 @@ class producerController {
             const producer = await db_producers.create(temp); // scrivo producer a db
             return [200, "OK: [producer " + producer.id_producer + "] creato."]
         }catch(err){
-            console.log(err)
             return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 

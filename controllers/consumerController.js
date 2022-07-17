@@ -84,7 +84,6 @@ class consumerController {
         try{
 
             let result = await this.getConsumerById(id)
-            console.log(result)
             result[1].update({credito: credito})
 
             return [200, "OK: credito di [consumer " + id + "] aggiornato."]
