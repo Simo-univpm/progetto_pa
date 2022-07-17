@@ -1,5 +1,7 @@
 const router = require('express').Router();
 
+const checkLogin = require('../middlewares/checkLogin');
+
 const ProducerController = require('../controllers/producerController');
 const producerController = new ProducerController();
 
@@ -47,7 +49,7 @@ router.delete('/', async (req, res) => {
 
 
 // per la consegna ==================================================================
-router.get('/producer/checkReservations', async (req, res) => {
+router.get('/producer/checkReservations', checkLogin, async (req, res) => {
 
     var result = await producerController.checkReservations(req.body)
     res.status(result[0]).json(result[1]);
@@ -55,7 +57,7 @@ router.get('/producer/checkReservations', async (req, res) => {
 });
 
 
-router.get('/producer/checkStats', async (req, res) => {
+router.get('/producer/checkStats', checkLogin, async (req, res) => {
 
     var result = await producerController.checkStats(req.body)
     res.status(result[0]).json(result[1]);
@@ -63,7 +65,7 @@ router.get('/producer/checkStats', async (req, res) => {
 });
 
 
-router.get('/producer/checkEarnings', async (req, res) => {
+router.get('/producer/checkEarnings', checkLogin, async (req, res) => {
 
     var result = await producerController.checkEarnings(req.body)
     res.status(result[0]).json(result[1]);

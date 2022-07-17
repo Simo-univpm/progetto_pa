@@ -13,9 +13,11 @@ class slotController {
     // CRUD =================================================
     async getTransaction(id_producer, id_consumer, slot){
 
+        console.log(id_producer, id_consumer, slot)
+
         try{
 
-            const transaction = await db_transazioni.findOne({where: { id_producer: id_producer} && {id_consumer: id_consumer} && {slot_selezionato: slot}});
+            const transaction = await db_transazioni.findOne({where: {id_producer: id_producer, id_consumer: id_consumer, slot_selezionato: slot}});
             if( ! transaction) return [404, "ERRORE: transazione tra [producer " + id_producer + "] e [consumer " + id_consumer + "] per [slot " + slot + "] non trovata."]
 
             return [200, transaction]
@@ -107,7 +109,7 @@ class slotController {
         let slot_totale;   // è il quantitativo totale di energia messo a disposizione dal produttore
         let slot_rimanente;// è il quantitativo di energia messo a disposizione - quantitativo di energia opzionata
 
-        let result_p = await producerController.getProducer(req);
+        let result_p = await producerController.getProducerById(req.body.id);
         let producer = result_p[1]
         
         let result_c = await consumerController.getConsumerById(req.user.id);
@@ -163,7 +165,7 @@ class slotController {
         // crea la transazione a db
         await this.createTransaction(consumer, producer, req, slot_costo, today, tomorrow);
 
-        return [200, "Transazione tra [producer " + producer.id_producer + "] e [consumer "+ consumer.id_consumer + "] registrata con successo"]
+        return [200, "OK: Transazione tra [producer " + producer.id_producer + "] e [consumer "+ consumer.id_consumer + "] registrata con successo."]
 
     }
 
@@ -176,17 +178,6 @@ class slotController {
             "slot": 15, // numero dello slot da editare
             "kw": 0     // quantitativo di kw da modificare --> se 0 si "cancella" la richiesta (controllare data)
         }
-
-        Dare la possibilità ad un consumatore di modificare 
-        (anche cancellare, ovvero imponendo una quantità parti a zero) 
-        i quantitativi richiesti per uno o più slot. Se la cancellazione avviene prima 
-        delle 24h allora non vi sono costi; se avviene in un periodo temporale inferiore 
-        o uguale alle 24 viene addebitato l’intero costo.
-
-        per modificare una prenotazione si deve:
-        modificare lo slot interessato del producer interessato rimettendo l'energia e i consumi a posto
-        trovare la transazione nel db delle transazioni ed aggiornarla in base alla data (se la richiesta avviene prima dopo le 24 ore il costo non si aggiorna, altrimenti si resetta)
-        controllare la data e restituire o meno il credito all'utente
 
         */
         
@@ -242,8 +233,10 @@ class slotController {
         // caso kw > 0 con un acquisto di slot già prenotato
         
         if(req.body.kw > 0){
-            //controllare se esiste già una transazione per lo slot con lo stesso id_producer e id_consumer
 
+            if(transaction.kw_acquistati == req.body.kw) return [400, "WARNING: richiesta ignorata, [kw " + req.body.kw + "] gia' assegnati a [consumer " + req.user.id + "] per lo [slot " + req.body.slot +"]."]
+
+            //controllare se esiste già una transazione per lo slot con lo stesso id_producer e id_consumer
             if(this.diff_hours(date_2, date_1) >= 24)
             {
                 // se ci sono almeno 24 ore: 
@@ -255,15 +248,15 @@ class slotController {
                 await this.delete(transaction.id_transazione) // si cancella la transazione
 
                 //si crea una nuova transazione con i nuovi kw
-                const result = await this.reserveSlot(req)
-                return [result[0], result[1]]
+                await this.reserveSlot(req)
+                return [200, "OK: Transazione tra [producer " + producer.id_producer + "] e [consumer "+ consumer.id_consumer + "] modificata con successo."]
 
-            }else return [500, "ERROR: la transazione non può essere modificata prima delle 24 ore"]
+            }else return [500, "ERRORE: la transazione non può essere modificata prima delle 24 ore"]
 
         }
         
         /// rimuovi
-        return [500, "ERROR: hai beccato il caso base"]
+        return [500, "ERRORE: hai beccato il caso base"]
 
     }
 
