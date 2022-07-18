@@ -28,8 +28,6 @@ class slotController {
 
     async createTransaction(consumer, producer, req, slot_costo, data_acquisto, data_prenotata){
 
-        console.log("ciao")
-
         let costo_transazione = req.body.kw*slot_costo;
         let emissioni_co2_slot = producer.emissioni_co2*req.body.kw;
 
@@ -48,7 +46,6 @@ class slotController {
                 data_prenotazione_transazione: data_prenotata
 
             });
-            console.log("ciao")
             
             return [200, "OK: [transazione " + transazione.id_transazione + "] creata."]
         
