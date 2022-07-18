@@ -55,7 +55,6 @@ CREATE TABLE db_producer(
   slot_23 VARCHAR(50),
   data_registrazione DATETIME NOT NULL,
   accetta_taglio_richieste BOOLEAN NOT NULL
-  percentuale_penalità_cambio_slot INTEGER NOT NULL
 );
 
 --DB utilizzato per la registrazione degli admin

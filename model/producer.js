@@ -143,10 +143,6 @@ const Producer = sequelize.define('producer', {
     accetta_taglio_richieste: {
         type: Sequelize.BOOLEAN,
         allowNull: false
-    },
-    percentuale_penalità_cambio_slot: {
-        type: Sequelize.INTEGER,
-        allowNull: false
     }
 }, 
 { 

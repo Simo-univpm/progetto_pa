@@ -55,13 +55,25 @@ router.get('/checkStats', checkLogin, async (req, res) => {
     
 });
 
-router.get('/checkEarnings', checkLogin, async (req, res) => {
+router.get('/checkEarningsOverSlots', checkLogin, async (req, res) => {
 
-    var result = await producerController.checkEarnings(req.body)
+    var result = await producerController.checkEarningsOverSlots(req.user.id, req.body.slot_inizio, req.body.slot_fine)
     res.status(result[0]).json(result[1]);
     
 });
 
+router.get('/checkEarningsOverTimePeriod', checkLogin, async (req, res) => {
 
+    var result = await producerController.checkEarningsOverTimePeriod(req.user.id, req.body.data_inizio, req.body.data_fine)
+    res.status(result[0]).json(result[1]);
+    
+});
+
+router.get('/checkEarnings', checkLogin, async (req, res) => {
+
+    var result = await producerController.checkEarnings(req.user.id, req.body.inizio, req.body.fine)
+    res.status(result[0]).json(result[1]);
+    
+});
 
 module.exports = router;

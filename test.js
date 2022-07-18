@@ -62,7 +62,7 @@ console.log(somma)
     let X_consumer = createRemap(kw_richiesti, 0, tetteo_teorico, 0, tetto_massimo);
 */
 
-
+/*
 function createRemap(x, inMin, inMax, outMin, outMax) {
 
     return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
@@ -103,4 +103,23 @@ function array_obj_to_num(array_obj) {
         array_num.push(array_obj[i].num);
     }
     return array_num;
+}
+
+
+const today = new Date();
+const tomorrow = new Date();
+tomorrow.setDate(today.getDate() + 1);
+tomorrow.setHours(req.body.slot, 0, 0, 0);
+
+let date = new Date("2020-07-19 20:30")
+console.log(date)
+*/
+
+let valore = 12;
+let stringa = "stringa"
+
+if(typeof valore === 'string'){
+    console.log("1")
+} else {
+    console.log("2")
 }

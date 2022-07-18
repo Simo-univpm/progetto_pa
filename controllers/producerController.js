@@ -1,3 +1,6 @@
+const { Op } = require('sequelize');
+
+const db_transazioni = require('../model/transazioni').transazioni;
 const db_producers = require('../model/producer').producer;
 const bcrypt = require('bcryptjs');
 
@@ -149,7 +152,6 @@ class producerController {
 
     }
 
-    // non un api richiamabile dall'esterno
     async getMultipleSlots(id_producer, slot_inizio, slot_fine){
     
         let result_p = await this.getProducerById(id_producer)
@@ -195,11 +197,6 @@ class producerController {
 
     
     // consegna =======================================================================
-
-    async checkStats(body){}
-
-    async checkEarnings(body){}
-
     async checkReservations(id_producer, slot_inizio, slot_fine){
 
         if((slot_inizio < 0) || (slot_inizio > 23)) return [400, "ERRORE: periodo selezionato non valido."]
@@ -235,10 +232,62 @@ class producerController {
 
     }
 
-    createRemap(x, inMin, inMax, outMin, outMax) {
+    async checkStats(body){}
 
-        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+
+    async checkEarnings(id_producer, inizio, fine){
+
+        /*
+        // trova i guadagni per il produttore loggato nel range di slot indicato per tutte le transazioni effettuate
+            {
+                "inizio": 0,
+                "fine": 18
+            }
+
         
+        // trova i guadagni per il produttore loggato nel range temporale specificato
+            {
+                "inizio": "2022-07-20 05:00",
+                "fine": "2022-07-20 05:00"
+            }
+        
+        */
+
+        // caso in cui l'utente inserisce data e ora --> "2020-07-19 20:30"
+        if((typeof inizio === 'string') && (typeof fine === 'string')){
+
+            try{
+
+                var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
+                if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di date selezionato."]
+    
+            }catch(err){
+                return [500, "ERRORE: qualcosa e' andato storto." + err]
+            }
+
+        } else {
+
+            // caso in cui l'utente inserisce un range di slot 15 - 18
+            if((inizio < 0) || (inizio > 23)) return [400, "ERRORE: periodo selezionato non valido."]
+            if((fine < 0) || (fine > 23)) return [400, "ERRORE: periodo selezionato non valido."]
+
+            try{
+
+                var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "slot_selezionato": {[Op.between] : [inizio , fine]}}});
+                if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di slot selezionato."]
+
+            }catch(err){
+                return [500, "ERRORE: qualcosa e' andato storto." + err]
+            }
+
+        }
+            let guadagno = 0;
+            transazioni.forEach(transazione => {
+                guadagno += transazione.costo_slot;
+            });
+
+            return [200, guadagno]
+
     }
 
     //funzione che calcola la percentuale tra i due array di rimanente e totale e li inserisce in un array
@@ -254,7 +303,12 @@ class producerController {
         }
         return array_percentuale;
     }
-    
+
+    createRemap(x, inMin, inMax, outMin, outMax) {
+
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        
+    }
 
 }
 
