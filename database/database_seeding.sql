@@ -56,6 +56,7 @@ CREATE TABLE db_producer(
   slot_23 VARCHAR(50),
   data_registrazione DATETIME NOT NULL,
   accetta_taglio_richieste BOOLEAN NOT NULL
+  percentuale_penalità_cambio_slot INTEGER NOT NULL
 );
 
 --DB nel quale vengno duplicate e mantenute (per avere uno storico separato) tutte le registrazione dei produttori
