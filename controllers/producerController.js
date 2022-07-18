@@ -90,6 +90,7 @@ class producerController {
         }
     
         producer.data_registrazione = data_registrazione;
+        producer.accetta_taglio_richieste = data.taglio;
         
         return producer
     
@@ -98,6 +99,7 @@ class producerController {
     async editSlot(id_producer, slot_number, campo, valore){
 
         let slot_to_edit = "slot_" + slot_number
+        valore = valore.toFixed(2) // prende due numeri dopo la virgola
 
         try{
 

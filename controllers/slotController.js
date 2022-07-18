@@ -159,12 +159,10 @@ class slotController {
 
         }
 
-        // cambia qui
-        let kw_rimanenti = slot_rimanente - req.body.kw;
-        if(kw_rimanenti < 0) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta."]
+        if((req.body.kw > slot_rimanente) && ( ! producer.accetta_taglio_richieste)) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta."]
 
         // PRENOTAZIONE DELLO SLOT =======================================================================================================================
-        
+        let kw_rimanenti = slot_rimanente - req.body.kw
         await producerController.editSlot(req.body.id, req.body.slot, "rimanente", kw_rimanenti) // aggiorno kw rimanenti per lo slot
         await consumerController.editConsumerCredit(req.user.id, consumer.credito - (req.body.kw*slot_costo)) // aggiorno credito consumer
         await this.createTransaction(consumer, producer, req, slot_costo, today, tomorrow); // crea la transazione a db
