@@ -91,7 +91,6 @@ class producerController {
     
         producer.data_registrazione = data_registrazione;
         producer.accetta_taglio_richieste = data.taglio;
-        producer.percentuale_penalità_cambio_slot = data.penalita;
         
         return producer
     
