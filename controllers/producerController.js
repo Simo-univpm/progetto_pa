@@ -82,7 +82,7 @@ class producerController {
         producer.privilegi = 1;
     
         // impostazione slots
-        const default_slot = JSON.stringify({"costo": data.costo, "totale": data.tetto_max_kwh_init, "rimanente": data.tetto_max_kwh_init});
+        const default_slot = JSON.stringify({"costo": data.costo.toFixed(2), "totale": data.tetto_max_kwh_init.toFixed(2), "rimanente": data.tetto_max_kwh_init.toFixed(2)});
     
         for(let i = 0; i < 24; i++){
             let app_str = "slot_" + String(i);

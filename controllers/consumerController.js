@@ -63,7 +63,7 @@ class consumerController {
                 nome: data.nome,
                 email: data.email,
                 passwd: hashed_passwd,
-                credito: data.credito,
+                credito: data.credito.toFixed(2),
                 privilegi: 2,
                 data_registrazione: data_registrazione
 
@@ -84,7 +84,7 @@ class consumerController {
         try{
 
             let result = await this.getConsumerById(id)
-            result[1].update({credito: credito})
+            result[1].update({credito: credito.toFixed(2)})
 
             return [200, "OK: credito di [consumer " + id + "] aggiornato."]
 
