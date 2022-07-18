@@ -33,7 +33,7 @@ const Producer = sequelize.define('producer', {
         allowNull: false
     },
     emissioni_co2: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.FLOAT(10,2),
         allowNull: false
     },
     privilegi: {
