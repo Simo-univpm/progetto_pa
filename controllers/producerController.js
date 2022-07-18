@@ -151,9 +151,6 @@ class producerController {
 
     // non un api richiamabile dall'esterno
     async getMultipleSlots(id_producer, slot_inizio, slot_fine){
-
-        if((slot_inizio < 0) || (slot_inizio > 23)) return -1;
-        if((slot_fine < 0) || (slot_fine > 23)) return -1;
     
         let result_p = await this.getProducerById(id_producer)
         let producer = result_p[1]
@@ -205,33 +202,36 @@ class producerController {
 
     async checkReservations(id_producer, slot_inizio, slot_fine){
 
-        /*
-        Dare ad un produttore la possibilità di verificare le richieste per il giorno seguente;
-        dare la possibilità di filtrare per fasce orarie (es. 10:00 – 17:00). 
-        Tale rotta deve tornare per ogni fascia oraria la % di occupazione 
-        rispetto alla capacità erogabile in quella fascia oraria
-        */
+        if((slot_inizio < 0) || (slot_inizio > 23)) return [400, "ERRORE: periodo selezionato non valido."]
+        if((slot_fine < 0) || (slot_fine > 23)) return [400, "ERRORE: periodo selezionato non valido."]
 
-        // 1) selezionare solo gli slot futuri
-        // 2) prendere il totale e il rimanente di ogni slot e fare la percentuale
-
+        // ottengo gli slot interessati ed estrapolo i valori totali e rimanenti mettendoli in due array separati
         let totale = await this.getMultipleSlots(id_producer, slot_inizio, slot_fine)
         let rimanente = JSON.parse(JSON.stringify(totale)) // deep copy
         
         totale = totale.map(x => x.totale)
         rimanente = rimanente.map(x => x.rimanente)
 
-        console.log(totale)
-        console.log(rimanente)
+        // creo array con tutti i kw erogati dal produttore nel periodo considerato
+        let kw_erogati = [];
+        for(let i = 0; i < totale.length; i ++) kw_erogati.push(totale[i] - rimanente[i]);
 
-        //rimanente.map(x => delete x.costo)
-        //rimanente.map(x => delete x.totale)
+        // calcolo della percentuale di energia erogata nel periodo considerat
+        const percentuali_occupazione = this.calcola_percentuale(kw_erogati, totale);
 
-        //const percentuali_occupazione = this.inserisci_percentuale(this.calcola_percentuale(array_obj_to_num(rimanente), array_obj_to_num(totale)));
-        //console.log(percentuali_occupazione)
+        // costruisco un array contenente il nome dello slot interessato e la percentuale di energia erogata
+        let array_slot_percentuali = [];
+        for (let i = slot_inizio; i <= slot_fine; i++){
 
-        
-        return [200, "ciao"];
+            let app_obj = {}
+            let app_str = "slot_" + String(i);
+
+            app_obj[app_str] = percentuali_occupazione[i-slot_inizio];
+            array_slot_percentuali.push(app_obj)
+
+        }
+
+        return [200, array_slot_percentuali];
 
     }
 
@@ -245,31 +245,16 @@ class producerController {
     calcola_percentuale(array_rimanente, array_totale) {
 
         let array_percentuale = [];
+        
         for (let i = 0; i < array_rimanente.length; i++) {
-            array_percentuale.push(createRemap(array_rimanente[i], 0, array_totale[i], 0, 100))    //array_rimanente[i] / array_totale[i]);
-            console.log("array_rimanente[" + i + "] " + array_rimanente[i], "array_totale[" + i + "] " + array_totale[i], "array_percentuale[" + i + "] " + array_percentuale[i] + "%")
+
+            array_percentuale.push(this.createRemap(array_rimanente[i], 0, array_totale[i], 0, 100))    //array_rimanente[i] / array_totale[i]);
+            //console.log("array_rimanente[" + i + "] " + array_rimanente[i], "array_totale[" + i + "] " + array_totale[i], "array_percentuale[" + i + "] " + array_percentuale[i] + "%")
 
         }
-    return array_percentuale;
+        return array_percentuale;
     }
     
-    inserisci_percentuale(array_percentuale) {
-
-        let array_percentuale_inserito = [];
-
-        for (let i = 0; i < array_percentuale.length; i++) {
-            array_percentuale_inserito.push(array_percentuale[i]);
-        }
-        return array_percentuale_inserito;
-    }
-
-    array_obj_to_num(array_obj) {
-        let array_num = [];
-        for (let i = 0; i < array_obj.length; i++) {
-            array_num.push(array_obj[i].num);
-        }
-        return array_num;
-    }
 
 }
 
