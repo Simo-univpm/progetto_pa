@@ -32,7 +32,7 @@ connessioneDB();
 
 // messa in ascolto del server sulla porta specificata nel file .env
 const port = process.env.PORT;
-app.listen(port, () => console.log('Listening on port ' + port));
+app.listen(port, () => console.log('In ascolto sulla porta ' + port));
 
 
 async function connessioneDB(){

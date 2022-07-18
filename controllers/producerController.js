@@ -149,6 +149,36 @@ class producerController {
 
     }
 
+    // non un api richiamabile dall'esterno
+    async getMultipleSlots(id_producer, slot_inizio, slot_fine){
+
+        if((slot_inizio < 0) || (slot_inizio > 23)) return -1;
+        if((slot_fine < 0) || (slot_fine > 23)) return -1;
+    
+        let result_p = await this.getProducerById(id_producer)
+        let producer = result_p[1]
+
+        let selected_slots = []
+
+        try{
+
+            for(let i = slot_inizio; i <= slot_fine; i ++){
+
+                let slot_to_read = "slot_" + i;
+
+                let slot = producer[slot_to_read]
+                selected_slots.push(JSON.parse(slot))
+
+            }
+
+            return selected_slots
+
+        }catch(err){
+            return err
+        }
+
+    }
+
     async delete(req){
 
         // nel body serve: id
@@ -169,6 +199,10 @@ class producerController {
     
     // consegna =======================================================================
 
+    async checkStats(body){}
+
+    async checkEarnings(body){}
+
     async checkReservations(id_producer, slot_inizio, slot_fine){
 
         /*
@@ -182,64 +216,69 @@ class producerController {
         // 2) prendere il totale e il rimanente di ogni slot e fare la percentuale
 
         let totale = await this.getMultipleSlots(id_producer, slot_inizio, slot_fine)
-        let rimanente = [...totale] // shallow copy
+        let rimanente = JSON.parse(JSON.stringify(totale)) // deep copy
         
         totale.map(x => delete x.costo)
         totale.map(x => delete x.rimanente)
 
         rimanente.map(x => delete x.costo)
-        rimanente.map(x => delete x.rimanente)
+        rimanente.map(x => delete x.totale)
+
 
         
+        //asd = this.array_obj_to_num(totale)
+        //asdasd = this.array_obj_to_num(rimanente)
+
+        //console.log(asd, asdasd)
+
+        //const percentuali_occupazione = this.inserisci_percentuale(this.calcola_percentuale(array_obj_to_num(rimanente), array_obj_to_num(totale)));
+        //console.log(percentuali_occupazione)
+
+        let result = totale.map(a => a.totale);
+        console.log(result)
+
         
-        return [200, selected_slots];
+        return [200, "ciao"];
 
     }
 
-    async checkStats(body){}
+    createRemap(x, inMin, inMax, outMin, outMax) {
 
-    async checkEarnings(body){}
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        
+    }
 
+    //funzione che calcola la percentuale tra i due array di rimanente e totale e li inserisce in un array
+    calcola_percentuale(array_rimanente, array_totale) {
 
-    // non un api richiamabile dall'esterno
-    async getMultipleSlots(id_producer, slot_inizio, slot_fine){
+        let array_percentuale = [];
+        for (let i = 0; i < array_rimanente.length; i++) {
+            array_percentuale.push(createRemap(array_rimanente[i], 0, array_totale[i], 0, 100))    //array_rimanente[i] / array_totale[i]);
+            console.log("array_rimanente[" + i + "] " + array_rimanente[i], "array_totale[" + i + "] " + array_totale[i], "array_percentuale[" + i + "] " + array_percentuale[i] + "%")
 
-        if((slot_inizio < 0) || (slot_inizio > 23)) return -1;
-        if((slot_fine < 0) || (slot_fine > 23)) return -1;
-    
-        let result_p = await this.getProducerById(id_producer)
-        let producer = result_p[1]
-
-        let selected_slots = []
-
-        try{
-
-            for(let i = slot_inizio; i <= slot_fine; i ++){
-
-                let slot_to_read = "slot_" + i;
-                console.log(slot_to_read)
-
-                let slot = producer[slot_to_read]
-                selected_slots.push(JSON.parse(slot))
-
-            }
-
-            return selected_slots
-
-        }catch(err){
-            return err
         }
+    return array_percentuale;
+    }
+    
+    inserisci_percentuale(array_percentuale) {
 
+        let array_percentuale_inserito = [];
+
+        for (let i = 0; i < array_percentuale.length; i++) {
+            array_percentuale_inserito.push(array_percentuale[i]);
+        }
+        return array_percentuale_inserito;
+    }
+
+    array_obj_to_num(array_obj) {
+        let array_num = [];
+        for (let i = 0; i < array_obj.length; i++) {
+            array_num.push(array_obj[i].num);
+        }
+        return array_num;
     }
 
 }
 
 
 module.exports = producerController;
-
-
-
-// ok edita il campo
-// poi fai crud per admin
-// poi fai la prenotazione dello slot usanto i crud freschi freschi
-// dormi

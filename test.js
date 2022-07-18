@@ -40,7 +40,7 @@ console.log("noodles_percentuale: ", noodles_percentuale)
 let somma = nigiri_percentuale + mima_percentuale + noodles_percentuale
 console.log(somma)
 
-*/
+
 
 // ==================================================================================================
 
