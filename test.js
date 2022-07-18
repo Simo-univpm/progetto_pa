@@ -1,11 +1,4 @@
-const db_producers = require('../model/producer').producer;
 /*
-function createRemap(x, inMin, inMax, outMin, outMax) {
-
-    return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-    
-}
-
 let tetto_massimo = 1000;
 
 let consumer = [200, 400, 500];
@@ -47,7 +40,7 @@ console.log("noodles_percentuale: ", noodles_percentuale)
 let somma = nigiri_percentuale + mima_percentuale + noodles_percentuale
 console.log(somma)
 
-
+*/
 
 // ==================================================================================================
 
@@ -69,47 +62,36 @@ console.log(somma)
     let X_consumer = createRemap(kw_richiesti, 0, tetteo_teorico, 0, tetto_massimo);
 */
 
-async function getProducerById(id){
 
-    try{
+function createRemap(x, inMin, inMax, outMin, outMax) {
 
-       const producer = await db_producers.findOne({where: { id_producer: id }});
-       if( ! producer) return [404, "ERRORE: [producer " + id + "] non trovato."]
-
-       return [200, producer]
-
-    }catch(err){
-        return [500, "ERRORE: qualcosa e' andato storto." + err]
-    }
-
-}
-
-
-async function getMultipleSlots(id_producer, slot_inizio, slot_fine){
+    return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     
-    let result_p = await getProducerById(id_producer) // rimetti this dopo eh
-    let producer = result_p[1]
-
-    let selected_slots = []
-
-    try{
-
-        for(let i = slot_inizio; i < slot_fine; i ++){
-
-            let slot_to_read = "slot_" + i
-
-            let slot = producer[slot_to_read]
-            selected_slots.push(JSON.parse(slot))
-
-        }
-
-        console.log(selected_slots)
-        return selected_slots
-
-    }catch(err){
-        return err
-    }
-
 }
 
-getMultipleSlots(2, 0, 9);
+//crea due funzione che prendono valori di rimanente e totale 
+let array_totale = [10, 20, 30, 40, 50];
+let array_rimanente = [3, 5, 10, 15, 35];
+
+
+//funzione che calcola la percentuale tra i due array di rimanente e totale e li inserisce in un array
+function calcola_percentuale(array_rimanente, array_totale) {
+    let array_percentuale = [];
+    for (let i = 0; i < array_rimanente.length; i++) {
+        array_percentuale.push(createRemap(array_rimanente[i], 0, array_totale[i], 0, 100))    //array_rimanente[i] / array_totale[i]);
+        console.log("array_rimanente[" + i + "] " + array_rimanente[i], "array_totale[" + i + "] " + array_totale[i], "array_percentuale[" + i + "] " + array_percentuale[i] + "%")
+
+    }
+    return array_percentuale;
+}
+
+let array_percentuale_inserito = [];
+//funzione che inserisce i valori di percentuale in un array della stessa lunghezza di array_rimanente
+function inserisci_percentuale(array_percentuale) {
+    for (let i = 0; i < array_percentuale.length; i++) {
+        array_percentuale_inserito.push(array_percentuale[i]);
+    }
+    return array_percentuale_inserito;
+}
+
+console.log(inserisci_percentuale(calcola_percentuale(array_rimanente, array_totale)));
