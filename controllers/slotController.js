@@ -230,6 +230,7 @@ class slotController {
 
 
         // caso kw > 0 con un acquisto di slot già prenotato
+        
         if(req.body.kw > 0){
 
             if(transaction.kw_acquistati == req.body.kw) return [400, "WARNING: richiesta ignorata, [kw " + req.body.kw + "] gia' assegnati a [consumer " + req.user.id + "] per lo [slot " + req.body.slot +"]."]
