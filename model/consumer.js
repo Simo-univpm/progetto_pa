@@ -23,7 +23,7 @@ const Consumer = sequelize.define('consumer', {
         allowNull: false
     },
     credito: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
     },
     privilegi: {

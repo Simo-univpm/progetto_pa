@@ -32,12 +32,8 @@ const Producer = sequelize.define('producer', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    //costo_per_kwh: {
-    //    type: Sequelize.INTEGER,
-    //    allowNull: false
-    //},
     emissioni_co2: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
     },
     privilegi: {
@@ -142,6 +138,10 @@ const Producer = sequelize.define('producer', {
     },
     data_registrazione: {
         type: Sequelize.DATE,
+        allowNull: false
+    },
+    accetta_taglio_richieste: {
+        type: Sequelize.BOOLEAN,
         allowNull: false
     }
 }, 

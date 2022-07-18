@@ -13,7 +13,7 @@ CREATE TABLE db_consumer(
   --cognome VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(50) NOT NULL,
-  credito INTEGER NOT NULL,
+  credito FLOAT NOT NULL,
   privilegi INTEGER NOT NULL,
   data_registrazione DATETIME NOT NULL
 );
@@ -28,7 +28,7 @@ CREATE TABLE db_producer(
   passwd VARCHAR(50) NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
   --costo_per_kwh INTEGER NOT NULL,
-  emissioni_co2 INTEGER NOT NULL,
+  emissioni_co2 FLOAT NOT NULL,
   privilegi INTEGER NOT NULL,
   slot_0  VARCHAR(50),
   slot_1  VARCHAR(50),
@@ -54,7 +54,8 @@ CREATE TABLE db_producer(
   slot_21 VARCHAR(50),
   slot_22 VARCHAR(50),
   slot_23 VARCHAR(50),
-  data_registrazione DATETIME NOT NULL
+  data_registrazione DATETIME NOT NULL,
+  accetta_taglio_richieste BOOLEAN NOT NULL
 );
 
 --DB nel quale vengno duplicate e mantenute (per avere uno storico separato) tutte le registrazione dei produttori
@@ -65,8 +66,8 @@ CREATE TABLE db_storico_produzione(
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(50) NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
-  costo_per_kwh INTEGER NOT NULL,
-  emissioni_co2 INTEGER NOT NULL,
+  costo_per_kwh FLOAT NOT NULL,
+  emissioni_co2 FLOAT NOT NULL,
   privilegi INTEGER NOT NULL,
   slot_0  VARCHAR(50),
   slot_1  VARCHAR(50),
@@ -111,8 +112,8 @@ CREATE TABLE db_transazioni(
   id_transazione SERIAL PRIMARY KEY NOT NULL,
   id_consumer INTEGER NOT NULL,
   id_producer INTEGER NOT NULL,
-  emissioni_co2_slot INTEGER NOT NULL,
-  costo_slot INTEGER NOT NULL,
+  emissioni_co2_slot FLOAT NOT NULL,
+  costo_slot FLOAT NOT NULL,
   kw_acquistati FLOAT NOT NULL,
   slot_selezionato INTEGER NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
