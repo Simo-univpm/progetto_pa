@@ -28,8 +28,8 @@ class slotController {
 
     async createTransaction(consumer, producer, req, slot_costo, data_acquisto, data_prenotata){
 
-        let costo_transazione = req.body.kw*slot_costo;
-        let emissioni_co2_slot = producer.emissioni_co2*req.body.kw;
+        let costo_transazione = (req.body.kw*slot_costo).toFixed(2);
+        let emissioni_co2_slot = (producer.emissioni_co2*req.body.kw).toFixed(2);
 
         try{
 
@@ -230,7 +230,6 @@ class slotController {
 
 
         // caso kw > 0 con un acquisto di slot già prenotato
-        
         if(req.body.kw > 0){
 
             if(transaction.kw_acquistati == req.body.kw) return [400, "WARNING: richiesta ignorata, [kw " + req.body.kw + "] gia' assegnati a [consumer " + req.user.id + "] per lo [slot " + req.body.slot +"]."]
@@ -250,12 +249,9 @@ class slotController {
                 await this.reserveSlot(req)
                 return [200, "OK: Transazione tra [producer " + producer.id_producer + "] e [consumer "+ consumer.id_consumer + "] modificata con successo."]
 
-            }else return [500, "ERRORE: la transazione non può essere modificata prima delle 24 ore"]
+            } else return [500, "ERRORE: transazione non modificata, possibile cancellarla ponendo la richiesta = 0 kw."]
 
         }
-        
-        /// rimuovi
-        return [500, "ERRORE: hai beccato il caso base"]
 
     }
 

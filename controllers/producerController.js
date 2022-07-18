@@ -99,7 +99,8 @@ class producerController {
     async editSlot(id_producer, slot_number, campo, valore){
 
         let slot_to_edit = "slot_" + slot_number
-        valore = valore.toFixed(2) // prende due numeri dopo la virgola
+
+        if(valore < 0) return [500, "ERRORE: inserire un valore positivo"]
 
         try{
 
@@ -109,9 +110,9 @@ class producerController {
             let slot = producer[slot_to_edit]
             slot = JSON.parse(slot)
 
-            if(campo === "costo") slot.costo = valore
-            else if(campo === "totale") slot.totale = valore
-            else if(campo === "rimanente") slot.rimanente = valore
+            if(campo === "costo") slot.costo = valore.toFixed(2)
+            else if(campo === "totale") slot.totale = valore.toFixed(2)
+            else if(campo === "rimanente") slot.rimanente = valore.toFixed(2)
             else return [404, "ERRORE: campo non esistente"]
 
             slot = JSON.stringify(slot)

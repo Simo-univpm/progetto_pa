@@ -1,54 +1,46 @@
 const router = require('express').Router();
 
 const checkLogin = require('../middlewares/checkLogin');
+const checkProducer = require('../middlewares/checkProducer');
 
 const ProducerController = require('../controllers/producerController');
 const producerController = new ProducerController();
 
 
-// per CRUD =========================================================================
-// get one specific producer
-router.get('/', async (req, res) => {
-
-    var result = await producerController.getProducer(req)
-    res.status(result[0]).json(result[1]);
-    
-});
-
-// create one producer
-router.post('/', async (req, res) => {
-
-    var result = await producerController.createProducer(req)
-    res.status(result[0]).json(result[1]);
-    
-});
-
 // edit producer's slot kw limit
-router.patch('/kw', async (req, res) => {
+router.patch('/kw', checkLogin, checkProducer, async (req, res) => {
 
-    var result = await producerController.editSlotKwLimit(req)
-    res.status(result[0]).json(result[1]);
-    
+    if(req.body.slot == "all"){
+
+        for(let i = 0; i < 24; i++) var result = await producerController.editSlot(req.user.id, i, "totale", req.body.kw)
+        res.status(result[0]).json(result[1]);
+
+    } else {
+
+        var result = await producerController.editSlot(req.user.id, req.body.slot, "totale", req.body.kw)
+        res.status(result[0]).json(result[1]);
+
+    }
+
 });
 
 // edit producer's slot price
-router.patch('/price', async (req, res) => {
+router.patch('/costo', checkLogin, checkProducer, async (req, res) => {
 
-    var result = await producerController.editSlotPrice(req)
-    res.status(result[0]).json(result[1]);
-    
+    if(req.body.slot == "all"){
+
+        for(let i = 0; i < 24; i++) var result = await producerController.editSlot(req.user.id, i, "costo", req.body.costo)
+        res.status(result[0]).json(result[1]);
+
+    } else {
+
+        var result = await producerController.editSlot(req.user.id, req.body.slot, "costo", req.body.costo)
+        res.status(result[0]).json(result[1]);
+
+    }
+
 });
 
-// delete one producer
-router.delete('/', async (req, res) => {
-
-    var result = await producerController.delete(req)
-    res.status(result[0]).json(result[1]);
-    
-});
-
-
-// per la consegna ==================================================================
 router.get('/producer/checkReservations', checkLogin, async (req, res) => {
 
     var result = await producerController.checkReservations(req.body)
@@ -56,14 +48,12 @@ router.get('/producer/checkReservations', checkLogin, async (req, res) => {
     
 });
 
-
 router.get('/producer/checkStats', checkLogin, async (req, res) => {
 
     var result = await producerController.checkStats(req.body)
     res.status(result[0]).json(result[1]);
     
 });
-
 
 router.get('/producer/checkEarnings', checkLogin, async (req, res) => {
 

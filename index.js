@@ -14,14 +14,14 @@ console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
 
 // rendi disponibili solo per l'admin
 //const consumersRoute = require('./routes/consumers');
-//const producersRoute = require('./routes/producers');
+const producersRoute = require('./routes/producers');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth')
 const slotRoutes = require('./routes/slot');
 
 // rendi disponibili solo per l'admin
 //app.use('/api/consumers', consumersRoute);
-//app.use('/api/producers', producersRoute);
+app.use('/api/producers', producersRoute);
 app.use('/api/admin', adminRoutes);
 app.use('/api/slot', slotRoutes); // tutte le chiamate per gestire le transazioni tra consumer, producer e slot
 app.use('/api/auth', authRoutes); // le chiamate per effettuare login e registrazione
@@ -43,13 +43,14 @@ async function connessioneDB(){
        
     try {
 
-        await database.sequelize; // aka database.Singleton.creaSingleton.getInstance()
-        // aggiungi effettivo controllo della connessione qui
-        console.log('Connessione stabilita correttamente');
+        await database.sequelize; // corrisponde a database.Singleton.creaSingleton.getInstance()
+        console.log('Database connesso');
     
-        await database.sequelize.sync(); // aka database.Singleton.creaSingleton.getInstance().sync()
-        console.log("Sincronizzazione effettuta!"); 
-    } catch (error) {
-        console.error('Impossibile stabilire una connessione, errore: ', error);
+        await database.sequelize.sync(); // corrisponde a database.Singleton.creaSingleton.getInstance().sync()
+        console.log("Database sincronizzato"); 
+
+    } catch (err) {
+        console.error('Errore di connessione al database: \n', err);
     }
+    
 }
