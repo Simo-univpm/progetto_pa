@@ -166,12 +166,71 @@ class producerController {
 
     }
 
+    
     // consegna =======================================================================
-    async checkReservations(body){}
+
+    async checkReservations(id_producer, slot_inizio, slot_fine){
+
+        /*
+        Dare ad un produttore la possibilità di verificare le richieste per il giorno seguente;
+        dare la possibilità di filtrare per fasce orarie (es. 10:00 – 17:00). 
+        Tale rotta deve tornare per ogni fascia oraria la % di occupazione 
+        rispetto alla capacità erogabile in quella fascia oraria
+        */
+
+        // 1) selezionare solo gli slot futuri
+        // 2) prendere il totale e il rimanente di ogni slot e fare la percentuale
+
+        let totale = await this.getMultipleSlots(id_producer, slot_inizio, slot_fine)
+        let rimanente = [...totale] // shallow copy
+        
+        totale.map(x => delete x.costo)
+        totale.map(x => delete x.rimanente)
+
+        rimanente.map(x => delete x.costo)
+        rimanente.map(x => delete x.rimanente)
+
+        
+        
+        return [200, selected_slots];
+
+    }
 
     async checkStats(body){}
 
     async checkEarnings(body){}
+
+
+    // non un api richiamabile dall'esterno
+    async getMultipleSlots(id_producer, slot_inizio, slot_fine){
+
+        if((slot_inizio < 0) || (slot_inizio > 23)) return -1;
+        if((slot_fine < 0) || (slot_fine > 23)) return -1;
+    
+        let result_p = await this.getProducerById(id_producer)
+        let producer = result_p[1]
+
+        let selected_slots = []
+
+        try{
+
+            for(let i = slot_inizio; i <= slot_fine; i ++){
+
+                let slot_to_read = "slot_" + i;
+                console.log(slot_to_read)
+
+                let slot = producer[slot_to_read]
+                selected_slots.push(JSON.parse(slot))
+
+            }
+
+            return selected_slots
+
+        }catch(err){
+            return err
+        }
+
+    }
 
 }
 
