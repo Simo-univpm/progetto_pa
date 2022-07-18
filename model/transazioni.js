@@ -19,15 +19,15 @@ const Transazioni = sequelize.define('transazioni', {
         allowNull: false
     },
     emissioni_co2_slot: {
-        type: Sequelize.FLOAT(10,2),
+        type: Sequelize.FLOAT,
         allowNull: false
     },
     costo_slot: {
-        type: Sequelize.FLOAT(10,2),
+        type: Sequelize.FLOAT,
         allowNull: false
     },
     kw_acquistati: {
-        type: Sequelize.FLOAT(10,2),
+        type: Sequelize.FLOAT,
         allowNull: false
     },
     slot_selezionato: {
