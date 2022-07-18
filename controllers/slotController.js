@@ -195,21 +195,7 @@ class slotController {
 
         if(req.body.kw == 0){
             
-            if(this.diff_hours(date_2, date_1) >= 24) {
-
-                // se ci sono almeno 24 ore: 
-                let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
-                let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
-                
-                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
-                await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer
-                await this.delete(transaction.id_transazione) // si cancella la transazione
-
-                return [200, "OK: transazione da [consumer " + req.user.id + "] verso [ producer " + req.body.id + "] annullata. Transazione cancellata dal db, kw restituiti al producer, credito restituto al consumer (tempo >= 24 ore)"]
-
-            }
-
-            // penalità
+            // caso testato e funzionante
             if(this.diff_hours(date_2, date_1) < 24)
             {
                 // se non ci sono almeno 24 ore:
@@ -225,10 +211,26 @@ class slotController {
 
             }
 
-        }
+            // caso testato e funzionante
+            if(this.diff_hours(date_2, date_1) >= 24) {
+
+                // se ci sono almeno 24 ore: 
+                let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
+                let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
+                
+                await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
+                await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer
+                await this.delete(transaction.id_transazione) // si cancella la transazione
+
+                return [200, "OK: transazione da [consumer " + req.user.id + "] verso [ producer " + req.body.id + "] annullata. Transazione cancellata dal db, kw restituiti al producer, credito restituto al consumer (tempo >= 24 ore)"]
+
+            }
+
+        } // fine caso kw richiesti = 0 --> body.kw == 0
 
 
         // caso kw > 0 con un acquisto di slot già prenotato
+        
         if(req.body.kw > 0){
 
             if(transaction.kw_acquistati == req.body.kw) return [400, "WARNING: richiesta ignorata, [kw " + req.body.kw + "] gia' assegnati a [consumer " + req.user.id + "] per lo [slot " + req.body.slot +"]."]
@@ -248,15 +250,7 @@ class slotController {
                 await this.reserveSlot(req)
                 return [200, "OK: Transazione tra [producer " + producer.id_producer + "] e [consumer "+ consumer.id_consumer + "] modificata con successo."]
 
-            }
-
-            // penalità
-            if(this.diff_hours(date_2, date_1) < 24)
-            {
-
-
-
-            }
+            } else return [500, "ERRORE: transazione non modificata, possibile cancellarla ponendo la richiesta = 0 kw."]
 
         }
 
