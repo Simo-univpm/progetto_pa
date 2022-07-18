@@ -41,21 +41,21 @@ router.patch('/costo', checkLogin, checkProducer, async (req, res) => {
 
 });
 
-router.get('/producer/checkReservations', checkLogin, async (req, res) => {
+router.get('/checkReservations', checkLogin, async (req, res) => {
 
-    var result = await producerController.checkReservations(req.body)
+    var result = await producerController.checkReservations(req.user.id, req.body.slot_inizio, req.body.slot_fine)
     res.status(result[0]).json(result[1]);
     
 });
 
-router.get('/producer/checkStats', checkLogin, async (req, res) => {
+router.get('/checkStats', checkLogin, async (req, res) => {
 
     var result = await producerController.checkStats(req.body)
     res.status(result[0]).json(result[1]);
     
 });
 
-router.get('/producer/checkEarnings', checkLogin, async (req, res) => {
+router.get('/checkEarnings', checkLogin, async (req, res) => {
 
     var result = await producerController.checkEarnings(req.body)
     res.status(result[0]).json(result[1]);
