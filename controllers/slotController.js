@@ -26,26 +26,6 @@ class slotController {
 
     }
 
-    async getAllSlotTransactions(id_producer, slot){
-
-        // ritorna tutte le transazioni di un producer per uno slot
-
-        try{
-
-            const transactions = await db_transazioni.findAll({where: {id_producer: id_producer, slot_selezionato: slot}});
-            if( ! transactions) return [404, "ERRORE: transazioni di [producer " + id_producer + "] per [slot " + slot + "] non trovate."]
-
-            console.log(typeof(transactions))
-            console.log(transactions)
-
-            return [200, transactions]
-
-        }catch(err){
-            return [500, "ERRORE: qualcosa e' andato storto." + err]
-        }
-
-    }
-
     async createTransaction(consumer, producer, req, slot_costo, data_acquisto, data_prenotata){
 
         let costo_transazione = req.body.kw*slot_costo;
@@ -122,10 +102,10 @@ class slotController {
         tomorrow.setDate(today.getDate() + 1);
         tomorrow.setHours(req.body.slot, 0, 0, 0);
 
-        let selected_slot; // è il nome dello slot selezionato: "slot_0"
-        let slot_costo;    // è il costo per kw dello slot
-        let slot_totale;   // è il quantitativo totale di energia messo a disposizione dal produttore
-        let slot_rimanente;// è il quantitativo di energia messo a disposizione - quantitativo di energia opzionata
+        let selected_slot;  // è il nome dello slot selezionato: "slot_0"
+        let slot_costo;     // è il costo per kw dello slot
+        let slot_totale;    // è il quantitativo totale di energia messo a disposizione dal produttore
+        let slot_rimanente; // è il quantitativo di energia messo a disposizione - quantitativo di energia opzionata
 
         let result_p = await producerController.getProducerById(req.body.id);
         let producer = result_p[1]
@@ -136,11 +116,11 @@ class slotController {
         let result_t = await this.getTransaction(req.body.id, req.user.id, req.body.slot)
         let transaction = result_t[1]
 
-        // controlla l'esistenza della transazione
-        if(transaction.id_transazione) return [400, "ERRORE: [slot " + req.body.slot + "] gia' acquistato: possibile la modifica, non la prenotazione."]
 
         // CONTROLLO VALIDITA' RICHIESTA DEL CONSUMER ====================================================================================================
-        // controllo esistenza produttore di energia
+        
+        // controlla l'esistenza della transazione
+        if(transaction.id_transazione) return [400, "ERRORE: [slot " + req.body.slot + "] gia' acquistato: possibile la modifica, non la prenotazione."]
 
         // controllo validità dello slot selezionato
         if(req.body.slot >= 0 && req.body.slot <= 23){ 
@@ -154,7 +134,7 @@ class slotController {
 
         } else return [404, "ERRORE: [slot " + req.body.slot + "] non esistente."]
 
-        // controllo validità data della prenotazione
+        // controllo validità data prenotazione
         if(this.diff_hours(tomorrow, today) < 24) return [403, "PROIBITO: selezionare uno slot ad una distanza di almeno 24 ore."]
 
         // controllo credito disponibile del consumer
@@ -164,18 +144,26 @@ class slotController {
         if(req.body.kw < 0.1) return [403, "PROIBITO: [consumer "+ req.user.id +"] deve selezionare almeno 0.1 kw."]
 
         // controllo validità energetica richiesta: se un consumatore ne richiede troppa
-        if(req.body.kw > slot_totale) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta."]
+        if(req.body.kw > slot_totale) return [403, "PROIBITO: la richiesta supera il tetto massimo disponibile per [slot " + req.body.slot + "] "]
         
         // controllo validità energetica richiesta: se un consumatore richiede più di quella disponibile si effettua un taglio tra tutti i consumatori
-        if(req.body.kw > slot_rimanente) this.balanceSlotRequests(req)
+        if(req.body.kw >= slot_rimanente) {
+            // si bilanciano le richieste e si interrompe prematuramente l'esecuzione della funzione
+            // consumer, producer, req, slot_costo, today, tomorrow
+            await this.balanceSlotRequests(req, slot_totale, slot_rimanente, slot_costo, producer.emissioni_co2, consumer, producer, today, tomorrow)
+            return [200, "OK: troppe richieste per [slot " + req.body.slot +"], effettuato taglio lineare sulle richieste."]
+        }
 
 
         // PRENOTAZIONE DELLO SLOT =======================================================================================================================
         
         // aggiorno kw rimanenti per lo slot
         let kw_rimanenti = slot_rimanente - req.body.kw;
-        if(kw_rimanenti < 0) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta."]
-        else await producerController.editSlot(req.body.id, req.body.slot, "rimanente", kw_rimanenti)
+        //if(kw_rimanenti < 0) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta."]
+        await producerController.editSlot(req.body.id, req.body.slot, "rimanente", kw_rimanenti)
+        
+        // aggiorno kw rimanenti per lo slot
+        await producerController.editSlot(req.body.id, req.body.slot, "rimanente", (slot_rimanente - req.body.kw))
 
         // aggiorno credito consumer
         await consumerController.editConsumerCredit(req.user.id, consumer.credito - (req.body.kw*slot_costo))
@@ -278,49 +266,103 @@ class slotController {
 
     }
 
-    async balanceSlotRequests(req){
+    async balanceSlotRequests(req, slot_totale, slot_rimanente, slot_costo, emissioni_co2, consumer, producer, today, tomorrow){
 
-        //1) "X" fa una richiesta che supera la capacità rimanente del produttore
-        //2) si tiene in memoria la richiesta di "X"
-        //3) la richiesta in kw di "X" viene sommata a tutti i kw acquistati delle transazioni all'interno dello stesso slot richiesto
-        //4) la somma corrisponde al tetto teorico necessario per soddisfare tutti -> y = tetto_massimo_teorico
-        //5) si fa il map(z, 0, y, 0, tetto_massimo) dove z è il valore in kw acquistato da ogni consumer interno allo slot + la richiesta di x
-        //6) si assegnano i nuovi kw ai consumer
+        /*
+        1) "X" fa una richiesta che supera la capacità rimanente del produttore
+        2) si tiene in memoria la richiesta di "X"
+        3) la richiesta in kw di "X" viene sommata a tutti i kw acquistati delle transazioni all'interno dello stesso slot richiesto
+        4) la somma corrisponde al tetto teorico necessario per soddisfare tutti -> y = tetto_massimo_teorico
+        5) si fa il map(z, 0, y, 0, tetto_massimo) dove z è il valore in kw acquistato da ogni consumer interno allo slot + la richiesta di x
+        6) si assegnano i nuovi kw ai consumer
 
+         esempio
+         200 + 400 + 500 = 1100
+        per i consumer le cui transazioni sono già all'interno dello slot richiesto
+        let consumer_1 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo); //-> editSlot mmm
+        let consumer_2 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo); //-> editSlot mmm
+
+        per la nuova richiesta di "X"
+        let X_consumer = createRemap(kw_richiesti, 0, tetteo_teorico, 0, tetto_massimo);  //-> reserveSlot mmm
+        */
+
+
+        slot_rimanente = slot_totale; // reset del rimanente 
+
+        const all_slot_transactions = await db_transazioni.findAll({where: {id_producer: req.body.id, slot_selezionato: req.body.slot}}); // trovo tutte le richieste per uno specifico slot
+        let tetto_massimo_teorico = req.body.kw; // inizializzo il tetto massimo teorico con il valore della richiesta attuale
 
         // trovo il tetto massimo teorico
-        const all_slot_transactions = await this.getAllSlotTransactions(req.body.id, req.body.slot)
-        let tetto_massimo_teorico = req.body.kw;
-
-        all_slot_transactions.forEach(function (arrayItem) {
-            tetto_massimo_teorico = arrayItem.costo_slot;
+        all_slot_transactions.forEach(transaction => {
+            tetto_massimo_teorico += transaction.costo_slot;
         });
-        
-        //console.log(tetto_massimo_teorico)
-        
-        // 200 + 400 + 500 = 1100
-        //per i consumer le cui transazioni sono già all'interno dello slot richiesto
-        //let consumer_1 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo); //-> editSlot
-        //let consumer_2 = createRemap(kw_acquistati, 0, tetteo_teorico, 0, tetto_massimo); //-> editSlot
 
-        //per la nuova richiesta di "X"
-        //let X_consumer = createRemap(kw_richiesti, 0, tetteo_teorico, 0, tetto_massimo);  //-> reserveSlot
+        console.log("tetto massimo teorico: ", tetto_massimo_teorico)
+
+        // bilancio tutte le richieste esistenti per lo slot
+        all_slot_transactions.forEach(transaction => {
+
+            // bilancio la richiesta
+            let kw_acquistati_bilanciati = Math.trunc(this.remap_requests(transaction.kw_acquistati, 0, tetto_massimo_teorico, 0, slot_totale))
+
+            // edito la richiesta
+            this.editTransactionFields(transaction, "emissioni_co2_slot", Math.trunc(kw_acquistati_bilanciati * emissioni_co2))
+            this.editTransactionFields(transaction, "costo_slot", Math.trunc(kw_acquistati_bilanciati * slot_costo))
+            this.editTransactionFields(transaction, "kw_acquistati", Math.trunc(kw_acquistati_bilanciati))
+
+            console.log("id transazione: ", transaction.id_transazione, "emissioni: ", Math.trunc(kw_acquistati_bilanciati * emissioni_co2))
+            console.log("id transazione: ", transaction.id_transazione, "costo_slot: ", Math.trunc(kw_acquistati_bilanciati * slot_costo))
+            console.log("id transazione: ", transaction.id_transazione, "kw_acquistati: ", Math.trunc(kw_acquistati_bilanciati))
+
+            slot_rimanente -= kw_acquistati_bilanciati;
+            console.log("slot rimanente for each: ", slot_rimanente)
 
 
+        });
+
+        // bilancio la nuova richiesta che ha provocato il taglio
+        let kw_extra = this.remap_requests(req.body.kw, 0, tetto_massimo_teorico, 0, slot_totale)
+
+        console.log("kw richiesta originali: ", req.body.kw)
+        console.log("kw richiesta bilanciati: ", kw_extra)
+
+        // effettuo una nuova transazione con la richiesta bilanciata
+        req.body.kw = kw_extra
+        console.log("kw richiesta bilanciati dopo assegnamento a req.body: ", req.body.kw)
+
+        await producerController.editSlot(req.body.id, req.body.slot, "rimanente", (slot_rimanente - req.body.kw))
+        console.log("slot rimanente: ", (slot_rimanente))
+        console.log("slot rimanente - req.body.kw: ", (slot_rimanente - req.body.kw))
+
+        await consumerController.editConsumerCredit(req.user.id, consumer.credito -  Math.trunc((req.body.kw*slot_costo)))
+        console.log("nuovo credito: ", Math.trunc((req.body.kw*slot_costo)))
+
+        await this.createTransaction(consumer, producer, req, slot_costo, today, tomorrow);
+        console.log("transazione creata")
+
+        //return await this.reserveSlot(req)
 
     }
 
     diff_hours(dt2, dt1) {
 
     //funzione per calcolare la differenza di ore tra 2 date
-
     var diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60 * 60;
     return Math.round(Math.abs(diff));
 
     }
 
+    remap_requests(x, inMin, inMax, outMin, outMax) {
+
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        
+    }
+
 }
+
+
+
 
 
 module.exports = slotController;
