@@ -158,7 +158,6 @@ class slotController {
             return [200, "OK: troppe richieste per [slot " + req.body.slot +"], effettuato taglio lineare sulle richieste."]
 
         }
-        // ciao 
 
         if((req.body.kw > slot_rimanente) && ( ! producer.accetta_taglio_richieste)) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta."]
 
