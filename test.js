@@ -95,3 +95,12 @@ function inserisci_percentuale(array_percentuale) {
 }
 
 console.log(inserisci_percentuale(calcola_percentuale(array_rimanente, array_totale)));
+
+//funzione che trasforma da un array di oggetti a un array di numeri
+function array_obj_to_num(array_obj) {
+    let array_num = [];
+    for (let i = 0; i < array_obj.length; i++) {
+        array_num.push(array_obj[i].num);
+    }
+    return array_num;
+}
