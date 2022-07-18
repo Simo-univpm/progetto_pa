@@ -154,6 +154,5 @@ const Producer = sequelize.define('producer', {
     freezeTableName: true
 });
 
-//toJson
 
 module.exports = { producer: Producer };
