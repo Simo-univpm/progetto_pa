@@ -30,6 +30,14 @@ const Transazioni = sequelize.define('transazioni', {
         type: Sequelize.FLOAT,
         allowNull: false
     },
+    kw_rimanenti: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+    },
+    kw_massimo: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+    },
     slot_selezionato: {
         type: Sequelize.INTEGER,
         allowNull: false

@@ -26,7 +26,7 @@ class slotController {
 
     }
 
-    async createTransaction(consumer, producer, req, slot_costo, data_acquisto, data_prenotata){
+    async createTransaction(consumer, producer, req, slot_costo, slot_rimanente, slot_totale, data_acquisto, data_prenotata){
 
         let costo_transazione = (req.body.kw*slot_costo).toFixed(2);
         let emissioni_co2_slot = (producer.emissioni_co2*req.body.kw).toFixed(2);
@@ -40,6 +40,8 @@ class slotController {
                 emissioni_co2_slot: emissioni_co2_slot,
                 costo_slot: costo_transazione,
                 kw_acquistati: req.body.kw,
+                kw_rimanenti: slot_rimanente,
+                kw_massimo: slot_totale,
                 slot_selezionato: req.body.slot,
                 fonte_produzione: producer.fonte_produzione,
                 data_acquisto_transazione: data_acquisto,
@@ -61,6 +63,8 @@ class slotController {
         try{
 
             if(campo === "kw_acquistati") transazione.update({kw_acquistati: valore});
+            else if(campo === "kw_rimanenti") transazione.update({kw_rimanenti: valore});
+            else if(campo === "kw_massimo") transazione.update({kw_massimo: valore});
             else if(campo === "costo_slot") transazione.update({costo_slot: valore});
             else if(campo === "emissioni_co2_slot") transazione.update({emissioni_co2_slot: valore});
             else if(campo === "data_acquisto_transazione") transazione.update({data_acquisto_transazione: valore});
@@ -162,7 +166,7 @@ class slotController {
         let kw_rimanenti = slot_rimanente - req.body.kw
         await producerController.editSlot(req.body.id, req.body.slot, "rimanente", kw_rimanenti) // aggiorno kw rimanenti per lo slot
         await consumerController.editConsumerCredit(req.user.id, consumer.credito - (req.body.kw*slot_costo)) // aggiorno credito consumer
-        await this.createTransaction(consumer, producer, req, slot_costo, today, tomorrow); // crea la transazione a db
+        await this.createTransaction(consumer, producer, req, slot_costo, kw_rimanenti, slot_totale, today, tomorrow); // crea la transazione a db
 
         return [200, "OK: Transazione tra [producer " + producer.id_producer + "] e [consumer "+ consumer.id_consumer + "] registrata con successo."]
 
@@ -195,7 +199,6 @@ class slotController {
 
         if(req.body.kw == 0){
             
-            // caso testato e funzionante
             if(this.diff_hours(date_2, date_1) < 24)
             {
                 // se non ci sono almeno 24 ore:
@@ -204,6 +207,7 @@ class slotController {
                 let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
                 
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
+                await this.editTransactionFields(transaction, "kw_rimanenti", valore_aggiornato) // si resettano i kw rimanenti nella transazione
                 await this.editTransactionFields(transaction, "emissioni_co2_slot", 0) // si azzerano le emissioni della transazione
                 await this.editTransactionFields(transaction, "kw_acquistati", 0) // si azzerano i kw acquistati della transazione
 
@@ -211,7 +215,6 @@ class slotController {
 
             }
 
-            // caso testato e funzionante
             if(this.diff_hours(date_2, date_1) >= 24) {
 
                 // se ci sono almeno 24 ore: 
@@ -219,6 +222,7 @@ class slotController {
                 let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
                 
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
+                await this.editTransactionFields(transaction, "kw_rimanenti", valore_aggiornato) // si resettano i kw rimanenti nella transazione
                 await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer
                 await this.delete(transaction.id_transazione) // si cancella la transazione
 
@@ -242,7 +246,12 @@ class slotController {
                 let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
                 let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
                 
+                //console.log("valore slot: ", valore_slot[1])
+                //console.log("valore aggiornato: ", valore_aggiornato)
+                //console.log("kw_acquistati: ", transaction.kw_acquistati)
+
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
+                await this.editTransactionFields(transaction, "kw_rimanenti", valore_aggiornato) // si resettano i kw rimanenti nella transazione
                 await consumerController.editConsumerCredit(req.user.id, (consumer.credito + transaction.costo_slot)) // si riassegna il credito al consumer
                 await this.delete(transaction.id_transazione) // si cancella la transazione
 
@@ -278,6 +287,7 @@ class slotController {
             this.editTransactionFields(transaction, "emissioni_co2_slot", kw_acquistati_bilanciati * emissioni_co2)
             this.editTransactionFields(transaction, "costo_slot", kw_acquistati_bilanciati * slot_costo)
             this.editTransactionFields(transaction, "kw_acquistati", kw_acquistati_bilanciati)
+            this.editTransactionFields(transaction, "kw_rimanenti", slot_rimanente - kw_acquistati_bilanciati)
 
             slot_rimanente -= kw_acquistati_bilanciati;
 
@@ -289,8 +299,8 @@ class slotController {
         // effettuo una nuova transazione con la richiesta bilanciata
         req.body.kw = kw_extra
         await producerController.editSlot(req.body.id, req.body.slot, "rimanente", (slot_rimanente - req.body.kw))
-        await consumerController.editConsumerCredit(req.user.id, consumer.credito - (req.body.kw*slot_costo))
-        await this.createTransaction(consumer, producer, req, slot_costo, today, tomorrow);
+        await consumerController.editConsumerCredit(req.user.id, consumer.credito - (slot_costo*req.body.kw))
+        await this.createTransaction(consumer, producer, req, slot_costo, (slot_rimanente-req.body.kw), slot_totale, today, tomorrow);
 
     }
 

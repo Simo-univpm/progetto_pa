@@ -141,9 +141,9 @@ class producerController {
             let slot = producer[slot_to_read]
             slot = JSON.parse(slot)
 
-            if(campo === "costo") return [200, slot.costo]
-            else if(campo === "totale") return [200, slot.totale]
-            else if(campo === "rimanente")return [200, slot.rimanente]
+            if(campo === "costo") return [200, parseFloat(slot.costo)]
+            else if(campo === "totale") return [200, parseFloat(slot.totale)]
+            else if(campo === "rimanente")return [200, parseFloat(slot.rimanente)]
             else return [404, "ERRORE: campo non esistente"]
 
         }catch(err){
@@ -251,17 +251,48 @@ class producerController {
         % min di energia venduta --> (venduta/erogabile * 100)
         % max di energia venduta
         % med di energia venduta
-          dev std di energia venduta
+        dev std di energia venduta
         */
 
-        // creare oggetto del tipo --> {"slot": 15, "min": 10%, "max": 80%, "dev_std": 123}
+        // cacciare tutti gli slot disponibili nell'intervallo di tempo
+        // fare la somma 
 
-        let min, max, med, dev_std = 0;
+        let kw_erogati_per_slot = [];
+        let lista_slot_analizzati = [];
 
+        for(let i = 0; i < transazioni.length; i++){
 
+            let slot_corrente = transazioni[i].slot_selezionato;
 
+            // controllo se ho già analizzato le vendite per lo slot corrente
+            if( ! lista_slot_analizzati.includes(slot_corrente)) { 
 
-        return [200, transazioni]
+                lista_slot_analizzati.push(slot_corrente)
+                
+                var app_slot = {
+                    "slot_selezionato": slot_corrente,
+                    "kw_acquistati": transazioni[i].kw_acquistati,
+                    "kw_massimo": transazioni[i].kw_massimo,
+                    "data_prenotazione_transazione": transazioni[i].data_prenotazione_transazione
+                }
+
+            }
+            else continue; // se ho analizzato le vendite per lo slot salto l'iterazione
+            
+            // altrimenti si sommano tra di loro i kw acquistati di tutte le transazioni per lo stesso slot
+            for(let k = i+1; k < transazioni.length; k++){
+
+                if(transazioni[k].slot_selezionato == slot_corrente) {
+                    app_slot.kw_acquistati += transazioni[k].kw_acquistati
+                }
+
+            }
+
+            kw_erogati_per_slot.push(app_slot);
+
+        }
+
+        return [200, kw_erogati_per_slot]
 
     }
 
