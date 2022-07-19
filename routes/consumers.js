@@ -11,7 +11,7 @@ const consumerController = new ConsumerController();
 //checkuser()
 //checkcredit()
 
-// edit consumer's credit field
+// edit consumer's credit field // DA RIMUOVERE ????
 router.patch('/', async (req, res) => {
 
     var result = await consumerController.editConsumerCredit(req)
@@ -19,14 +19,28 @@ router.patch('/', async (req, res) => {
     
 });
 
-router.get('/getPurchaseList', checkLogin, async (req, res) => {
+router.get('/transactions/producer', checkLogin, async (req, res) => {
 
-    var result = await consumerController.getPurchaseList(time_period)
+    var result = await consumerController.getPurchaseListProducer(req.user.id, req.body.id)
     res.status(result[0]).json(result[1]);
     
 });
 
-router.get('/getEmissions', checkLogin, async (req, res) => {
+router.get('/transactions/fonte', checkLogin, async (req, res) => {
+
+    var result = await consumerController.getPurchaseListFonte(req.user.id, req.body.fonte)
+    res.status(result[0]).json(result[1]);
+    
+});
+
+router.get('/transactions/periodo', checkLogin, async (req, res) => {
+
+    var result = await consumerController.getPurchaseListPeriodo(req.user.id, req.body.inizio, req.body.fine)
+    res.status(result[0]).json(result[1]);
+    
+});
+
+router.get('/emissions', checkLogin, async (req, res) => {
 
     var result = await consumerController.getEmissions(req.user.id, req.body.inizio, req.body.fine)
     res.status(result[0]).json(result[1]);

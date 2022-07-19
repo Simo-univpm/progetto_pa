@@ -113,7 +113,7 @@ tomorrow.setHours(req.body.slot, 0, 0, 0);
 
 let date = new Date("2020-07-19 20:30")
 console.log(date)
-*/
+
 
 let valore = 12;
 let stringa = "stringa"
@@ -123,3 +123,17 @@ if(typeof valore === 'string'){
 } else {
     console.log("2")
 }
+*/
+
+const obj = {"uno":1, "due": 2, "tre": 3}
+
+function asd(...argomenti){
+
+    console.log(argomenti)
+
+}
+
+
+
+asd(obj)
+
