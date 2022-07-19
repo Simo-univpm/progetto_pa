@@ -302,4 +302,15 @@ async checkStatsROTTO(id_producer, data_inizio, data_fine){
     return [200, statistiche_slots]
 
 }
+//var plotly = require('plotly')({"username": "DummySystem29a", "apiKey": "QK0cHj9839WiHwG3vXEr", "host": "localhost", "port": 443})
+var plotly = require('plotly')("DummySystem29a", "QK0cHj9839WiHwG3vXEr")
+
+var data = [{x:[0,1,2], y:[3,2,1], type: 'bar'}];
+var layout = {fileopt : "overwrite", filename : "simple-node-example"};
+
+plotly.plot(data, layout, function (err, msg) {
+	if (err) return console.log(err);
+	console.log(msg);
+});
+
 */

@@ -24,10 +24,8 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/slot', slotRoutes); // tutte le chiamate per gestire le transazioni tra consumer, producer e slot
 app.use('/api/auth', authRoutes); // le chiamate per effettuare login e registrazione
 
+
 connessioneDB();
-
-
-// si verifica se è passato un giorno per salvare lo storico dei producer a db a fine giornata //
 
 
 // messa in ascolto del server sulla porta specificata nel file .env
