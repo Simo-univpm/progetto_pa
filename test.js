@@ -123,7 +123,7 @@ if(typeof valore === 'string'){
 } else {
     console.log("2")
 }
-*/
+
 
 const obj = {"uno":1, "due": 2, "tre": 3}
 
@@ -137,3 +137,169 @@ function asd(...argomenti){
 
 asd(obj)
 
+*/
+
+
+
+
+
+/*
+async checkStatsNICOLA(id_producer, data_inizio, data_fine){
+
+    let inizio = new Date(data_inizio);
+    let fine = new Date(data_fine);
+
+
+    try{
+
+        var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [inizio , fine]}}});
+        if(transazioni.length == 0) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di date selezionato."]
+
+    }catch(err){
+        return [500, "ERRORE: qualcosa e' andato storto." + err]
+    }
+
+    //inizio.setHours(0, 0, 0, 0);
+    //fine.setHours(0, 0, 0, 0);
+
+    while(inizio <= fine){
+
+        console.log("inizio: ", inizio)
+        console.log("fine: ", fine)
+
+        var kw_erogati_per_slot = [];
+        var lista_slot_analizzati = [];
+
+        // trovo i kw erogati per ogni slot
+        for(let i = 0; i < transazioni.length; i++){
+
+            let slot_corrente = transazioni[i].slot_selezionato;
+
+            // controllo se ho già analizzato le vendite per lo slot corrente
+            if( ! lista_slot_analizzati.includes(slot_corrente)) { 
+
+                lista_slot_analizzati.push(slot_corrente)
+                var app_slot = { "slot_selezionato": slot_corrente, "kw_acquistati": transazioni[i].kw_acquistati, "kw_massimo": transazioni[i].kw_massimo, "data_prenotazione_transazione": transazioni[i].data_prenotazione_transazione }
+
+            } else continue; // se le ho analizzate salto l'iterazione
+            
+            // altrimenti si sommano tra di loro i kw acquistati di tutte le transazioni per lo stesso slot
+            for(let k = i+1; k < transazioni.length; k++){
+
+                let data_prenotazione_trasformata = new Date(transazioni[k].data_prenotazione_transazione)
+                data_prenotazione_trasformata.setHours(0, 0, 0, 0);
+
+                //console.log("data_prenotazione_trasformata: ", data_prenotazione_trasformata)
+
+                if((transazioni[k].slot_selezionato == slot_corrente) && (data_prenotazione_trasformata == inizio)) {
+                    app_slot.kw_acquistati += transazioni[k].kw_acquistati
+                }
+
+            }
+
+            kw_erogati_per_slot.push(app_slot);
+
+        }
+
+        inizio.setDate(inizio.getDate() + 1);
+    }
+
+    let statistiche_slots = [];
+    kw_erogati_per_slot.forEach(slot => {
+        
+        let app_obj = {}
+        app_obj["slot"] = slot.slot_selezionato
+        app_obj["%_min"] = ((slot.kw_acquistati/slot.kw_massimo) * 100)
+        app_obj["%_max"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+        app_obj["%_med"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+        app_obj["dev_std"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+
+        statistiche_slots.push(app_obj)
+
+    });
+
+    return [200, statistiche_slots]
+
+}
+
+async checkStatsROTTO(id_producer, data_inizio, data_fine){
+
+    let inizio = new Date(data_inizio);
+    let fine = new Date(data_fine);
+
+    while(inizio <= fine){
+
+        try{
+
+            let inizio_giornata = inizio.setHours(0,0,0,0);
+            let fine_giornata = inizio.setHours(23,59,0,0);
+
+            console.log(inizio)
+            console.log(inizio <= fine)
+
+            var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [inizio_giornata, fine_giornata]}}});
+            //if(transazioni.length == 0) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di date selezionato."]
+
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
+        }
+
+        let kw_erogati_per_slot = [];
+        let lista_slot_analizzati = [];
+
+        // trovo i kw erogati per ogni slot
+        for(let i = 0; i < transazioni.length; i++){
+
+            let slot_corrente = transazioni[i].slot_selezionato;
+
+            // controllo se ho già analizzato le vendite per lo slot corrente
+            if( ! lista_slot_analizzati.includes(slot_corrente)) { 
+
+                lista_slot_analizzati.push(slot_corrente)
+
+                var app_slot = {
+                    "slot_selezionato": slot_corrente,
+                    "kw_acquistati": transazioni[i].kw_acquistati,
+                    "kw_massimo": transazioni[i].kw_massimo,
+                    "data_prenotazione_transazione": transazioni[i].data_prenotazione_transazione
+                }
+
+            } else continue; // se le ho analizzate salto l'iterazione
+            
+            // altrimenti si sommano tra di loro i kw acquistati di tutte le transazioni per lo stesso slot
+            for(let k = i+1; k < transazioni.length; k++){
+
+                if(transazioni[k].slot_selezionato == slot_corrente) {
+                    app_slot.kw_acquistati += transazioni[k].kw_acquistati
+                }
+
+            }
+
+            kw_erogati_per_slot.push(app_slot);
+
+        }
+
+
+        var statistiche_slots = [];
+        kw_erogati_per_slot.forEach(slot => {
+            
+            let app_obj = {}
+            app_obj["slot"] = slot.slot_selezionato
+            app_obj["date"] = slot.data_prenotazione_transazione
+            app_obj["%_min"] = ((slot.kw_acquistati/slot.kw_massimo) * 100)
+            app_obj["%_max"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+            app_obj["%_med"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+            app_obj["dev_std"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+
+            statistiche_slots.push(app_obj)
+
+        });
+
+        inizio.setDate(inizio.getDate() + 1);
+    }
+
+
+    return [200, statistiche_slots]
+
+}
+*/

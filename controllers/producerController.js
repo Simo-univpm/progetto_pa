@@ -232,7 +232,7 @@ class producerController {
 
     }
 
-    async checkStatsOLDandWORKING(id_producer, inizio, fine){
+    async checkStats(id_producer, inizio, fine){
 
         try{
 
@@ -242,9 +242,6 @@ class producerController {
         }catch(err){
             return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
-
-        console.log(new Date(inizio) < new Date(fine))
-        console.log(new Date(inizio), new Date(fine))
 
         let kw_erogati_per_slot = [];
         let lista_slot_analizzati = [];
@@ -288,9 +285,9 @@ class producerController {
             let app_obj = {}
             app_obj["slot"] = slot.slot_selezionato
             app_obj["%_min"] = ((slot.kw_acquistati/slot.kw_massimo) * 100)
-            app_obj["%_max"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
-            app_obj["%_med"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
-            app_obj["dev_std"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+            app_obj["%_max"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // aggiornare calcoli
+            app_obj["%_med"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // aggiornare calcoli
+            app_obj["dev_std"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // aggiornare calcoli
 
             statistiche_slots.push(app_obj)
 
@@ -299,85 +296,6 @@ class producerController {
         return [200, statistiche_slots]
 
     }
-
-    async checkStats(id_producer, data_inizio, data_fine){
-
-        let inizio = new Date(data_inizio);
-        let fine = new Date(data_fine);
-
-
-        try{
-
-            var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [inizio , fine]}}});
-            if(transazioni.length == 0) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di date selezionato."]
-
-        }catch(err){
-            return [500, "ERRORE: qualcosa e' andato storto." + err]
-        }
-
-        //inizio.setHours(0, 0, 0, 0);
-        //fine.setHours(0, 0, 0, 0);
-
-        while(inizio <= fine){
-
-            console.log("inizio: ", inizio)
-            console.log("fine: ", fine)
-
-            var kw_erogati_per_slot = [];
-            var lista_slot_analizzati = [];
-    
-            // trovo i kw erogati per ogni slot
-            for(let i = 0; i < transazioni.length; i++){
-    
-                let slot_corrente = transazioni[i].slot_selezionato;
-    
-                // controllo se ho già analizzato le vendite per lo slot corrente
-                if( ! lista_slot_analizzati.includes(slot_corrente)) { 
-    
-                    lista_slot_analizzati.push(slot_corrente)
-                    var app_slot = { "slot_selezionato": slot_corrente, "kw_acquistati": transazioni[i].kw_acquistati, "kw_massimo": transazioni[i].kw_massimo, "data_prenotazione_transazione": transazioni[i].data_prenotazione_transazione }
-    
-                } else continue; // se le ho analizzate salto l'iterazione
-                
-                // altrimenti si sommano tra di loro i kw acquistati di tutte le transazioni per lo stesso slot
-                for(let k = i+1; k < transazioni.length; k++){
-    
-                    let data_prenotazione_trasformata = new Date(transazioni[k].data_prenotazione_transazione)
-                    data_prenotazione_trasformata.setHours(0, 0, 0, 0);
-
-                    //console.log("data_prenotazione_trasformata: ", data_prenotazione_trasformata)
-
-                    if((transazioni[k].slot_selezionato == slot_corrente) && (data_prenotazione_trasformata == inizio)) {
-                        app_slot.kw_acquistati += transazioni[k].kw_acquistati
-                    }
-    
-                }
-    
-                kw_erogati_per_slot.push(app_slot);
-    
-            }
-
-            inizio.setDate(inizio.getDate() + 1);
-        }
-
-        let statistiche_slots = [];
-        kw_erogati_per_slot.forEach(slot => {
-            
-            let app_obj = {}
-            app_obj["slot"] = slot.slot_selezionato
-            app_obj["%_min"] = ((slot.kw_acquistati/slot.kw_massimo) * 100)
-            app_obj["%_max"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
-            app_obj["%_med"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
-            app_obj["dev_std"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
-
-            statistiche_slots.push(app_obj)
-
-        });
-
-        return [200, statistiche_slots]
-
-    }
-
 
     async checkEarnings(id_producer, inizio, fine){
         
