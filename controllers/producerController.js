@@ -234,10 +234,6 @@ class producerController {
 
     async checkStats(id_producer, inizio, fine){
 
-        // getta tutte le transazioni per il periodo temporale selezionato | OK
-        // getta tutti gli slot per quella fascia oraria --> gli slot usati stanno dentro le transazioni
-        // dove ci sono i buchi ritorna kw 100% o qualcosa del genere
-
         try{
 
             var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
@@ -247,19 +243,11 @@ class producerController {
             return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
-        /* prendere:
-        % min di energia venduta --> (venduta/erogabile * 100)
-        % max di energia venduta
-        % med di energia venduta
-        dev std di energia venduta
-        */
-
-        // cacciare tutti gli slot disponibili nell'intervallo di tempo
-        // fare la somma 
 
         let kw_erogati_per_slot = [];
         let lista_slot_analizzati = [];
 
+        // trovo i kw erogati per ogni slot
         for(let i = 0; i < transazioni.length; i++){
 
             let slot_corrente = transazioni[i].slot_selezionato;
@@ -268,7 +256,7 @@ class producerController {
             if( ! lista_slot_analizzati.includes(slot_corrente)) { 
 
                 lista_slot_analizzati.push(slot_corrente)
-                
+
                 var app_slot = {
                     "slot_selezionato": slot_corrente,
                     "kw_acquistati": transazioni[i].kw_acquistati,
@@ -292,7 +280,24 @@ class producerController {
 
         }
 
-        return [200, kw_erogati_per_slot]
+
+        let statistiche_slots = [];
+        kw_erogati_per_slot.forEach(slot => {
+            
+            let app_obj = {}
+            app_obj["slot"] = slot.slot_selezionato
+            app_obj["%_min"] = ((slot.kw_acquistati/slot.kw_massimo) * 100)
+            app_obj["%_max"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+            app_obj["%_med"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+            app_obj["dev_std"] = ((slot.kw_acquistati/slot.kw_massimo) * 100) // inserire matematica di nicola qui
+
+            statistiche_slots.push(app_obj)
+
+        });
+
+
+
+        return [200, statistiche_slots]
 
     }
 
