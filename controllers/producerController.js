@@ -77,7 +77,6 @@ class producerController {
         const data_registrazione = new Date();
     
         producer.nome = data.nome;
-        producer.codice_fiscale = data.codice_fiscale;
         producer.email = data.email;
         producer.passwd = hashed_passwd;
         producer.fonte_produzione = data.fonte_produzione;
@@ -236,52 +235,25 @@ class producerController {
 
 
     async checkEarnings(id_producer, inizio, fine){
-
-        /*
-        // trova i guadagni per il produttore loggato nel range di slot indicato per tutte le transazioni effettuate
-            {
-                "inizio": 0,
-                "fine": 18
-            }
-
         
-        // trova i guadagni per il produttore loggato nel range temporale specificato
-            {
-                "inizio": "2022-07-20 05:00",
-                "fine": "2022-07-20 05:00"
-            }
-        
-        */
-
-        // caso in cui l'utente inserisce data e ora --> "2020-07-19 20:30"
-        if((typeof inizio === 'string') && (typeof fine === 'string')){
-
-            try{
-
-                var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
-                if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di date selezionato."]
-    
-            }catch(err){
-                return [500, "ERRORE: qualcosa e' andato storto." + err]
-            }
-
-        } else {
-
-            // caso in cui l'utente inserisce un range di slot 15 - 18
-            if((inizio < 0) || (inizio > 23)) return [400, "ERRORE: periodo selezionato non valido."]
-            if((fine < 0) || (fine > 23)) return [400, "ERRORE: periodo selezionato non valido."]
-
-            try{
-
-                var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "slot_selezionato": {[Op.between] : [inizio , fine]}}});
-                if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di slot selezionato."]
-
-            }catch(err){
-                return [500, "ERRORE: qualcosa e' andato storto." + err]
-            }
-
+    /*
+    trova i guadagni per il produttore loggato nel range temporale specificato
+        {
+            "inizio": "2022-07-20 05:00",
+            "fine": "2022-07-20 05:00"
         }
         
+    */
+
+        try{
+
+            var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
+            if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di date selezionato."]
+
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
+        }
+
         let guadagno = 0;
         transazioni.forEach(transazione => {
             guadagno += transazione.costo_slot;

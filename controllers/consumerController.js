@@ -1,6 +1,8 @@
-const db_transazioni = require('../model/transazioni').transazioni;const db_consumers = require('../model/consumer').consumer;
+const db_consumers = require('../model/consumer').consumer;
+const db_transazioni = require('../model/transazioni').transazioni;
 const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
+
 
 class consumerController {
 
@@ -113,23 +115,61 @@ class consumerController {
     }
 
     // consegna ==============================================
-    async getPurchaseList(id_consumer, producer, fonte, inizio, fine){
+    async getPurchaseListProducer(id_consumer, id_producer){
 
-        
+        if(typeof id_producer != 'Number') return [400, "ERRORE: inserire un id numerico."]
 
+        try{
+
+            // tutte le transazioni effettuate dall'utente filtrate per id_producer
+            const transazioni = await db_transazioni.findAll({where: {id_consumer: id_consumer, id_producer: id_producer}});
+            if((transazioni.length == 0)) return [404, "ERRORE: transazioni con [producer " + id_producer + "] per [consumer " + id_consumer + "] non trovate."]
+
+            return [200, transazioni];
+
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
+        }
+
+
+    }
+
+    async getPurchaseListFonte(id_consumer, fonte){
+
+        try{
+
+            // tutte le transazioni effettuate dall'utente filtrate per fonte
+            const transazioni = await db_transazioni.findAll({where: {id_consumer: id_consumer, fonte_produzione: fonte}});
+            if(transazioni.length == 0) return [404, "ERRORE: transazioni di energia [" + fonte + "] per [consumer " + id_consumer + "] non trovate."]
+
+            return [200, transazioni];
+
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
+        }
+
+
+    }
+
+    async getPurchaseListPeriodo(id_consumer, inizio, fine){
+
+        try{
+
+            // tutte le transazioni effetuate dall'utente filtrate per periodo temporale
+            const transazioni = await db_transazioni.findAll({ where: {id_consumer: id_consumer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
+            if(transazioni.length == 0) return [404, "ERRORE: transazioni per il periodo [" + inizio  + ", " + fine + "] per [consumer " + id_consumer + "] non trovate."]
+
+            return [200, transazioni];
+
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
+        }
     }
 
     async getEmissions(id_consumer, inizio, fine){
 
-        /*
-        // trova le emissioni per il consumer loggato nel range di slot indicato per tutte le transazioni effettuate
-            {
-                "inizio": 0,
-                "fine": 18
-            }
-
-        
-        // trova le emissioni per il consumer loggato nel range temporale specificato
+        /*      
+        trova le emissioni per il consumer loggato nel range temporale specificato
             {
                 "inizio": "2022-07-20 05:00",
                 "fine": "2022-07-20 05:00"
@@ -137,33 +177,13 @@ class consumerController {
         
         */
 
-        // caso in cui l'utente inserisce data e ora --> "2020-07-19 20:30"
-        if((typeof inizio === 'string') && (typeof fine === 'string')){
+        try{
 
-            try{
+            var transazioni = await db_transazioni.findAll({ where: {id_consumer: id_consumer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
+            if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [consumer " + id_consumer + "] per il range di date selezionato."]
 
-                var transazioni = await db_transazioni.findAll({ where: {id_consumer: id_consumer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
-                if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [consumer " + id_consumer + "] per il range di date selezionato."]
-    
-            }catch(err){
-                return [500, "ERRORE: qualcosa e' andato storto." + err]
-            }
-
-        } else {
-
-            // caso in cui l'utente inserisce un range di slot 15 - 18
-            if((inizio < 0) || (inizio > 23)) return [400, "ERRORE: periodo selezionato non valido."]
-            if((fine < 0) || (fine > 23)) return [400, "ERRORE: periodo selezionato non valido."]
-
-            try{
-
-                var transazioni = await db_transazioni.findAll({ where: {id_consumer: id_consumer, "slot_selezionato": {[Op.between] : [inizio , fine]}}});
-                if( ! transazioni) return [404, "ERRORE: transazioni non trovate per [consumer " + id_consumer + "] per il range di slot selezionato."]
-
-            }catch(err){
-                return [500, "ERRORE: qualcosa e' andato storto." + err]
-            }
-
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
         }
 
         let emissioni = 0;
