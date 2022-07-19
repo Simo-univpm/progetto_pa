@@ -1,8 +1,8 @@
-const { Op } = require('sequelize');
-
 const db_transazioni = require('../model/transazioni').transazioni;
 const db_producers = require('../model/producer').producer;
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
+
 
 class producerController {
 
@@ -281,12 +281,13 @@ class producerController {
             }
 
         }
-            let guadagno = 0;
-            transazioni.forEach(transazione => {
-                guadagno += transazione.costo_slot;
-            });
+        
+        let guadagno = 0;
+        transazioni.forEach(transazione => {
+            guadagno += transazione.costo_slot;
+        });
 
-            return [200, guadagno]
+        return [200, guadagno]
 
     }
 
