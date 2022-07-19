@@ -212,7 +212,7 @@ class producerController {
         let kw_erogati = [];
         for(let i = 0; i < totale.length; i ++) kw_erogati.push(totale[i] - rimanente[i]);
 
-        // calcolo della percentuale di energia erogata nel periodo considerat
+        // calcolo della percentuale di energia erogata nel periodo considerato
         const percentuali_occupazione = this.calcola_percentuale(kw_erogati, totale);
 
         // costruisco un array contenente il nome dello slot interessato e la percentuale di energia erogata
@@ -231,7 +231,38 @@ class producerController {
 
     }
 
-    async checkStats(body){}
+    async checkStats(id_producer, inizio, fine){
+
+        // getta tutte le transazioni per il periodo temporale selezionato | OK
+        // getta tutti gli slot per quella fascia oraria --> gli slot usati stanno dentro le transazioni
+        // dove ci sono i buchi ritorna kw 100% o qualcosa del genere
+
+        try{
+
+            var transazioni = await db_transazioni.findAll({ where: {id_producer: id_producer, "data_prenotazione_transazione": {[Op.between] : [new Date(inizio) , new Date(fine)]}}});
+            if(transazioni.length == 0) return [404, "ERRORE: transazioni non trovate per [producer " + id_producer + "] per il range di date selezionato."]
+
+        }catch(err){
+            return [500, "ERRORE: qualcosa e' andato storto." + err]
+        }
+
+        /* prendere:
+        % min di energia venduta --> (venduta/erogabile * 100)
+        % max di energia venduta
+        % med di energia venduta
+          dev std di energia venduta
+        */
+
+        // creare oggetto del tipo --> {"slot": 15, "min": 10%, "max": 80%, "dev_std": 123}
+
+        let min, max, med, dev_std = 0;
+
+
+
+
+        return [200, transazioni]
+
+    }
 
 
     async checkEarnings(id_producer, inizio, fine){
