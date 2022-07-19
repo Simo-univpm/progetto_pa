@@ -22,7 +22,7 @@ CREATE TABLE db_consumer(
 CREATE TABLE db_producer(
   id_producer INTEGER NOT NULL,
   nome VARCHAR(50) NOT NULL,
-  codice_fiscale VARCHAR(50) NOT NULL,
+  --codice_fiscale VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   passwd VARCHAR(50) NOT NULL,
   fonte_produzione VARCHAR(50) NOT NULL,
@@ -83,28 +83,39 @@ CREATE TABLE db_transazioni(
 );
 
 
-INSERT INTO prodotto (nome_prodotto, tipologia, anno, prezzo, disponibile, link)
-VALUES 
-    ('U2 - One', 'Audio', 1992, 2, false, null),
-    ('U2 - One (Official Music Video)', 'Video', 1992, 3, false, null),
-    ('Mahmood, BLANCO - Brividi', 'Audio', 2022, 2, true, './files/Mahmood, BLANCO - Brividi.mp3'),
-    ('Pinguini Tattici Nucleari - Irene', 'Audio', 2018, 2, true, './files/Pinguini Tattici Nucleari - Irene.mp3'),
-    ('Radiohead - Creep (Official Music Video)', 'Video', 1992, 3, true, './files/Radiohead - Creep (Official Music Video).mp4');
+INSERT INTO db_consumer(nome, email, passwd, credito, privilegi, data_registrazione)
+VALUES
+--// id_cons, nome,       cognome,  email,                    passwd,     credito,  privilegi,    data_registrazione
+    ('1',     'Mario',    'cogn',   'mario@mario.it',         'mario',    500,      2,            '2022-07-19 00:57:39.964+02');
+    ('2',     'Giuseppe', 'cogn',   'giuseppe@giuseppe.it',   'giuseppe', 1000,     2,            '2022-07-19 00:57:39.964+02');
+    ('3',     'Luca',     'cogn',   'luca@luca.it',           'luca',     600,      2,            '2022-07-19 00:57:39.964+02');
+    ('4',     'Paolo',    'cogn',   'paolo@paolo.it',         'paolo',    700,      2,            '2022-07-19 00:57:39.964+02');
+    ('5',     'Giovanni', 'cogn',   'giovanni@giovanni.it',   'giovanni', 900,      2,            '2022-07-19 00:57:39.964+02');
+    
 
-INSERT INTO utente (username, passwd, cognome, nome, mail, ruolo, indirizzo, credito)
+INSERT INTO db_producer (nome, codice_fiscale, email, passwd, fonte_produzione, emissioni_co2, privilegi, data_registrazione, accetta_taglio_richieste)
 VALUES 
-    ('paolo95','$2a$12$zHLBzgjqH1xIDLI0Oasr6..4i0VYWlfWOLc1sIKl8tYPFXs1e.1s2', 'Compagnoni', 'Paolo', 'compagnonipaolo95@gmail.com', 'admin', 'Viale Piane San Donato 33 - Corropoli (TE)', 7),
-    ('simone95','$2a$12$huCmEyw5m2thUh.2P6vEmeG/SPbGEN5TTOlEteDsbTkBbL0sLUvam', 'Onori', 'Simone', 'simoenonori@gmail.com', 'user', 'Via Napoli 2/A - Ascoli Piceno (AP)', 7),
-    ('faini98','$2a$12$Y8DXqFtpNeTzlBnm8cHZqupe1eG/EBOAySqkGs1REDhedtQmGjmKa', 'Faini', 'Aurora', 'aurorafaini@gmail.com', 'user', 'Via Giuseppe Mazzini 22 - Monteprandone (AP)', 7),
-    ('schiavi92','$2a$12$rccf3ddKBAtF00Uzz38xA.8q5yJ/swYqHWS9jT3Ze1U0gfhYemCS.', 'Schiavi', 'Elise', 'eliseschiavi@gmail.com', 'admin', 'Via dell Olmo 7 - San Benedetto del Tronto (AP)', 7);
+--// id_p, nome,              email,            passwd,             fonte_prod,     emis_co2, slot_0('costo slot', 'tetto_massimo', 'rimanente')           slot_1('costo slot', 'tetto_massimo', 'rimanente')           slot_2('costo slot', 'tetto_massimo', 'rimanente')            slot_3('costo slot', 'tetto_massimo', 'rimanente')          slot_4('costo slot', 'tetto_massimo', 'rimanente')            slot_5('costo slot', 'tetto_massimo', 'rimanente')          slot_6('costo slot', 'tetto_massimo', 'rimanente')           slot_7('costo slot', 'tetto_massimo', 'rimanente')           slot_8('costo slot', 'tetto_massimo', 'rimanente')           slot_9('costo slot', 'tetto_massimo', 'rimanente')           slot_10('costo slot', 'tetto_massimo', 'rimanente')          slot_11('costo slot', 'tetto_massimo', 'rimanente')          slot_12('costo slot', 'tetto_massimo', 'rimanente')          slot_13('costo slot', 'tetto_massimo', 'rimanente')          slot_14('costo slot', 'tetto_massimo', 'rimanente')          slot_15('costo slot', 'tetto_massimo', 'rimanente')          slot_16('costo slot', 'tetto_massimo', 'rimanente')          slot_17('costo slot', 'tetto_massimo', 'rimanente')          slot_18('costo slot', 'tetto_massimo', 'rimanente')          slot_19('costo slot', 'tetto_massimo', 'rimanente')           slot_20('costo slot', 'tetto_massimo', 'rimanente')          slot_21('costo slot', 'tetto_massimo', 'rimanente')          slot_22('costo slot', 'tetto_massimo', 'rimanente')          slot_23('costo slot', 'tetto_massimo', 'rimanente')          data_registrazione,          accetta_taglio_richieste)
+    ('1',  'ENEL',            'enel@enel.it',   'enel',             'fossile',      0.5,      "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", '2022-07-19 00:57:39.964+02', true);
+    ('2',  'EnergiaPulita',   'enpu@enpu.it',   'energiapulita',    'eolico',       0,        "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", '2022-07-19 00:57:39.964+02', false);
+    ('3',  'SolarEnergyPower','solen@solen.it', 'solarenergypower', 'fotovoltaico', 0,        "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", "{"costo":"1.00","totale":"1000.00","rimanente":"1000.00"}", '2022-07-19 00:57:39.964+02', false);
 
-INSERT INTO acquisto (utente, prodotto, data_acquisto, originale, mail_amico, download_amico)
-VALUES 
-    (1, 2, '2022-03-02', true, null, null),
-    (1, 2, '2002-03-02', false, null, null),
-    (1, 3, '2022-07-21', false, null, null),
-    (2, 2, '2022-11-20', false, null, null),
-    (1, 3, '2022-01-21', true, 'prova@prova.com', false),
-    (2, 2, '2022-04-20', true, 'tizio@tizio.com', true),
-    (2, 3, '2022-07-12', true, null, null),
-    (3, 3, '2021-08-06', true, null, null);
+
+    
+
+INSERT INTO db_admin(nome, email, passwd, privilegi, data_registrazione)
+VALUES
+--  id_a, nome,      email,                passwd,    priv, data_registrazione
+    ('1', 'admin_1', 'admin_1@admin_1.it', 'admin_1', 0,    '2022-07-19 00:57:39.964+02');
+
+
+INSERT INTO db_transazioni(id_consumer, id_producer, emissioni_co2_slot, costo_slot, kw_acquistati, slot_selezionato, fonte_produzione, data_acquisto_transazione, data_prenotazione_transazione)
+VALUES
+  --id_tran, id_prod, id_cons, em_co2, $_slot, kw_acq, slot_n, fonte,          data_acq,                      data_slot_pren
+    ('1',    '1',     '1',     '0.5',  '200',  '100',  '10',   'fossile',      '2022-07-19 00:57:39.964+02',  '2022-07-19 10:00:00.964+02');
+    ('2',    '2',     '3',     '0',    '300',  '500',  '15',   'eolico',       '2022-07-19 00:57:39.964+02',  '2022-07-19 00:57:39.964+02');
+    ('3',    '3',     '0.5',   '0.5',  '0.5',  '1',    '11',   'fotovoltaico', '2022-07-19 00:57:39.964+02',  '2022-07-19 00:57:39.964+02');
+    ('4',    '1',     '0.5',   '0.5',  '0.5',  '1',    '11',   'fossile',      '2022-07-19 00:57:39.964+02',  '2022-07-19 00:57:39.964+02');
+    ('5',    '2',     '0.5',   '0.5',  '0.5',  '1',    '20',   'eolico',       '2022-07-19 00:57:39.964+02',  '2022-07-19 00:57:39.964+02');
+    ('6',    '3',     '0.5',   '0.5',  '0.5',  '1',    '18',   'fotovoltaico', '2022-07-19 00:57:39.964+02',  '2022-07-19 00:57:39.964+02');
+    ('7',    '1',     '0.5',   '0.5',  '0.5',  '1',    '15',   'fossile',      '2022-07-19 00:57:39.964+02',  '2022-07-19 00:57:39.964+02');

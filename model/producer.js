@@ -16,10 +16,10 @@ const Producer = sequelize.define('producer', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    codice_fiscale: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
+    //codice_fiscale: {
+    //    type: Sequelize.STRING,
+    //    allowNull: false
+    //},
     email: {
         type: Sequelize.STRING,
         allowNull: false
