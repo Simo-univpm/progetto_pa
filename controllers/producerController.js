@@ -77,7 +77,7 @@ class producerController {
         const data_registrazione = new Date();
     
         producer.nome = data.nome;
-        producer.codice_fiscale = data.codice_fiscale;
+        //producer.codice_fiscale = data.codice_fiscale;
         producer.email = data.email;
         producer.passwd = hashed_passwd;
         producer.fonte_produzione = data.fonte_produzione;
