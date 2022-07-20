@@ -395,7 +395,7 @@ In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 # Esecuzione del software
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando 
 ```
-**"docker compose -f docker-compose.yml up"**.
+docker compose -f docker-compose.yml up
 ```
 
 ## Dockerfile
