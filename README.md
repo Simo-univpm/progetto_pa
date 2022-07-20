@@ -34,7 +34,7 @@ Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descriz
 
 ### Chiamate disponibili per tutti gli utenti all'endpoint **...:8080/api/auth**
 
-#### (POST) .../registerProducer
+- #### (POST) .../registerProducer
 Rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo producer.
 La richiesta necessita di un body con i seguenti dati:
 ```
