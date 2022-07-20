@@ -7,6 +7,7 @@ dotenv.config();
 class Singleton{
     
     static creaSingleton = (function () {
+
         let instance;
 
         function createInstance() {
@@ -27,6 +28,7 @@ class Singleton{
                 return instance;
             }
         };
+        
     })();
 
 

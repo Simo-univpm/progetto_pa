@@ -20,8 +20,6 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 
 # Progettazione
 - librerie e perché
-- struttura directory progetto
-- pattern mvc, singleton, cor
 - due diagrammi uml
 - due diagrammi use case
 - nuovo schema er
@@ -100,10 +98,18 @@ da completare
 Come pattern architetturale è stato scelto di utilizzare l'MVC; Nel nostro caso tutte le entità rappresentanti il dominio interessato sono contenuti nella directory model, mentre i controller che offrono tutte le logiche di business per operare con le entità sono contenuti nella directory controllers, permettendoci quindi di separare completamente le entità dai relativi metodi. Inoltre questo rende indipendente lo sviluppo del server backend rispetto allo sviluppo dell'interfaccia grafica, che appunto è stata simulata con Postman per ovviare alla sua mancanza.
 
 - ### Singleton
-Il singleton è un pattern che ci garantisce l'esistenza di una singola instanza di entità all'interno dell'applicazione. In particolare è stato usato il pattern per istanziare la connessione al database postgres che essendo costosa va limitata.
-Il file che sfrutta questo pattern è "database.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico che ci permette di ottenere l'istanza di sequelize se è già stata creata, oppure ne genererà una al momento della richiesta tramite le variabili d'ambiente specificate nel file ".env"
+Il singleton è un pattern che ci garantisce l'esistenza di una singola istanza di entità all'interno dell'applicazione. In particolare è stato usato il pattern per istanziare la connessione al database postgres che essendo costosa va limitata.
+Il file che sfrutta questo pattern è "database.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico "creaSingleton" che ci permette di ottenere l'istanza di sequelize se è già stata creata, altrimenti ne genererà una al momento della richiesta tramite le variabili d'ambiente specificate nel file ".env".
+Questo ci permette di andare ad effettuare le query sfruttando solamente l'unica connessione al database postgres esitente e quindi di risparmiare risorse.
+Il metodo che ci permette di ottenere la connessione è esportato sotto il nome di "sequelize" (che corrisponde a "Singleton.creaSingleton.getInstance()"), di conseguenza all'interno di ogni model sarà presente il comando "const sequelize = require('./database').sequelize;" per sfruttarla generando le query di cui il software ha bisogno.
 
 - ### Chain Of Responsibility (COR)
+Il COR è un pattern comportamentale che permette di passare le richieste lungo una "catena" di gestori. Dopo aver ricevuto una richiesta, ogni gestore elabora la richiesta e decide se passarla al gestore successivo della catena o se sollevare un'eccezione.
+Nel software sviluppato questo pattern è individuabile nel file principale "index.js" dove si proteggono le rotte per l'accesso alle risorse con una catena di middlewares. Ad esempio la rotta ".../api/consumers" è protetta da una COR di 3 middleware ovvero: checkLogin, checkConsumer e checkCredit. Il cor è implementato secondo questa istruzione "app.use('/api/consumers', [checkLogin, checkConsumer, checkCredit]);" che appunto "filtra" la richiesta secondo i 3 middlewares.
+In particolar modo checkLogin si occupa di verificare se l'utente che genera la richiesta è autenticato o meno, se è autenticato la richiesta passa al middleware checkConsumer che si occupa di controllare se l'utente possiede i privilegi da consumer e se l'utente è un consumer allora si passa la richiesta all'ultimo middleware checkCredit che verifica se l'utente è in possesso di credito.
+Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in base al middleware.
+
+## Diagrammi UML e 
 
 # Test del progetto
 Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/); tutte le chiamate eccetto quelle rispondenti all'endpoint .../api/auth necessitano del token "auth-token" nell'header della richiesta. Il token contiene le informazioni base degli utenti **necessarie** al funzionamento del programma.
