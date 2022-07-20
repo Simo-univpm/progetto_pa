@@ -30,15 +30,15 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 # Test del progetto
 Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/). Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descrizioni e degli esempi di body usati per testare il software:
 
-### Chiamate disponibili per tutti gli utenti all'endpoint ...:8080/api/auth
+### Chiamate disponibili per tutti gli utenti all'endpoint **...:8080/api/auth**
 
 #### (POST) .../registerProducer
 rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo producer.
 La richiesta necessita di un body con i seguenti dati:
 ```
 {
-    "nome": "nome_produttore",
-    "email": "email_produttore",
+    "nome": "nome produttore",
+    "email": "email@produttore.it",
     "passwd": "password_produttore",
     "fonte_produzione": "fotovoltaico",
     "emissioni_co2": 2.3,
@@ -51,11 +51,33 @@ dove:
 -  **fonte_produzione** (stringa) rappresenta le 3 tipologie di fonte di produzione specificate dalla consegna, ovvero "Eolico", "Fossile", "Fotovoltaico";
 -  **emissioni_co2** (valore) rappresenta i grammi di co2 prodotti per kw di energia
 -  **costo** (valore) rappresenta il costo di ogni kw di energia
--  **tetto_max_kwh_init** (valore) rappresenta la soglia massima di produzione con la quale inizializzare tutti gli slot del produttore al momento della creazione (soglia alterabile tramite le chiamate apposite disponibili all'endpoint .../producers)
+-  **tetto_max_kwh_init** (valore) rappresenta la soglia massima di produzione con la quale inizializzare **tutti** gli slot del produttore al momento della creazione (soglia alterabile tramite le chiamate apposite disponibili all'endpoint .../producers)
 - **taglio** (boolean) rappresenta la possibilità per il produttore di applicare o meno un taglio lineare sia alle transazioni già effettuate sia ad una nuova transazione in ingresso nel caso in cui quest'ultima richieda un quantitativo superiore alla disponibilità.
 
 #### (POST) .../registerConsumer
+rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo consumer.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "nome": "nome consumer",
+    "email": "email@consumer.it",
+    "passwd": "password_consumer",
+    "credito": 100000
+}
+```
+dove:
+- **credito** (valore) corrisponde al credito con il quale si vuole inizializzare l'utente. Il credito è necessario per prenotare gli slot.
+
 #### (POST) .../registerAdmin
+rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo amministratore.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "nome": "admin",
+    "email": "admin",
+    "passwd": "admin"
+}
+```
 
 #### (POST) .../login
 rotta comune a tutti gli utenti, serve per effettuare il login per ottenere il Json Web Token (JWT) di autenticazione necessario per effettuare una qualsiasi altra chiamata ad eccezione di quelle disponibili sotto questo endpoint.
@@ -72,6 +94,7 @@ dove il campo "privilegi" sono i privilegi dell'utente inseriti al momento della
 ### Chiamate disponibili solamente per i producers all'endpoint ...:8080/api/producers
 
 #### (GET) .../checkReservations
+
 #### (GET) .../checkEarnings
 #### (GET) .../checkStats
 #### (PATCH) .../kw
