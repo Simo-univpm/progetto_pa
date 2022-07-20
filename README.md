@@ -26,7 +26,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - sequence diagram
 - diagramma entity relationship
 - autenticazione e JWT
-- chiamate api
+- chiamate API
 - esecuzione del progetto tramite docker compose
 - software ausiliari
 
@@ -332,7 +332,7 @@ La richiesta è quindi in grado di accettare due body diversi:
 ```
 dove:
 - **slot**(valore) è il singolo slot che si vuole modificare con i kw richiesti
-- **kw**(valore) è il nuovo tetto massimo che si vuole assegnare allo slot
+- **kw**(valore) è il nuovo tetto massimo che si vuole assegnare allo slot.
 in questo caso viene impostato il tetto massimo dello slot che va dalle 23:00 alle 23:59 con un valore pari a 1500 kw
 
 oppure
@@ -344,7 +344,7 @@ oppure
 }
 ```
 dove:
-- **slot**(stringa) è l'unico valore ammesso e rappresenta tutti gli slot del produttore che effettua la chiamata
+- **slot**(stringa) è l'unico valore ammesso e rappresenta tutti gli slot del produttore che effettua la chiamata.
 in questo caso vengono impostati tutti i tetti massimi del produttore a 1500 kw
 
 - ### (PATCH) .../costo
@@ -357,7 +357,7 @@ La richiesta è quindi in grado di accettare due body diversi:
 }
 ```
 dove:
-- **costo**(valore) è il nuovo costo per kw che si vuole assegnare allo slot
+- **costo**(valore) è il nuovo costo per kw che si vuole assegnare allo slot.
 in questo caso viene impostato il costo per kw dello slot che va dalle 23:00 alle 23:59 a 50
 
 oppure
@@ -368,7 +368,6 @@ oppure
     "kw": 50
 }
 ```
-dove:
 in questo caso vengono i costi per kw di tutti gli slot del produttore a 50
 
 ---
@@ -395,7 +394,6 @@ In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando **"docker compose -f docker-compose.yml up"**.
 
 # Software ausiliari utilizzati
-
 Per portare a termine il progetto sono stati utilizzati alcuni software ausiliari che ci sono tornati utili in fase di test e sviluppo.
 
 #Visual Studio Code e GitHub:
