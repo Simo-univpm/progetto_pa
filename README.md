@@ -101,7 +101,7 @@ Come pattern architetturale è stato scelto di utilizzare l'MVC; Nel nostro caso
 
 - ### Singleton
 Il singleton è un pattern che ci garantisce l'esistenza di una singola instanza di entità all'interno dell'applicazione. In particolare è stato usato il pattern per istanziare la connessione al database postgres che essendo costosa va limitata.
-Il file che sfrutta questo pattern è "database.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico che ci permette di ottenere l'istanza di sequelize se è già stata creata, oppure ne genererà una al momento della richiesta.
+Il file che sfrutta questo pattern è "database.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico che ci permette di ottenere l'istanza di sequelize se è già stata creata, oppure ne genererà una al momento della richiesta tramite le variabili d'ambiente specificate nel file ".env"
 
 - ### Chain Of Responsibility (COR)
 
