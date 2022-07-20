@@ -43,7 +43,56 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 da completare
 
 ## Struttura della directory del progetto
+.
+└── progetto_pa
+    ├── README.md
+    ├── controllers
+    │   ├── adminController.js
+    │   ├── authController.js
+    │   ├── consumerController.js
+    │   ├── producerController.js
+    │   └── slotController.js
+    ├── database
+    │   └── database_seeding.sql
+    ├── docker-compose.yml
+    ├── dockerfile
+    ├── documenti
+    │   ├── consegna progetto.docx
+    │   ├── documentazione api.txt
+    │   ├── requisiti funzionali.docx
+    │   ├── schema del 23.png
+    │   └── todo list.docx
+    ├── images
+    │   ├── GitHub-Mark-Light-120px-plus.png
+    │   ├── Visual_Studio_Code_1.35_icon.png
+    │   ├── docker.png
+    │   ├── pgadmin.png
+    │   └── postman.png
+    ├── index.js
+    ├── middlewares
+    │   ├── checkAdmin.js
+    │   ├── checkConsumer.js
+    │   ├── checkCredit.js
+    │   ├── checkLogin.js
+    │   └── checkProducer.js
+    ├── model
+    │   ├── admin.js
+    │   ├── consumer.js
+    │   ├── database.js
+    │   ├── producer.js
+    │   └── transazioni.js
+    ├── node_modules
+    ├── package-lock.json
+    ├── package.json
+    ├── routes
+    │   ├── admin.js
+    │   ├── auth.js
+    │   ├── consumers.js
+    │   ├── producers.js
+    │   └── slot.js
+    └── test.js
 
+    
 ## Pattern utilizzati
 
 - ### Model View Controller (MVC)
