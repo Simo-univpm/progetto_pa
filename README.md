@@ -188,7 +188,7 @@ sono stati riscontrati.
 
 #Posman:
 <p align="left">
-    <img src="./images/postmann.png?raw=true" width="10%" height="auto">
+    <img src="./images/postman.png?raw=true" width="10%" height="auto">
 </p>
 
 ```
