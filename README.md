@@ -411,7 +411,7 @@ In sostanza il docker compose si occupa di:
 # Software ausiliari utilizzati
 Per portare a termine il progetto sono stati utilizzati alcuni software ausiliari che ci sono tornati utili in fase di test e sviluppo.
 
-###Visual Studio Code e GitHub:
+### Visual Studio Code e GitHub:
 <p align="left">
     <img src="./images/Visual_Studio_Code_1.35_icon.png?raw=true" width="10%" height="auto">
     <img src="./images/GitHub-Mark-Light-120px-plus.png?raw=true" width="10%" height="auto">
@@ -422,7 +422,7 @@ Per sviluppare l'intero progetto è stato utilizzato Visual Studio Code con l'au
 che ci ha permesso di gestire il progetto in maniera semplificata e sincronizzata tra di noi.
 ```
 
-###Docker:  
+### Docker:  
 <p align="left">
     <img src="./images/docker.png?raw=true" width="10%" height="auto">
 </p>
@@ -433,7 +433,7 @@ del sistema e facilmente recuperabile ed immediatamente fruibile in caso errori 
 sono stati riscontrati.
 ```
 
-###Posman:
+### Posman:
 <p align="left">
     <img src="./images/postman.png?raw=true" width="10%" height="auto">
 </p>
@@ -443,7 +443,7 @@ Per testare le varie chiamate ai servizi è stato utilizzato Postman che ci ha p
 testare il sistema in maniera semplificata.
 ```
 
-###PgAdmin:
+### PgAdmin:
 <p align="left">
     <img src="./images/pgadmin.png?raw=true" width="10%" height="auto">
 </p>
