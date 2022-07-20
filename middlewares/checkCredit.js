@@ -8,7 +8,7 @@ async function checkCredit(req, res, next){
         let result_c = await consumerController.getConsumerById(req.user.id);
         let consumer = result_c[1];
 
-        if(consumer.credito == 0) return res.status(401).send("NON AUTORIZZATO: [consumer ' + req.user.id + '] non dispone di credito a sufficienza per continuare");
+        if(consumer.credito == 0) return res.status(401).send("NON AUTORIZZATO: [consumer " + req.user.id + "] non dispone di credito a sufficienza per continuare");
         else next();
 
     }
