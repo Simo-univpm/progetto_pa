@@ -93,10 +93,7 @@ La richiesta necessita di un body con i seguenti dati:
 ```
 dove il campo "privilegi" sono i privilegi dell'utente inseriti al momento della registrazione (0 se è admin, 1 se è producer, 2 se è consumer). Effettuare un login con i privilegi sbagliati e le credenziali corrette ritornerà un errore.
 
-
-
-
-
+---
 
 ### Chiamate disponibili solamente per i consumers all'endpoint **"...:8080/api/slot"**
 
