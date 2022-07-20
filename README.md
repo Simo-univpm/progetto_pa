@@ -19,7 +19,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
   - Se la somma delle richieste è superiore o uguale alla capacità erogabile per quella fascia oraria allora il produttore potrà decidere se accettare le richieste effettuando un taglio lineare a quanto richiesto dai vari consumatori. Il taglio è proporzionale al quantitativo richiesto.
 
 ## Indice
-- librerie utilizzate
+- [librerie utilizzate](#librerie-utilizzate)
 - struttura directory progetto
 - pattern utilizzati
 - diagrammi delle classi
