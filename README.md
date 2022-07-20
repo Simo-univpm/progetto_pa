@@ -112,10 +112,10 @@ L'autenticazione serve per distinguere i vari utenti quando qualcuno effettua un
 Il token, se decifrato contiene le seguenti informazioni
 ```
 { 
-    id: ~~id,~~
-    privilegi: ~~user.privilegi,~~
-    nome: ~~user.nome,~~
-    email: ~~user.email~~
+    id: ~~id
+    privilegi: ~~user.privilegi
+    nome: ~~user.nome
+    email: ~~user.email
 }
 ```
 dove:
