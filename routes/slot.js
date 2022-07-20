@@ -1,12 +1,7 @@
 const router = require('express').Router();
 
-const checkLogin = require('../middlewares/checkLogin');
-const checkCredit = require('../middlewares/checkCredit');
-const checkConsumer = require('../middlewares/checkConsumer');
-
 const SlotController = require('../controllers/slotController');
 const slotController = new SlotController();
-
 
 router.post('/', async (req, res) => {
 
@@ -21,6 +16,8 @@ router.patch('/', async (req, res) => {
     res.status(result[0]).json(result[1]);
     
 });
+
+
 
 
 

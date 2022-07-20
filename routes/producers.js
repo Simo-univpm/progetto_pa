@@ -3,7 +3,6 @@ const router = require('express').Router();
 const ProducerController = require('../controllers/producerController');
 const producerController = new ProducerController();
 
-
 // edit producer's slot kw limit
 router.patch('/kw', async (req, res) => {
 
@@ -83,5 +82,9 @@ router.get('/checkEarnings', async (req, res) => {
     res.status(result[0]).json(result[1]);
     
 });
+
+
+
+
 
 module.exports = router;

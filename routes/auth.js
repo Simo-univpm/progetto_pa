@@ -3,8 +3,8 @@ const router = require('express').Router();
 const AuthController = require('../controllers/authController');
 const authController = new AuthController();
 
+// queste rotte sono valide per tutti gli utenti
 
-// per tutti gli utenti ============================================================
 router.post('/login', async (req, res) => {
 
     var result = await authController.login(req)
@@ -32,7 +32,6 @@ router.post('/registerAdmin', async (req, res) => {
     res.status(result[0]).json(result[1]);
     
 });
-
 
 
 

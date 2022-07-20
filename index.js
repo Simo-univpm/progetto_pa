@@ -27,6 +27,7 @@ const authRoutes = require('./routes/auth')
 const slotRoutes = require('./routes/slot');
 
 
+// utilizzo dei middleware secondo una logica chain of responsibility per gestire determinate casistiche
 app.use('/api/consumers', [checkLogin, checkConsumer, checkCredit]);
 app.use('/api/consumers', consumersRoute);
 

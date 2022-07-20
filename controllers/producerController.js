@@ -8,7 +8,6 @@ class producerController {
 
     constructor(){}
 
-    // CRUD =================================================
     async getProducer(req){
 
         //nel body serve: id
@@ -195,8 +194,6 @@ class producerController {
 
     }
 
-    
-    // consegna =======================================================================
     async checkReservations(id_producer, slot_inizio, slot_fine){
 
         if((slot_inizio < 0) || (slot_inizio > 23)) return [400, "ERRORE: periodo selezionato non valido."]

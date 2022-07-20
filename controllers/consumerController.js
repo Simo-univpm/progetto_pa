@@ -8,7 +8,6 @@ class consumerController {
 
     constructor(){}
 
-    // CRUD =================================================
     async getConsumer(req){
 
         //nel body serve: id
@@ -97,24 +96,6 @@ class consumerController {
 
     }
 
-    async delete(req){
-
-        // nel body serve: id
-
-        let id  = req.body.id;
-
-        try{
-
-            await db_consumers.destroy({ where: { id_consumer: id } });
-            return [200, "OK: [consumer " + id + "] eliminato."]
-
-        }catch(err){
-            return [500, "ERRORE: qualcosa e' andato storto." + err]
-        }
-
-    }
-
-    // consegna ==============================================
     async getPurchaseListProducer(id_consumer, id_producer){
 
         //if(typeof id_producer != 'Number') return [400, "ERRORE: inserire un id numerico."]

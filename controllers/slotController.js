@@ -10,7 +10,6 @@ class slotController {
 
     constructor(){}
 
-    // CRUD =================================================
     async getTransaction(id_producer, id_consumer, slot){
 
         try{
@@ -26,7 +25,7 @@ class slotController {
 
     }
 
-    // aggiusta questa
+    // perfeziona
     async createTransaction(consumer, producer, req, slot_costo, slot_rimanente, slot_totale, data_acquisto, data_prenotata){
 
         let costo_transazione = (req.body.kw*slot_costo).toFixed(2);
@@ -80,7 +79,6 @@ class slotController {
 
     }
 
-    //funzione per cancellare la transazione dal db
     async delete(id){
 
         try{
@@ -94,7 +92,6 @@ class slotController {
 
     }
 
-    // consegna =============================================
     async reserveSlot(req){
 
         /*

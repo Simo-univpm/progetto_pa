@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "test": "echo \"Warning: nessun test specificato!\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Simo-univpm/progetto_pa"
   },
   "author": "Francalancia Simone, Silveri Nicola",
   "license": "GPL-3.0",
@@ -25,5 +25,5 @@
     "sequelize": "^6.21.0",
     "sequelize-cli": "^6.4.1"
   },
-  "homepage": ""
+  "homepage": "https://github.com/Simo-univpm/progetto_pa"
 }

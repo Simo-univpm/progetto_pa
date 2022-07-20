@@ -1,4 +1,4 @@
-//verifica se un utente è in possesso del token e se quindi è autenticato
+//verifica se un utente è in possesso del token jwt e se quindi è autenticato
 const jwt = require('jsonwebtoken');
 
 /*
