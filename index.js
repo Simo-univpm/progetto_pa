@@ -6,13 +6,14 @@ const dotenv = require('dotenv');
 dotenv.config();
 //const cors = require('cors');
 
+// middlewares
 const checkAdmin = require('./middlewares/checkAdmin');
 const checkLogin = require('./middlewares/checkLogin');
 const checkCredit = require('./middlewares/checkCredit');
 const checkProducer = require('./middlewares/checkProducer');
 const checkConsumer = require('./middlewares/checkConsumer');
 
-// middlewares
+
 app.use(express.json());
 app.use(cors());
 
@@ -27,7 +28,7 @@ const authRoutes = require('./routes/auth')
 const slotRoutes = require('./routes/slot');
 
 
-// utilizzo dei middleware secondo una logica chain of responsibility per gestire determinate casistiche
+// utilizzo dei middlewares secondo una logica chain of responsibility per gestire determinate casistiche
 app.use('/api/consumers', [checkLogin, checkConsumer, checkCredit]);
 app.use('/api/consumers', consumersRoute);
 
