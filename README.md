@@ -20,7 +20,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 
 ## Indice
 - librerie utilizzate
-- struttura progetto
+- struttura directory progetto
 - pattern utilizzati
 - diagrammi delle classi
 - sequence diagram
@@ -28,8 +28,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - autenticazione e JWT
 - chiamate API
 - esecuzione del progetto
-- docker file
-- docker compose
+- docker file e docker compose
 - software ausiliari
 
 ## Librerie utilizzate
@@ -407,7 +406,7 @@ In sostanza il docker compose si occupa di:
     - uno contenente l'immagine di node ed il progetto: progettopa
 - configurare il database all'avvio tramite lo script di seeding **database_seeding.sql** (presente nella directory database)
 - avviare il server dopo l'avvio del database
-- esporre le porte necessarie alla comunicazione tra macchina host e container
+- esporre le porte necessarie alla comunicazione tra macchina host e containers
 
 
 # Software ausiliari utilizzati
