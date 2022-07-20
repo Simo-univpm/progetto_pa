@@ -27,15 +27,47 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - due righe sull'autenticazione e sul token
 - due descrizioni delle principali funzioni dei controller tipo reserve slot e taglio poi bo
 
-# Test
-Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/). Di seguito sono indicate tutte le chiamate HTTP disponibili e le relative descrizioni:
+# Test del progetto
+Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/). Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descrizioni e degli esempi di body usati per testare il software:
 
 ### Chiamate disponibili per tutti gli utenti all'endpoint ...:8080/api/auth
 
-#### (POST) .../login
-#### (POST) .../registerConsumer
 #### (POST) .../registerProducer
+rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo producer.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "nome": "nome_produttore",
+    "email": "email_produttore",
+    "passwd": "password_produttore",
+    "fonte_produzione": "fotovoltaico",
+    "emissioni_co2": 2.3,
+    "costo": 3.5,
+    "tetto_max_kwh_init": 1000,
+    "taglio": true
+}
+```
+dove:
+-  **fonte_produzione** (stringa) rappresenta le 3 tipologie di fonte di produzione specificate dalla consegna, ovvero "Eolico", "Fossile", "Fotovoltaico";
+-  **emissioni_co2** (valore) rappresenta i grammi di co2 prodotti per kw di energia
+-  **costo** (valore) rappresenta il costo di ogni kw di energia
+-  **tetto_max_kwh_init** (valore) rappresenta la soglia massima di produzione con la quale inizializzare tutti gli slot del produttore al momento della creazione (soglia alterabile tramite le chiamate apposite disponibili all'endpoint .../producers)
+- **taglio** (boolean) rappresenta la possibilità per il produttore di applicare o meno un taglio lineare sia alle transazioni già effettuate sia ad una nuova transazione in ingresso nel caso in cui quest'ultima richieda un quantitativo superiore alla disponibilità.
+
+#### (POST) .../registerConsumer
 #### (POST) .../registerAdmin
+
+#### (POST) .../login
+rotta comune a tutti gli utenti, serve per effettuare il login per ottenere il Json Web Token (JWT) di autenticazione necessario per effettuare una qualsiasi altra chiamata ad eccezione di quelle disponibili sotto questo endpoint.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "privilegi": 2,
+    "email": "utente@email.it",
+    "passwd": "utentePassword"
+}
+```
+dove il campo "privilegi" sono i privilegi dell'utente inseriti al momento della registrazione (0 se è admin, 1 se è producer, 2 se è consumer). Effettuare un login con i privilegi sbagliati e le credenziali corrette ritornerà un errore.
 
 ### Chiamate disponibili solamente per i producers all'endpoint ...:8080/api/producers
 
@@ -60,6 +92,9 @@ Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (h
 ## Chiamate disponibili solamente per gli admin all'endpoint ...:8080/api/admin
 
 ##(POST) .../ricarica
+
+
+
 
 # Esecuzione del software tramite docker compose
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando **"docker compose -f docker-compose.yml up"**.
