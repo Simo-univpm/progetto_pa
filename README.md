@@ -90,7 +90,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
     └── test.js
 ```
 
-## Pattern utilizzati (inserire motivazione del perché sono stati scelti --> per superà l'esame)
+## Pattern utilizzati (inserire motivazione del perché sono stati scelti)
 
 - ### Model View Controller (MVC)
 Come pattern architetturale è stato scelto di utilizzare l'MVC; nel nostro caso tutte le entità rappresentanti il dominio interessato sono contenuti nella directory model, mentre i controller che offrono tutte le logiche di business per operare con le entità sono contenute nella directory controllers, permettendoci quindi di separare completamente le entità dai relativi metodi. Inoltre questo rende indipendente lo sviluppo del server backend rispetto allo sviluppo dell'interfaccia grafica, che appunto è stata simulata con Postman per ovviare alla sua mancanza.
@@ -395,30 +395,21 @@ In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 # Esecuzione del software
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando 
 ```
-docker compose -f docker-compose.yml up
+docker compose up ???? ao nicò ma è vero ????
 ```
 
-## Dockerfile
-Il docker file si occupa di creare un'immagine docker con Node.js, il codice del progetto e tutte le relative dipendenze necessarie al suo funzionamento. Il docker file utilizzato all'interno del nostro progetto è il seguente:
-```
-FROM node:latest
-WORKDIR /usr/app
-COPY package.json .
-RUN npm install
-COPY . .
-EXPOSE 8080
-CMD ["node", "index.js"]
-```
-Le istruzioni sopra elencate si occupano di:
-- costruire l’immagine a partire dall’immagine del repository node contrassegnato dal tag latest
-- impostare la directory /usr/app come working directory
-- copiare al suo interno il file package.json
-- installare tutte le dipendenze necessarie al funzionamento del server
-- copiarle nella working directory
-- esporre la porta 8080
-- eseguire l'applicazione (tramite node index.js)
+## Dockerfile e docker compose
+Il docker file si occupa di creare un'immagine docker con Node.js, il codice del progetto e tutte le relative dipendenze necessarie al suo funzionamento, questa immagine serve per generare un container dentro il quale sarà eseguito il progetto, tuttavia essendo necessario un database postgres è necessario creare ed eseguire un altro container che contenga una immagine postgres al suo interno; successivamente è necessario far comunicare assieme i due container.
+Tutto questo è automatizzabile e possibile tramite docker compose specificato all'interno del file **docker-compose.yml** presente nella root directory del progetto.
+In sostanza il docker compose si occupa di:
+- creare due container
+    - uno contenente l'immagine di node ed il progetto: progettopa
+    - uno contenente l'immagine relativa al Database Postgres: postgres
+-
 
 ## Docker compose
+Il docker file generato precedentemente serve per generare un container dentro il quale sarà eseguito il progetto, tuttavia essendo necessario un database postgres è necessario creare ed eseguire un altro container che contenga una immagine postgres al suo interno; successivamente è necessario far comunicare assieme i due container; questo è automatizzabile e possibile tramite docker compose specificato all'interno del file **docker-compose.yml** presente nella root directory del progetto.
+
 
 # Software ausiliari utilizzati
 Per portare a termine il progetto sono stati utilizzati alcuni software ausiliari che ci sono tornati utili in fase di test e sviluppo.
