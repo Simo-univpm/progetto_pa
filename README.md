@@ -2,9 +2,10 @@
 ## Sviluppo di un backend per la gestione della compravendita di energia
 
 # Membri del gruppo
-Francalancia Simone s1102917, Silveri Nicola s1101284
+- Francalancia Simone, matricola s1102917
+- Silveri Nicola, matricola s1101284
 
-# Descrizione e obbioettivo del progetto
+# Descrizione e obbiettivo del progetto
 L'obbiettivo è quello di realizzare un sistema che consenta di gestire il processo di compravendita di energia “locale”. Esistono N produttori e M consumatori. Un produttore può mettere a disposizione di un acquirente in una fascia oraria di 1h un certo quantitativo di energia. Il processo di compravendita ha un orizzonte temporale di 1 giorno, ovvero si compra oggi uno o più “slot” per domani.
 - I produttori mettono possono mettere a disposizione degli slot temporali della durata di 1h con un valore pari a x kWh.
 - Ogni produttore ha una capacità massima di produzione oraria che non deve essere superata (questo valore è diverso per ogni produttore e per ogni fascia oraria).
@@ -26,6 +27,24 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - nuovo schema er
 - due righe sull'autenticazione e sul token
 - due descrizioni delle principali funzioni dei controller tipo reserve slot e taglio poi bo
+
+## Librerie utilizzate
+- bcryptjs, v2.4.3
+- cors, v2.8.5
+- dotenv, 16.0.1
+- express, v4.16.1
+- jsonwebtoken, v8.5.1
+- nodemon, v2.0.19
+- pg, v8.7.3
+- pg-hstore, v2.3.4
+- sequelize, v6.21.0
+- sequelize-cli, v6.4.1
+
+da completare
+
+## Struttura della directory del progetto
+
+## 
 
 # Test del progetto
 Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/); tutte le chiamate eccetto quelle rispondenti all'endpoint .../api/auth necessitano del token "auth-token" nell'header della richiesta. Il token contiene le informazioni base degli utenti **necessarie** al funzionamento del programma.
