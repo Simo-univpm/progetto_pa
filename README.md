@@ -127,7 +127,7 @@ Per eseguire il software basta aprire un terminale nella directory del progetto 
 Per portare a termine il progetto sono stati utilizzati alcuni software ausiliari che ci sono tornati utili in fase di test e sviluppo.
 
 #Visual Studio Code e GitHub:
-![VSCode]([http://url/to/img.png](https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg))
+![VSCode](https://github.com/Simo-univpm/progetto_pa/blob/main/images/Visual_Studio_Code_1.35_icon.png)
 ![GitHub](http://url/to/img.png)
 ```
 Per sviluppare l'intero progetto è stato utilizzato Visual Studio Code con l'ausilio di GitHub 
