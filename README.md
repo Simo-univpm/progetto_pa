@@ -20,16 +20,16 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 
 ## Indice
 - [librerie utilizzate](#librerie-utilizzate)
-- struttura directory progetto
-- pattern utilizzati
-- diagrammi delle classi
-- sequence diagram
-- diagramma entity relationship
-- autenticazione e JWT
-- chiamate API
-- esecuzione del progetto
-- docker file e docker compose
-- software ausiliari
+- [struttura directory progetto](#struttura-della-directory-del-progetto)
+- [pattern utilizzati](#pattern-utilizzati)
+- [diagrammi delle classi](#diagrammi-delle-classi)
+- [sequence diagram](#sequence-diagrams)
+- [diagramma entity relationship]()
+- [autenticazione e JWT]()
+- [chiamate API]()
+- [esecuzione del progetto]()
+- [docker file e docker compose]()
+- [software ausiliari]()
 
 ## Librerie utilizzate
 - express, v4.16.1 per lo sviluppo del server 
@@ -89,7 +89,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
     └── test.js
 ```
 
-## Pattern utilizzati (inserire motivazione del perché sono stati scelti)
+## Pattern utilizzati
 
 - ### Model View Controller (MVC)
 Come pattern architetturale è stato scelto di utilizzare l'MVC; nel nostro caso tutte le entità rappresentanti il dominio interessato sono contenuti nella directory model, mentre i controller che offrono tutte le logiche di business per operare con le entità sono contenute nella directory controllers, permettendoci quindi di separare completamente le entità dai relativi metodi. Inoltre questo rende indipendente lo sviluppo del server backend rispetto allo sviluppo dell'interfaccia grafica, che appunto è stata simulata con Postman per ovviare alla sua mancanza.
@@ -110,7 +110,7 @@ Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in 
 
 ## Sequence diagrams
 
-## Diagramma ER base di dati implementata (se serve)
+## Diagramma entity relationship
 
 ## Autenticazione e JWT
 L'autenticazione serve per distinguere i vari utenti quando qualcuno effettua una chiamata ad una particolare rotta. Tutte le rotte ad eccezione di quelle per l'autenticazione hanno bisogno del Json Web Token per il funzionamento in quanto il token porta con se delle informazioni vitali per il server, il token si ottiene effettuando una chiamata POST alla rotta ".../auth/login" nella quale bisogna inserire i privilegi, la mail e la password. Una volta effettuata la chiamata verrà restituito una stringa cifrata tramite la libreria "jsonwebtoken" e l'utilizzo del token secret (TOKEN_SECRET) che è impostato nel file .env contenente le variabili d'ambiente.
