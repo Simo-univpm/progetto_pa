@@ -433,7 +433,7 @@ del sistema e facilmente recuperabile ed immediatamente fruibile in caso errori 
 sono stati riscontrati.
 ```
 
-### Posman:
+### Postman:
 <p align="left">
     <img src="./images/postman.png?raw=true" width="10%" height="auto">
 </p>
