@@ -44,51 +44,48 @@ da completare col perché dell'utilizzo
 ```
 .
 └── progetto_pa
-    ├── README.md
+    |
     ├── controllers
     │   ├── adminController.js
     │   ├── authController.js
     │   ├── consumerController.js
     │   ├── producerController.js
     │   └── slotController.js
-    ├── database
-    │   └── database_seeding.sql
-    ├── docker-compose.yml
-    ├── dockerfile
-    ├── documenti
-    │   ├── consegna progetto.docx
-    │   ├── documentazione api.txt
-    │   ├── requisiti funzionali.docx
-    │   ├── schema del 23.png
-    │   └── todo list.docx
-    ├── images
-    │   ├── GitHub-Mark-Light-120px-plus.png
-    │   ├── Visual_Studio_Code_1.35_icon.png
-    │   ├── docker.png
-    │   ├── pgadmin.png
-    │   └── postman.png
-    ├── index.js
+    |
     ├── middlewares
     │   ├── checkAdmin.js
     │   ├── checkConsumer.js
     │   ├── checkCredit.js
     │   ├── checkLogin.js
     │   └── checkProducer.js
+    |
+    ├── database
+    │   └── database_seeding.sql
+    |
     ├── model
     │   ├── admin.js
     │   ├── consumer.js
     │   ├── database.js
     │   ├── producer.js
     │   └── transazioni.js
-    ├── node_modules
-    ├── package-lock.json
-    ├── package.json
+    |
     ├── routes
     │   ├── admin.js
     │   ├── auth.js
     │   ├── consumers.js
     │   ├── producers.js
     │   └── slot.js
+    |
+    ├── index.js
+    |
+    ├── docker-compose.yml
+    ├── dockerfile
+    |
+    ├── README.md
+    |
+    ├── node_modules
+    ├── package-lock.json
+    ├── package.json
     └── test.js
 ```
 
