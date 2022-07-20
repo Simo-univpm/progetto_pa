@@ -43,6 +43,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 da completare
 
 ## Struttura della directory del progetto
+```
 .
 └── progetto_pa
     ├── README.md
@@ -91,8 +92,8 @@ da completare
     │   ├── producers.js
     │   └── slot.js
     └── test.js
+```
 
-    
 ## Pattern utilizzati
 
 - ### Model View Controller (MVC)
