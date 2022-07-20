@@ -393,7 +393,10 @@ In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 ---
 
 # Esecuzione del software
-Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando **"docker compose -f docker-compose.yml up"**.
+Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando 
+```
+**"docker compose -f docker-compose.yml up"**.
+```
 
 ## Dockerfile
 Il docker file si occupa di creare un'immagine docker con Node.js, il codice del progetto e tutte le relative dipendenze necessarie al suo funzionamento. Il docker file utilizzato all'interno del nostro progetto è il seguente:
