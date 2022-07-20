@@ -3,6 +3,8 @@ const router = require('express').Router();
 const ConsumerController = require('../controllers/consumerController');
 const consumerController = new ConsumerController();
 
+
+
 router.get('/transactions/producer', async (req, res) => {
 
     var result = await consumerController.getPurchaseListProducer(req.user.id, req.body.id)
