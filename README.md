@@ -96,9 +96,11 @@ da completare
 ## Pattern utilizzati
 
 - ### Model View Controller (MVC)
-Come pattern architetturale è stato scelto di utilizzare l'MVC per separare la logica di presentazione dei dati dalla logica di business
+Come pattern architetturale è stato scelto di utilizzare l'MVC; Nel nostro caso tutte le entità rappresentanti il dominio interessato sono contenuti nella directory model, mentre i controller che offrono tutte le logiche di business per operare con le entità sono contenuti nella directory controllers, permettendoci quindi di separare completamente le entità dai relativi metodi. Inoltre questo rende indipendente lo sviluppo del server backend rispetto allo sviluppo dell'interfaccia grafica, che appunto è stata simulata con Postman per ovviare alla sua mancanza.
 
 - ### Singleton
+Il singleton è un pattern che ci garantisce l'esistenza di una singola instanza di entità all'interno dell'applicazione. In particolare è stato usato il pattern per istanziare la connessione al database postgres che essendo costosa va limitata.
+Il file che sfrutta questo pattern è "database.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico che ci permette di ottenere l'istanza di sequelize se è già stata creata, oppure ne genererà una al momento della richiesta.
 
 - ### Chain Of Responsibility (COR)
 
