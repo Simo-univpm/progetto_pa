@@ -400,7 +400,7 @@ docker compose up ???? ao nicò ma è vero ????
 
 ## Dockerfile e docker compose
 Il docker file si occupa di creare un'immagine docker con Node.js, il codice del progetto e tutte le relative dipendenze necessarie al suo funzionamento, questa immagine serve per generare un container dentro il quale sarà eseguito il progetto, tuttavia essendo necessario un database postgres è necessario creare ed eseguire un altro container che contenga una immagine postgres al suo interno; successivamente è necessario far comunicare assieme i due container.
-Tutto questo è automatizzabile e possibile tramite docker compose specificato all'interno del file **docker-compose.yml** presente nella root directory del progetto.
+Tutto questo è automatizzabile e possibile tramite docker compose. Le istruzioni per il comando docker compose sono specificate all'interno del file **docker-compose.yml** presente nella root directory del progetto.
 In sostanza il docker compose si occupa di:
 - creare due container
     - uno contenente l'immagine relativa al Database Postgres: postgres
