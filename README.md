@@ -27,7 +27,9 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - diagramma entity relationship
 - autenticazione e JWT
 - chiamate API
-- esecuzione del progetto tramite docker compose
+- esecuzione del progetto
+- docker file
+- docker compose
 - software ausiliari
 
 ## Librerie utilizzate
@@ -390,8 +392,30 @@ In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 
 ---
 
-# Esecuzione del software tramite docker compose
+# Esecuzione del software
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando **"docker compose -f docker-compose.yml up"**.
+
+## Dockerfile
+Il docker file si occupa di creare un'immagine docker con Node.js, il codice del progetto e tutte le relative dipendenze necessarie al suo funzionamento. Il docker file utilizzato all'interno del nostro progetto è il seguente:
+```
+FROM node:latest
+WORKDIR /usr/app
+COPY package.json .
+RUN npm install
+COPY . .
+EXPOSE 8080
+CMD ["node", "index.js"]
+```
+Le istruzioni sopra elencate si occupano di:
+- costruire l’immagine a partire dall’immagine del repository node contrassegnato dal tag latest
+- impostare la directory /usr/app come working directory
+- copiare al suo interno il file package.json
+- installare tutte le dipendenze necessarie al funzionamento del server
+- copiarle nella working directory
+- esporre la porta 8080
+- eseguire l'applicazione (tramite node index.js)
+
+## Docker compose
 
 # Software ausiliari utilizzati
 Per portare a termine il progetto sono stati utilizzati alcuni software ausiliari che ci sono tornati utili in fase di test e sviluppo.
