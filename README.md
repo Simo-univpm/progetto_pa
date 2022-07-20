@@ -24,12 +24,11 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - [pattern utilizzati](#pattern-utilizzati)
 - [diagrammi delle classi](#diagrammi-delle-classi)
 - [sequence diagram](#sequence-diagrams)
-- [diagramma entity relationship]()
-- [autenticazione e JWT]()
-- [chiamate API]()
-- [esecuzione del progetto]()
-- [docker file e docker compose]()
-- [software ausiliari]()
+- [diagramma entity relationship](#diagramma-entity-relationship)
+- [autenticazione e JWT](#autenticazione-e-jwt)
+- [chiamate API](#chiamate-api)
+- [esecuzione del progetto](#esecuzione-del-progetto)
+- [software ausiliari utilizzati](#software-ausiliari-utilizzati)
 
 ## Librerie utilizzate
 - express, v4.16.1 per lo sviluppo del server 
@@ -391,7 +390,7 @@ In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 
 ---
 
-# Esecuzione del software
+# Esecuzione del progetto
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando 
 ```
 docker compose up ???? ao nicò ma è vero ????
