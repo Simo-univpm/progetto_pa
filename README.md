@@ -28,12 +28,14 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - due descrizioni delle principali funzioni dei controller tipo reserve slot e taglio poi bo
 
 # Test del progetto
-Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/). Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descrizioni e degli esempi di body usati per testare il software:
+Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/); tutte le chiamate eccetto quelle rispondenti all'endpoint .../api/auth necessitano del token "auth-token" nell'header della richiesta. Il token contiene le informazioni base degli utenti **necessarie** al funzionamento del programma.
+Il token si ottiene al login e va impostato manualmente in postman nell'apposito campo "headers": nella campo **"key"** va inserito **"auth-token"** e nel campo **"valore"** va inserita **la stringa ricevuta dal server al momento del login**.
+Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descrizioni e degli esempi di body usati per testare il software:
 
 ### Chiamate disponibili per tutti gli utenti all'endpoint **...:8080/api/auth**
 
 #### (POST) .../registerProducer
-rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo producer.
+Rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo producer.
 La richiesta necessita di un body con i seguenti dati:
 ```
 {
@@ -55,7 +57,7 @@ dove:
 - **taglio** (boolean) rappresenta la possibilità per il produttore di applicare o meno un taglio lineare sia alle transazioni già effettuate sia ad una nuova transazione in ingresso nel caso in cui quest'ultima richieda un quantitativo superiore alla disponibilità.
 
 #### (POST) .../registerConsumer
-rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo consumer.
+Rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo consumer.
 La richiesta necessita di un body con i seguenti dati:
 ```
 {
@@ -69,7 +71,7 @@ dove:
 - **credito** (valore) corrisponde al credito con il quale si vuole inizializzare l'utente. Il credito è necessario per prenotare gli slot.
 
 #### (POST) .../registerAdmin
-rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo amministratore.
+Rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuovo amministratore.
 La richiesta necessita di un body con i seguenti dati:
 ```
 {
@@ -80,7 +82,7 @@ La richiesta necessita di un body con i seguenti dati:
 ```
 
 #### (POST) .../login
-rotta comune a tutti gli utenti, serve per effettuare il login per ottenere il Json Web Token (JWT) di autenticazione necessario per effettuare una qualsiasi altra chiamata ad eccezione di quelle disponibili sotto questo endpoint.
+Rotta comune a tutti gli utenti, serve per effettuare il login per ottenere il Json Web Token (JWT) di autenticazione necessario per effettuare una qualsiasi altra chiamata ad eccezione di quelle disponibili sotto questo endpoint.
 La richiesta necessita di un body con i seguenti dati:
 ```
 {
@@ -91,26 +93,62 @@ La richiesta necessita di un body con i seguenti dati:
 ```
 dove il campo "privilegi" sono i privilegi dell'utente inseriti al momento della registrazione (0 se è admin, 1 se è producer, 2 se è consumer). Effettuare un login con i privilegi sbagliati e le credenziali corrette ritornerà un errore.
 
-### Chiamate disponibili solamente per i producers all'endpoint ...:8080/api/producers
-
-#### (GET) .../checkReservations
-
-#### (GET) .../checkEarnings
-#### (GET) .../checkStats
-#### (PATCH) .../kw
-#### (PATCH) .../costo
-
-### Chiamate disponibili solamente per i consumers all'endpoint ...:8080/api/consumers
-
-#### (GET) .../emissions
-#### (GET) .../transactions/producers
-#### (GET) .../transactions/periodo
-#### (GET) .../transactions/fonte
 
 ### Chiamate disponibili solamente per i consumers all'endpoint ...:8080/api/slot
 
 #### (POST)  .../
+Rotta utilizzabile solamente dagli utenti consumers autenticati; serve per prenotare una data quantità di energia per un determinato slot verso un determinato produttore.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "id": 2,
+    "slot": 16,
+    "kw": 200
+}
+```
+dove:
+- **id** (valore) è l'id del produttore (id_producer) verso il quale si vuole prenotare lo slot;
+- **slot** (valore) è lo slot/fascia oraria che si vuole prenotare (ad esempio lo slot 16 corrisponde alla fascia oraria che va dalle 16:00 alle 16:59 del giorno successivo a quello attuale);
+- **kw** (valore) è la quantità di energia in kw che si vuole prenotare;
+
+
 #### (PATCH) .../
+Rotta utilizzabile solamente dagli utenti consumers autenticati; serve per modificare una prenotazione precedentemente effettuata.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "id": 2,
+    "slot": 16,
+    "kw": 300
+}
+```
+Dove i campi sono gli stessi della precedente chiamata POST.
+Il comportamento della api cambia in base alla quantità di kw richiesti in modifica: E' possibile specificare 0 nel campo "kw" per annullare una prenotazione precedentemente effettuata oppure un numero di kw maggiore di quello già prenotato per aumentare la richiesta energetica per lo slot e il producer specificati.
+
+### Chiamate disponibili solamente per i consumers all'endpoint ...:8080/api/consumers
+
+#### (GET) .../emissions
+Rotta utilizzabile solamente dagli utenti consumers autenticati; serve per ottenere il totale delle emissioni prodotte dai vari acquisti in un range temporale specificato dall'utente.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "inizio": "2022-07-19 02:00",
+    "fine":   "2022-07-21 03:00"
+}
+```
+
+
+#### (GET) .../transactions/producers
+#### (GET) .../transactions/periodo
+#### (GET) .../transactions/fonte
+
+### Chiamate disponibili solamente per i producers all'endpoint ...:8080/api/producers
+
+#### (GET) .../checkReservations
+#### (GET) .../checkEarnings
+#### (GET) .../checkStats
+#### (PATCH) .../kw
+#### (PATCH) .../costo
 
 ## Chiamate disponibili solamente per gli admin all'endpoint ...:8080/api/admin
 
