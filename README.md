@@ -27,18 +27,20 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - due descrizioni delle principali funzioni dei controller tipo reserve slot e taglio poi bo
 
 ## Librerie utilizzate
-- bcryptjs, v2.4.3
-    - per hashing delle password
-- cors, v2.8.5
-    - per
-- dotenv, 16.0.1
 - express, v4.16.1
+    - per lo sviluppo del server 
+- dotenv, 16.0.1
+    - per sfruttare le variabili d'ambiente
 - jsonwebtoken, v8.5.1
+    - per l'autenticazione
+- sequelize, v6.21.0 e sequelize-cli, v6.4.1
+    - per l'interfacciamento con il databse
+- pg, v8.7.3 e pg-hstore, v2.3.4
+    - client per il database postgres
+- bcryptjs, v2.4.3
+    -  per hashing delle password
 - nodemon, v2.0.19
-- pg, v8.7.3
-- pg-hstore, v2.3.4
-- sequelize, v6.21.0
-- sequelize-cli, v6.4.1
+    - per facilitare lo sviluppo
 
 da completare col perché dell'utilizzo
 
