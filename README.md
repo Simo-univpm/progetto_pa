@@ -73,9 +73,9 @@ rotta comune a tutti gli utenti, serve per effettuare la registrazione di un nuo
 La richiesta necessita di un body con i seguenti dati:
 ```
 {
-    "nome": "admin",
-    "email": "admin",
-    "passwd": "admin"
+    "nome": "nome admin",
+    "email": "email_admin",
+    "passwd": "password_admin"
 }
 ```
 
@@ -121,4 +121,41 @@ dove il campo "privilegi" sono i privilegi dell'utente inseriti al momento della
 
 # Esecuzione del software tramite docker compose
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando **"docker compose -f docker-compose.yml up"**.
+
+# Software ausiliari utilizzati
+
+Per portare a termine il progetto sono stati utilizzati alcuni software ausiliari che ci sono tornati utili in fase di test e sviluppo.
+
+#Visual Studio Code e GitHub:
+![VSCode]([http://url/to/img.png](https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg))
+![GitHub](http://url/to/img.png)
+```
+Per sviluppare l'intero progetto è stato utilizzato Visual Studio Code con l'ausilio di GitHub 
+che ci ha permesso di gestire il progetto in maniera semplificata e sincronizzata tra di noi.
+```
+
+#Docker:  
+![Docker](http://url/to/img.png)
+```
+L'intero progetto è stato sviluppato su Docker così da rendere il progetto separato dal resto 
+del sistema e facilmente recuperabile ed immediatamente fruibile in caso errori e problemi che 
+sono stati riscontrati.
+```
+
+#Posman:
+![Posman](http://url/to/img.png)
+```
+Per testare le varie chiamate ai servizi è stato utilizzato Postman che ci ha permesso di 
+testare il sistema in maniera semplificata.
+```
+
+#PgAdmin:
+![PgAdmin](http://url/to/img.png)
+```
+Al fine di controllare e verificare il corretto funzionamento dell'intero progetto è stato 
+utilizzato PgAdmin3 che ci ha permesso di svolgere tutte le operazioni sui database in maniera 
+semplificata e di applicare molto rapidamente le modifiche ai dati per poter testare il software 
+nelle diverse condizioni in cui può trovarsi.
+```
+
 
