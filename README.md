@@ -243,11 +243,44 @@ dove:
 in questo caso vengono impostati tutti i tetti massimi del produttore a 1500 kw
 
 #### (PATCH) .../costo
+Rotta utilizzabile solamente dai producers; serve per modificare la il costo dei kw per un determinato slot o per tutti gli slot disponibili di un produttore.
+La richiesta è quindi in grado di accettare due body diversi:
+```
+{
+    "slot": 23,
+    "costo": 50
+}
+```
+dove:
+- **costo**(valore) è il nuovo costo per kw che si vuole assegnare allo slot
+in questo caso viene impostato il costo per kw dello slot che va dalle 23:00 alle 23:59 a 50
+
+oppure
+
+```
+{
+    "slot": "all",
+    "kw": 50
+}
+```
+dove:
+in questo caso vengono i costi per kw di tutti gli slot del produttore a 50
 
 ### Chiamate disponibili solamente per gli admin all'endpoint ...:8080/api/admin
 
-####(POST) .../ricarica
-
+#### (POST) .../ricarica
+Rotta utilizzabile solamente dagli admin; serve per ricaricare il credito di un determinato utente.
+La richiesta necessita di un body con i seguenti dati:
+```
+{
+    "id": 1,
+    "credito": 8700
+}
+```
+dove:
+- **id** (valore) è l'id del cliente verso il quale effettuare la ricarica del credito
+- **credito** (valore) è il nuovo credito che si vuole assegnare al consumer (attenzione, assegnare e non sommare)
+In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 
 
 
