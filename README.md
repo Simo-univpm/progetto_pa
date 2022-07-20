@@ -49,6 +49,10 @@ da completare
 - ### Model View Controller (MVC)
 Come pattern architetturale è stato scelto di utilizzare l'MVC per separare la logica di presentazione dei dati dalla logica di business
 
+- ### Singleton
+
+- ### Chain Of Responsibility (COR)
+
 # Test del progetto
 Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/); tutte le chiamate eccetto quelle rispondenti all'endpoint .../api/auth necessitano del token "auth-token" nell'header della richiesta. Il token contiene le informazioni base degli utenti **necessarie** al funzionamento del programma.
 Il token si ottiene al login e va impostato manualmente in postman nell'apposito campo "headers": nella campo **"key"** va inserito **"auth-token"** e nel campo **"valore"** va inserita **la stringa ricevuta dal server al momento del login**.
