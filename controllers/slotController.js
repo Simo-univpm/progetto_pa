@@ -26,6 +26,7 @@ class slotController {
 
     }
 
+    // aggiusta questa
     async createTransaction(consumer, producer, req, slot_costo, slot_rimanente, slot_totale, data_acquisto, data_prenotata){
 
         let costo_transazione = (req.body.kw*slot_costo).toFixed(2);
@@ -60,15 +61,17 @@ class slotController {
 
     async editTransactionFields(transazione, campo, valore){
 
+        //let valore_tofix = valore.toFixed(2)
+
         try{
 
-            if(campo === "kw_acquistati") transazione.update({kw_acquistati: valore});
-            else if(campo === "kw_rimanenti") transazione.update({kw_rimanenti: valore});
-            else if(campo === "kw_massimo") transazione.update({kw_massimo: valore});
-            else if(campo === "costo_slot") transazione.update({costo_slot: valore});
-            else if(campo === "emissioni_co2_slot") transazione.update({emissioni_co2_slot: valore});
-            else if(campo === "data_acquisto_transazione") transazione.update({data_acquisto_transazione: valore});
-            else if(campo === "data_prenotazione_transazione") transazione.update({data_prenotazione_transazione: valore});
+            if(campo === "kw_acquistati") transazione.update({kw_acquistati: valore.toFixed(2)});
+            else if(campo === "kw_rimanenti") transazione.update({kw_rimanenti: valore.toFixed(2)});
+            else if(campo === "kw_massimo") transazione.update({kw_massimo: valore.toFixed(2)});
+            else if(campo === "costo_slot") transazione.update({costo_slot: valore.toFixed(2)});
+            else if(campo === "emissioni_co2_slot") transazione.update({emissioni_co2_slot: valore.toFixed(2)});
+            //else if(campo === "data_acquisto_transazione") transazione.update({data_acquisto_transazione: valore});
+            //else if(campo === "data_prenotazione_transazione") transazione.update({data_prenotazione_transazione: valore});
             else return [500, "ERRORE: campo [" + campo + "] non modificabile"];
 
         }catch(err){
@@ -112,20 +115,20 @@ class slotController {
         let slot_totale;    // è il quantitativo totale di energia messo a disposizione dal produttore
         let slot_rimanente; // è il quantitativo di energia messo a disposizione - quantitativo di energia opzionata
 
-        let result_p = await producerController.getProducerById(req.body.id);
+        let result_p = await producerController.getProducerById(req.body.id)
+        if(result_p[0] == 404) return [result_p[0], result_p[1]]
         let producer = result_p[1]
         
-        let result_c = await consumerController.getConsumerById(req.user.id);
+        let result_c = await consumerController.getConsumerById(req.user.id)
+        if(result_c[0] == 404) return [result_c[0], result_c[1]]
         let consumer = result_c[1]
         
-        let result_t = await this.getTransaction(req.body.id, req.user.id, req.body.slot)
-        let transaction = result_t[1]
-
 
         // CONTROLLO VALIDITA' RICHIESTA DEL CONSUMER ====================================================================================================
         
-        // controlla l'esistenza della transazione
-        if(transaction.id_transazione) return [400, "ERRORE: [slot " + req.body.slot + "] gia' acquistato: possibile la modifica, non la prenotazione."]
+        // controllo transazione già effettuata
+        let result_t = await this.getTransaction(req.body.id, req.user.id, req.body.slot)
+        if(result_t[0] == 200) return [400, "ERRORE: [slot " + req.body.slot + "] gia' acquistato: possibile la modifica, non la prenotazione."]
 
         // controllo validità dello slot selezionato
         if(req.body.slot >= 0 && req.body.slot <= 23){ 
@@ -142,17 +145,17 @@ class slotController {
         // controllo validità data prenotazione
         if(this.diff_hours(tomorrow, today) < 24) return [403, "PROIBITO: selezionare uno slot ad una distanza di almeno 24 ore."]
 
-        // controllo credito disponibile del consumer
-        if(! (consumer.credito >= (slot_costo*req.body.kw)) ) return [403, "PROIBITO: [consumer " + req.user.id + "] non dispone di credito sufficiente."]
-
         // controllo validità energetica richiesta: se un consumatore richiede troppa poca energia
         if(req.body.kw < 0.1) return [403, "PROIBITO: [consumer "+ req.user.id +"] deve selezionare almeno 0.1 kw."]
 
         // controllo validità energetica richiesta: se un consumatore ne richiede troppa
         if(req.body.kw > slot_totale) return [403, "PROIBITO: la richiesta supera il tetto massimo disponibile per [slot " + req.body.slot + "] "]
+
+        // controllo credito disponibile del consumer
+        if(! (consumer.credito >= (slot_costo*req.body.kw)) ) return [403, "PROIBITO: [consumer " + req.user.id + "] non dispone di credito sufficiente."]
         
         // controllo validità energetica richiesta: se un consumatore richiede più di quella disponibile si effettua un taglio tra tutti i consumatori
-        if((req.body.kw >= slot_rimanente) && (producer.accetta_taglio_richieste)) {
+        if((req.body.kw > slot_rimanente) && (producer.accetta_taglio_richieste)) {
 
             // si bilanciano le richieste e si interrompe prematuramente l'esecuzione della funzione
             await this.balanceSlotRequests(req, slot_totale, slot_rimanente, slot_costo, producer.emissioni_co2, consumer, producer, today, tomorrow)
@@ -160,7 +163,7 @@ class slotController {
 
         }
 
-        if((req.body.kw > slot_rimanente) && ( ! producer.accetta_taglio_richieste)) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta."]
+        if((req.body.kw > slot_rimanente) && ( ! producer.accetta_taglio_richieste)) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta, il producer non accetta tagli."]
 
         // PRENOTAZIONE DELLO SLOT =======================================================================================================================
         let kw_rimanenti = slot_rimanente - req.body.kw
@@ -184,15 +187,17 @@ class slotController {
 
         */
         
-        let result_p = await producerController.getProducerById(req.body.id);
-        let producer = result_p[1];
-    
-        let result_c = await consumerController.getConsumerById(req.user.id);
-        let consumer = result_c[1];
-
+        let result_p = await producerController.getProducerById(req.body.id)
+        if(result_p[0] == 404) return [result_p[0], result_p[1]]
+        let producer = result_p[1]
+        
+        let result_c = await consumerController.getConsumerById(req.user.id)
+        if(result_c[0] == 404) return [result_c[0], result_c[1]]
+        let consumer = result_c[1]
+        
         let result_t = await this.getTransaction(req.body.id, req.user.id, req.body.slot)
+        if(result_t[0] == 404) return [result_t[0], result_t[1]]
         let transaction = result_t[1]
-
 
         let date_2 = new Date(transaction.data_prenotazione_transazione)
         let date_1 = new Date()
@@ -244,11 +249,9 @@ class slotController {
             {
                 // se ci sono almeno 24 ore: 
                 let valore_slot = await producerController.getSlotValue(req.body.id, req.body.slot, "rimanente")
+                if(req.body.kw > valore_slot[1]) return [403, "PROIBITO: [slot " + req.body.slot + "] non dispone di energia a sufficienza per soddisfare la richiesta. Taglio lineare non effettuabile in modifica."]
+
                 let valore_aggiornato = valore_slot[1] + transaction.kw_acquistati
-                
-                //console.log("valore slot: ", valore_slot[1])
-                //console.log("valore aggiornato: ", valore_aggiornato)
-                //console.log("kw_acquistati: ", transaction.kw_acquistati)
 
                 await producerController.editSlot(req.body.id, req.body.slot, "rimanente", valore_aggiornato) // si restituiscono i kw allo slot del producer
                 await this.editTransactionFields(transaction, "kw_rimanenti", valore_aggiornato) // si resettano i kw rimanenti nella transazione
@@ -277,21 +280,28 @@ class slotController {
             tetto_massimo_teorico += transaction.costo_slot;
         });
 
+
         // bilancio tutte le richieste esistenti per lo slot
-        all_slot_transactions.forEach(transaction => {
+        for(let transaction of all_slot_transactions){
+
 
             // bilancio la richiesta
             let kw_acquistati_bilanciati = this.remap_requests(transaction.kw_acquistati, 0, tetto_massimo_teorico, 0, slot_totale)
 
+            // restituisco i crediti al consumer che aveva precedentemente prenotato al quale viene ridotta l'energia a causa del taglio
+            let resp_c = await consumerController.getConsumerById(transaction.id_consumer);
+            let consumer = resp_c[1]
+            await consumerController.editConsumerCredit(transaction.id_consumer, ( ((consumer.credito + transaction.costo_slot) - (kw_acquistati_bilanciati * slot_costo)) ))
+
             // edito la richiesta
-            this.editTransactionFields(transaction, "emissioni_co2_slot", kw_acquistati_bilanciati * emissioni_co2)
-            this.editTransactionFields(transaction, "costo_slot", kw_acquistati_bilanciati * slot_costo)
-            this.editTransactionFields(transaction, "kw_acquistati", kw_acquistati_bilanciati)
-            this.editTransactionFields(transaction, "kw_rimanenti", slot_rimanente - kw_acquistati_bilanciati)
+            await this.editTransactionFields(transaction, "emissioni_co2_slot", kw_acquistati_bilanciati * emissioni_co2)
+            await this.editTransactionFields(transaction, "costo_slot", kw_acquistati_bilanciati * slot_costo)
+            await this.editTransactionFields(transaction, "kw_acquistati", kw_acquistati_bilanciati)
+            await this.editTransactionFields(transaction, "kw_rimanenti", slot_rimanente - kw_acquistati_bilanciati)
 
             slot_rimanente -= kw_acquistati_bilanciati;
 
-        });
+        }
 
         // bilancio la nuova richiesta che ha provocato il taglio
         let kw_extra = this.remap_requests(req.body.kw, 0, tetto_massimo_teorico, 0, slot_totale)
@@ -300,7 +310,8 @@ class slotController {
         req.body.kw = kw_extra
         await producerController.editSlot(req.body.id, req.body.slot, "rimanente", (slot_rimanente - req.body.kw))
         await consumerController.editConsumerCredit(req.user.id, consumer.credito - (slot_costo*req.body.kw))
-        await this.createTransaction(consumer, producer, req, slot_costo, (slot_rimanente-req.body.kw), slot_totale, today, tomorrow);
+        //await this.createTransaction(consumer, producer, req, slot_costo, (slot_rimanente-req.body.kw), slot_totale, today, tomorrow);
+        await this.createTransaction(consumer, producer, req, slot_costo, 0, slot_totale, today, tomorrow);
 
     }
 

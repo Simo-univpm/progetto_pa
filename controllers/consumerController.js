@@ -117,7 +117,7 @@ class consumerController {
     // consegna ==============================================
     async getPurchaseListProducer(id_consumer, id_producer){
 
-        if(typeof id_producer != 'Number') return [400, "ERRORE: inserire un id numerico."]
+        //if(typeof id_producer != 'Number') return [400, "ERRORE: inserire un id numerico."]
 
         try{
 

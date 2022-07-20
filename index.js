@@ -6,11 +6,19 @@ const dotenv = require('dotenv');
 dotenv.config();
 //const cors = require('cors');
 
+const checkAdmin = require('./middlewares/checkAdmin');
+const checkLogin = require('./middlewares/checkLogin');
+const checkCredit = require('./middlewares/checkCredit');
+const checkProducer = require('./middlewares/checkProducer');
+const checkConsumer = require('./middlewares/checkConsumer');
+
 // middlewares
 app.use(express.json());
 app.use(cors());
 
+
 console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
+
 
 const consumersRoute = require('./routes/consumers');
 const producersRoute = require('./routes/producers');
@@ -18,11 +26,20 @@ const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth')
 const slotRoutes = require('./routes/slot');
 
+
+app.use('/api/consumers', [checkLogin, checkConsumer, checkCredit]);
 app.use('/api/consumers', consumersRoute);
+
+app.use('/api/producers', [checkLogin, checkProducer]);
 app.use('/api/producers', producersRoute);
+
+app.use('/api/admin', [checkLogin, checkAdmin]);
 app.use('/api/admin', adminRoutes);
-app.use('/api/slot', slotRoutes); // tutte le chiamate per gestire le transazioni tra consumer, producer e slot
-app.use('/api/auth', authRoutes); // le chiamate per effettuare login e registrazione
+
+app.use('/api/slot', [checkLogin, checkConsumer, checkCredit]);
+app.use('/api/slot', slotRoutes);
+
+app.use('/api/auth', authRoutes);
 
 
 connessioneDB();
