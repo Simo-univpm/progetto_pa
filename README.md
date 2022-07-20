@@ -176,7 +176,10 @@ che ci ha permesso di gestire il progetto in maniera semplificata e sincronizzat
 ```
 
 #Docker:  
-![Docker](http://url/to/img.png)
+<p align="left">
+    <img src="./images/docker.png?raw=true" width="10%" height="auto">
+</p>
+
 ```
 L'intero progetto è stato sviluppato su Docker così da rendere il progetto separato dal resto 
 del sistema e facilmente recuperabile ed immediatamente fruibile in caso errori e problemi che 
@@ -184,14 +187,20 @@ sono stati riscontrati.
 ```
 
 #Posman:
-![Posman](http://url/to/img.png)
+<p align="left">
+    <img src="./images/postmann.png?raw=true" width="10%" height="auto">
+</p>
+
 ```
 Per testare le varie chiamate ai servizi è stato utilizzato Postman che ci ha permesso di 
 testare il sistema in maniera semplificata.
 ```
 
 #PgAdmin:
-![PgAdmin](http://url/to/img.png)
+<p align="left">
+    <img src="./images/pgadmin.png?raw=true" width="10%" height="auto">
+</p>
+
 ```
 Al fine di controllare e verificare il corretto funzionamento dell'intero progetto è stato 
 utilizzato PgAdmin3 che ci ha permesso di svolgere tutte le operazioni sui database in maniera 
