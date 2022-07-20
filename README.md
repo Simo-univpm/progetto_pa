@@ -28,7 +28,9 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 
 ## Librerie utilizzate
 - bcryptjs, v2.4.3
+    - per hashing delle password
 - cors, v2.8.5
+    - per
 - dotenv, 16.0.1
 - express, v4.16.1
 - jsonwebtoken, v8.5.1
