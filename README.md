@@ -18,31 +18,24 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
   -	Se la somma delle richieste è inferiore o uguale alla capacità erogabile per quella fascia oraria allora non vi sono particolari azioni da svolgere.
   - Se la somma delle richieste è superiore o uguale alla capacità erogabile per quella fascia oraria allora il produttore potrà decidere se accettare le richieste effettuando un taglio lineare a quanto richiesto dai vari consumatori. Il taglio è proporzionale al quantitativo richiesto.
 
-# Progettazione
-- librerie e perché
-- due diagrammi uml
-- due diagrammi use case
-- nuovo schema er
-- due righe sull'autenticazione e sul token
-- due descrizioni delle principali funzioni dei controller tipo reserve slot e taglio poi bo
+# Progettazione indice
+- librerie utilizzate
+- struttura progetto
+- pattern utilizzati
+- diagrammi uml
+- diagrammi use case
+- schema entity relationship
+- autenticazione e JWT
+- descrizioni delle principali funzioni dei controller (tipo reserve slot e taglio poi bo)
 
 ## Librerie utilizzate
-- express, v4.16.1
-    - per lo sviluppo del server 
-- dotenv, 16.0.1
-    - per sfruttare le variabili d'ambiente
-- jsonwebtoken, v8.5.1
-    - per l'autenticazione
-- sequelize, v6.21.0 e sequelize-cli, v6.4.1
-    - per l'interfacciamento con il databse
-- pg, v8.7.3 e pg-hstore, v2.3.4
-    - client per il database postgres
-- bcryptjs, v2.4.3
-    -  per hashing delle password
-- nodemon, v2.0.19
-    - per facilitare lo sviluppo
-
-da completare col perché dell'utilizzo
+- express, v4.16.1 per lo sviluppo del server 
+- dotenv, 16.0.1 per sfruttare le variabili d'ambiente
+- jsonwebtoken, v8.5.1 per l'autenticazione
+- sequelize, v6.21.0 e sequelize-cli, v6.4.1 per l'interfacciamento con il databse
+- pg, v8.7.3 e pg-hstore, v2.3.4 client per il database postgres
+- bcryptjs, v2.4.3  per hashing delle password
+- nodemon, v2.0.19 per facilitare lo sviluppo
 
 ## Struttura della directory del progetto
 ```
@@ -96,7 +89,7 @@ da completare col perché dell'utilizzo
 ## Pattern utilizzati (inserire motivazione del perché sono stati scelti --> per superà l'esame)
 
 - ### Model View Controller (MVC)
-Come pattern architetturale è stato scelto di utilizzare l'MVC; Nel nostro caso tutte le entità rappresentanti il dominio interessato sono contenuti nella directory model, mentre i controller che offrono tutte le logiche di business per operare con le entità sono contenuti nella directory controllers, permettendoci quindi di separare completamente le entità dai relativi metodi. Inoltre questo rende indipendente lo sviluppo del server backend rispetto allo sviluppo dell'interfaccia grafica, che appunto è stata simulata con Postman per ovviare alla sua mancanza.
+Come pattern architetturale è stato scelto di utilizzare l'MVC; nel nostro caso tutte le entità rappresentanti il dominio interessato sono contenuti nella directory model, mentre i controller che offrono tutte le logiche di business per operare con le entità sono contenute nella directory controllers, permettendoci quindi di separare completamente le entità dai relativi metodi. Inoltre questo rende indipendente lo sviluppo del server backend rispetto allo sviluppo dell'interfaccia grafica, che appunto è stata simulata con Postman per ovviare alla sua mancanza.
 
 - ### Singleton
 Il singleton è un pattern che ci garantisce l'esistenza di una singola istanza di entità all'interno dell'applicazione. In particolare è stato usato il pattern per istanziare la connessione al database postgres che essendo costosa va limitata.
@@ -113,6 +106,23 @@ Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in 
 ## Diagrammi UML e Sequence diagrams
 
 ## Diagramma ER base di dati implementata (se serve)
+
+## Autenticazione
+L'autenticazione serve per distinguere i vari utenti quando qualcuno effettua una chiamata ad una particolare rotta. Tutte le rotte ad eccezione di quelle per l'autenticazione hanno bisogno del Json Web Token per il funzionamento in quanto il token porta con se delle informazioni vitali per il server, il token si ottiene effettuando una chiamata POST alla rotta ".../auth/login" (illustrata più dettagliatamente in seguito) nella quale bisogna inserire i privilegi, la mail e la password. Una volta effettuata la chiamata verrà restituito una stringa cifrata tramite la libreria "jsonwebtoken" e l'utilizzo del token secret (TOKEN_SECRET) che è impostato nel file .env contenente le variabili d'ambiente.
+Il token, se decifrato contiene le seguenti informazioni
+```
+{ 
+    id: ~~id,~~
+    privilegi: ~~user.privilegi,~~
+    nome: ~~user.nome,~~
+    email: ~~user.email~~
+}
+```
+dove:
+- **id** (valore) contiene l'id dell'utente che ha effettuato il login
+- **privilegi** (valore) è un numero intero che indica i privilegi dell'utente (0 se admin, 1 se producer, 2 se consumer)
+- **nome** (stringa) contiene il nome dell'utente che ha effettuato il login
+- **email** (stringa) contiene la mail dell'utente che ha effettuato il login
 
 # Test del progetto
 Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/); tutte le chiamate eccetto quelle rispondenti all'endpoint .../api/auth necessitano del token "auth-token" nell'header della richiesta. Il token contiene le informazioni base degli utenti **necessarie** al funzionamento del programma.
