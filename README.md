@@ -109,7 +109,9 @@ Nel software sviluppato questo pattern è individuabile nel file principale "ind
 In particolar modo checkLogin si occupa di verificare se l'utente che genera la richiesta è autenticato o meno, se è autenticato la richiesta passa al middleware checkConsumer che si occupa di controllare se l'utente possiede i privilegi da consumer e se l'utente è un consumer allora si passa la richiesta all'ultimo middleware checkCredit che verifica se l'utente è in possesso di credito.
 Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in base al middleware.
 
-## Diagrammi UML e 
+## Diagrammi UML e Sequence diagrams
+
+## Diagramma ER base di dati implementata (se serve)
 
 # Test del progetto
 Le api esposte dal progetto sono state testate mediante l'utilizzo di Postman (https://www.postman.com/); tutte le chiamate eccetto quelle rispondenti all'endpoint .../api/auth necessitano del token "auth-token" nell'header della richiesta. Il token contiene le informazioni base degli utenti **necessarie** al funzionamento del programma.
