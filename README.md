@@ -403,12 +403,11 @@ Il docker file si occupa di creare un'immagine docker con Node.js, il codice del
 Tutto questo è automatizzabile e possibile tramite docker compose specificato all'interno del file **docker-compose.yml** presente nella root directory del progetto.
 In sostanza il docker compose si occupa di:
 - creare due container
-    - uno contenente l'immagine di node ed il progetto: progettopa
     - uno contenente l'immagine relativa al Database Postgres: postgres
--
-
-## Docker compose
-Il docker file generato precedentemente serve per generare un container dentro il quale sarà eseguito il progetto, tuttavia essendo necessario un database postgres è necessario creare ed eseguire un altro container che contenga una immagine postgres al suo interno; successivamente è necessario far comunicare assieme i due container; questo è automatizzabile e possibile tramite docker compose specificato all'interno del file **docker-compose.yml** presente nella root directory del progetto.
+    - uno contenente l'immagine di node ed il progetto: progettopa
+- configurare il database all'avvio tramite lo script di seeding **database_seeding.sql** (presente nella directory database)
+- avviare il server dopo l'avvio del database
+- esporre le porte necessarie alla comunicazione tra macchina host e container
 
 
 # Software ausiliari utilizzati
