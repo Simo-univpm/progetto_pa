@@ -1,4 +1,4 @@
-# Progetto programmazione avanzata aa 21/22
+# Progetto programmazione avanzata aa 21/22 !!! aggiornare diagrammi e script di avvio del progetto !!!
 ## Sviluppo di un backend per la gestione della compravendita di energia
 
 # Membri del gruppo
