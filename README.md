@@ -122,7 +122,7 @@ Di seguito abbiamo riportato i principali casi d'interazione tra gli attori e il
 1. registrazione di un producer
 2. login di un qualsiasi utente
 3. prenotazione di uno slot per il giorno seguente
-4. chiamata admin per ricaricare il credito di un utente daje
+4. chiamata admin per ricaricare il credito di un utente
 
 1. 
 <p align="left">
