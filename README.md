@@ -1,4 +1,4 @@
-# Progetto programmazione avanzata aa 21/22 !!! aggiornare diagrammi e script di avvio del progetto !!!
+# Progetto programmazione avanzata aa 21/22
 ## Sviluppo di un backend per la gestione della compravendita di energia
 
 # Membri del gruppo
@@ -17,6 +17,13 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - Se un produttore riceve per una fascia oraria più richieste, allora devono essere verificati i seguenti casi:
   -	Se la somma delle richieste è inferiore o uguale alla capacità erogabile per quella fascia oraria allora non vi sono particolari azioni da svolgere.
   - Se la somma delle richieste è superiore o uguale alla capacità erogabile per quella fascia oraria allora il produttore potrà decidere se accettare le richieste effettuando un taglio lineare a quanto richiesto dai vari consumatori. Il taglio è proporzionale al quantitativo richiesto.
+
+## Diagramma use-case
+Il seguente diagramma use case mostra le principali interazioni tra gli attori ed il sistema. Essendo una progettazione svolta all'inizio del progetto potrebbe essere leggermente inaccurata.
+<p align="left">
+    <img src="./images/diagramma use-case.png?raw=true" width="100%" height="auto">
+</p>
+
 
 ## Indice
 - [librerie utilizzate](#librerie-utilizzate)
@@ -99,6 +106,9 @@ Il singleton è un pattern che ci garantisce l'esistenza di una singola istanza 
 Il file che sfrutta questo pattern è "database.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico "creaSingleton" che ci permette di ottenere l'istanza di sequelize se è già stata creata, altrimenti ne genererà una al momento della richiesta tramite le variabili d'ambiente specificate nel file ".env".
 Questo ci permette di andare ad effettuare le query sfruttando solamente l'unica connessione al database postgres esitente e quindi di risparmiare risorse.
 Il metodo che ci permette di ottenere la connessione è esportato sotto il nome di "sequelize" (che corrisponde a "Singleton.creaSingleton.getInstance()"), di conseguenza all'interno di ogni model sarà presente il comando "const sequelize = require('./database').sequelize;" per sfruttarla generando le query di cui il software ha bisogno.
+<p align="left">
+    <img src="./images/singleton class diagram.png?raw=true" width="100%" height="auto">
+</p>
 
 - ### Chain Of Responsibility (COR)
 Il COR è un pattern comportamentale che permette di passare le richieste lungo una "catena" di gestori. Dopo aver ricevuto una richiesta, ogni gestore elabora la richiesta e decide se passarla al gestore successivo della catena o se sollevare un'eccezione.
@@ -106,30 +116,30 @@ Nel software sviluppato questo pattern è individuabile nel file principale "ind
 In particolar modo checkLogin si occupa di verificare se l'utente che genera la richiesta è autenticato o meno, se è autenticato la richiesta passa al middleware checkConsumer che si occupa di controllare se l'utente possiede i privilegi da consumer e se l'utente è un consumer allora si passa la richiesta all'ultimo middleware checkCredit che verifica se l'utente è in possesso di credito.
 Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in base al middleware.
 
-## Diagrammi delle classi
-
-## Diagramma use-case
-
-<p align="left">
-    <img src="./images/diagramma use-case.png?raw=true" width="100%" height="auto">
-</p>
-
-
 
 ## Sequence diagrams
+Di seguito abbiamo riportato i principali casi d'interazione tra gli attori e il sistema realizzato sotto forma di sequence diagrams. I casi che abbiamo riportato sono:
+1. registrazione di un producer
+2. login di un qualsiasi utente
+3. prenotazione di uno slot per il giorno seguente
+4. chiamata admin per ricaricare il credito di un utente
 
+1. 
 <p align="left">
     <img src="./images/registra producer.png?raw=true" width="100%" height="auto">
 </p>
 
+2. 
 <p align="left">
     <img src="./images/login utente.png?raw=true" width="100%" height="auto">
 </p>
 
+3. 
 <p align="left">
     <img src="./images/prenotazione slot.png?raw=true" width="100%" height="auto">
 </p>
 
+4. 
 <p align="left">
     <img src="./images/ricarica credito.png?raw=true" width="100%" height="auto">
 </p>
@@ -436,7 +446,7 @@ In questo caso questa chiamata assegnerà 8700 crediti al consumer con id 1
 # Esecuzione del progetto
 Per eseguire il software basta aprire un terminale nella directory del progetto ed eseguire il comando 
 ```
-docker compose up ???? ao nicò ma è vero ????
+docker compose -f docker-compose.yml up
 ```
 
 ## Dockerfile e docker compose
