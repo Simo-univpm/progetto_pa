@@ -111,7 +111,7 @@ Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in 
 ## Diagramma use-case
 
 <p align="left">
-    <img src="./images/diagramma use-case.png?raw=true" width="50%" height="auto">
+    <img src="./images/diagramma use-case.png?raw=true" width="100%" height="auto">
 </p>
 
 
