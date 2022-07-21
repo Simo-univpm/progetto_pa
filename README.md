@@ -29,7 +29,6 @@ Il seguente diagramma use case mostra le principali interazioni tra gli attori e
 - [librerie utilizzate](#librerie-utilizzate)
 - [struttura directory progetto](#struttura-della-directory-del-progetto)
 - [pattern utilizzati](#pattern-utilizzati)
-- [diagrammi delle classi](#diagrammi-delle-classi)
 - [sequence diagram](#sequence-diagrams)
 - [diagramma entity relationship](#diagramma-entity-relationship)
 - [autenticazione e JWT](#autenticazione-e-jwt)
@@ -119,32 +118,31 @@ Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in 
 
 ## Sequence diagrams
 Di seguito abbiamo riportato i principali casi d'interazione tra gli attori e il sistema realizzato sotto forma di sequence diagrams. I casi che abbiamo riportato sono:
-1. registrazione di un producer
-2. login di un qualsiasi utente
-3. prenotazione di uno slot per il giorno seguente
-4. chiamata admin per ricaricare il credito di un utente
-
-1. 
+### 1. registrazione di un producer
 <p align="left">
     <img src="./images/registra producer.png?raw=true" width="100%" height="auto">
 </p>
 
-2. 
+### 2. login di un qualsiasi utente
 <p align="left">
     <img src="./images/login utente.png?raw=true" width="100%" height="auto">
 </p>
 
-3. 
+### 3. prenotazione di uno slot per il giorno seguente
 <p align="left">
     <img src="./images/prenotazione slot.png?raw=true" width="100%" height="auto">
 </p>
 
-4. 
+### 4. chiamata admin per ricaricare il credito di un utente
 <p align="left">
     <img src="./images/ricarica credito.png?raw=true" width="100%" height="auto">
 </p>
 
 ## Diagramma entity relationship
+Il seguente schema E-R mostra invece la struttura del database quindi delle entità e delle relazioni con i loro corrispettivi attributi:
+<p align="left">
+    <img src="./images/diagramma entity relationship.png?raw=true" width="100%" height="auto">
+</p>
 
 ## Autenticazione e JWT
 L'autenticazione serve per distinguere i vari utenti quando qualcuno effettua una chiamata ad una particolare rotta. Tutte le rotte ad eccezione di quelle per l'autenticazione hanno bisogno del Json Web Token per il funzionamento in quanto il token porta con se delle informazioni vitali per il server, il token si ottiene effettuando una chiamata POST alla rotta ".../auth/login" nella quale bisogna inserire i privilegi, la mail e la password. Una volta effettuata la chiamata verrà restituito una stringa cifrata tramite la libreria "jsonwebtoken" e l'utilizzo del token secret (TOKEN_SECRET) che è impostato nel file .env contenente le variabili d'ambiente.
