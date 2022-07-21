@@ -27,7 +27,7 @@ L'obbiettivo è quello di realizzare un sistema che consenta di gestire il proce
 - [diagramma entity relationship](#diagramma-entity-relationship)
 - [autenticazione e JWT](#autenticazione-e-jwt)
 - [chiamate API](#chiamate-api)
-- [indice chiamate API]()
+- [indice chiamate API](#indice-chiamate-api)
 - [esecuzione del progetto](#esecuzione-del-progetto)
 - [software ausiliari utilizzati](#software-ausiliari-utilizzati)
 
@@ -135,22 +135,22 @@ Il token si ottiene al login e va impostato manualmente in postman nell'apposito
 Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descrizioni e degli esempi di body usati per testare il software:
 
 ## Indice chiamate API
-- [(POST)  ...:8080/api/auth/registerProducer]()
-- [(POST)  ...:8080/api/auth/registerConsumer]()
-- [(POST)  ...:8080/api/auth/registerAdmin]()
-- [(POST)  ...:8080/api/auth/login]()
-- [(POST)  ...:8080/api/slot/]()
-- [(PATCH) ...:8080/api/slot/]()
-- [(GET)   ...:8080/api/consumers/emissions]()
-- [(GET)   ...:8080/api/consumers/transactions/producers]()
-- [(GET)   ...:8080/api/consumers/transactions/periodo]()
-- [(GET)   ...:8080/api/consumers/transactions/fonte]()
-- [(GET)   ...:8080/api/producers/checkReservations]()
-- [(GET)   ...:8080/api/producers/checkEarnings]()
-- [(GET)   ...:8080/api/producers/checkStats]()
-- [(PATCH) ...:8080/api/producers/kw]()
-- [(PATCH) ...:8080/api/producers/costo]()
-- [(POST)  ...:8080/api/admin/ricarica]()
+- [(POST)  ...:8080/api/auth/registerProducer](#post-registerproducer)
+- [(POST)  ...:8080/api/auth/registerConsumer](#post-registerconsumer)
+- [(POST)  ...:8080/api/auth/registerAdmin](#post-registeradmin)
+- [(POST)  ...:8080/api/auth/login](#post-login)
+- [(POST)  ...:8080/api/slot/](#post--)
+- [(PATCH) ...:8080/api/slot/](#patch-)
+- [(GET)   ...:8080/api/consumers/emissions](#get-emissions)
+- [(GET)   ...:8080/api/consumers/transactions/producers](#get-transactionsproducers)
+- [(GET)   ...:8080/api/consumers/transactions/periodo](#get-transactionsperiodo)
+- [(GET)   ...:8080/api/consumers/transactions/fonte](#get-transactionsfonte)
+- [(GET)   ...:8080/api/producers/checkReservations](#get-checkreservations)
+- [(GET)   ...:8080/api/producers/checkEarnings](#get-checkearnings)
+- [(GET)   ...:8080/api/producers/checkStats](#get-checkstats)
+- [(PATCH) ...:8080/api/producers/kw](#patch-kw)
+- [(PATCH) ...:8080/api/producers/costo](#patch-costo)
+- [(POST)  ...:8080/api/admin/ricarica](#post-ricarica)
 ]
 ## Chiamate disponibili per tutti gli utenti all'endpoint **"...:8080/api/auth"**
 
