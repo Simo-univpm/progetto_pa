@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const sequelize = require('./database').sequelize; // corrisponde a database.sequelize, ovvero alla connesione singleton di sequelize --> Singleton.creaSingleton.getInstance()
+const sequelize = require('./singleton').sequelize;
 
 
 /// RIMETTERE GLI SLOT CON ALLOWNULL A FALSE

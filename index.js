@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const database = require('./model/database');
+const database = require('./model/singleton');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -15,7 +15,7 @@ const checkConsumer = require('./middlewares/checkConsumer');
 
 
 app.use(express.json());
-app.use(cors());
+//app.use(cors());
 
 
 console.log('\n' + '----- | POWER COMPRA-VENDITA\'S SERVER | -----' + '\n');
@@ -56,10 +56,10 @@ async function connessioneDB(){
        
     try {
 
-        await database.sequelize; // corrisponde a database.Singleton.creaSingleton.getInstance()
+        await database.sequelize; // corrisponde a database.Singleton.genera_singleton.get_istanza()
         console.log('Database connesso');
     
-        await database.sequelize.sync(); // corrisponde a database.Singleton.creaSingleton.getInstance().sync()
+        await database.sequelize.sync(); // corrisponde a database.Singleton.genera_singleton.get_istanza()
         console.log("Database sincronizzato"); 
 
     } catch (err) {

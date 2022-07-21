@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const sequelize = require('./database').sequelize; // corrisponde a database.sequelize, ovvero alla connesione singleton di sequelize --> Singleton.creaSingleton.getInstance()
+const sequelize = require('./singleton').sequelize; // corrisponde a singleton.sequelize, ovvero alla connesione singleton di sequelize --> database.Singleton.genera_singleton.get_istanza()
 
 
 // Definizione del modello Sequelize dell'utente
