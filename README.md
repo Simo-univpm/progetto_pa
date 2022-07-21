@@ -151,7 +151,7 @@ Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descriz
 - [(PATCH) ...:8080/api/producers/kw](#patch-kw)
 - [(PATCH) ...:8080/api/producers/costo](#patch-costo)
 - [(POST)  ...:8080/api/admin/ricarica](#post-ricarica)
-]
+
 ## Chiamate disponibili per tutti gli utenti all'endpoint **"...:8080/api/auth"**
 
 - ### (POST) .../registerProducer
