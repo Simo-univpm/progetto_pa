@@ -25,7 +25,6 @@ class slotController {
 
     }
 
-    // perfeziona
     async createTransaction(consumer, producer, req, slot_costo, slot_rimanente, slot_totale, data_acquisto, data_prenotata){
 
         let costo_transazione = (req.body.kw*slot_costo).toFixed(2);
