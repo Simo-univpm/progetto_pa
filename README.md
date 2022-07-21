@@ -102,9 +102,9 @@ Come pattern architetturale è stato scelto di utilizzare l'MVC; nel nostro caso
 
 - ### Singleton
 Il singleton è un pattern che ci garantisce l'esistenza di una singola istanza di entità all'interno dell'applicazione. In particolare è stato usato il pattern per istanziare la connessione al database postgres che essendo costosa va limitata.
-Il file che sfrutta questo pattern è "database.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico "creaSingleton" che ci permette di ottenere l'istanza di sequelize se è già stata creata, altrimenti ne genererà una al momento della richiesta tramite le variabili d'ambiente specificate nel file ".env".
+Il file che sfrutta questo pattern è "singleton.js" presente all'interno della directory model. All'interno di questo file è presente una classe con un metodo statico "genera_singleton" che ci permette di ottenere l'istanza di sequelize se è già stata creata, altrimenti ne genererà una al momento della richiesta tramite le variabili d'ambiente specificate nel file ".env".
 Questo ci permette di andare ad effettuare le query sfruttando solamente l'unica connessione al database postgres esitente e quindi di risparmiare risorse.
-Il metodo che ci permette di ottenere la connessione è esportato sotto il nome di "sequelize" (che corrisponde a "Singleton.creaSingleton.getInstance()"), di conseguenza all'interno di ogni model sarà presente il comando "const sequelize = require('./database').sequelize;" per sfruttarla generando le query di cui il software ha bisogno.
+Il metodo che ci permette di ottenere la connessione è esportato sotto il nome di "sequelize" (che corrisponde a "Singleton.genera_singleton.get_istanza()"), di conseguenza all'interno di ogni model sarà presente il comando "const sequelize = require('./singleton').sequelize;" per sfruttarla generando le query di cui il software ha bisogno.
 <p align="left">
     <img src="./images/singleton class diagram.png?raw=true" width="100%" height="auto">
 </p>
