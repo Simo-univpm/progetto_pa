@@ -108,6 +108,13 @@ Se la richiesta non rispetta le specifiche allora verrà ritornato un errore in 
 
 ## Diagrammi delle classi
 
+## Diagramma use-case
+
+<p align="left">
+    <img src="./images/diagramma use-case.png?raw=true" width="50%" height="auto">
+</p>
+
+
 ## Sequence diagrams
 
 ## Diagramma entity relationship
