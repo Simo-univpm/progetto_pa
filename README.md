@@ -174,7 +174,7 @@ Di seguito sono indicate tutte le chiamate HTTP disponibili, le relative descriz
 - [(POST)  ...:8080/api/slot/](#post--)
 - [(PATCH) ...:8080/api/slot/](#patch-)
 - [(GET)   ...:8080/api/consumers/emissions](#get-emissions)
-- [(GET)   ...:8080/api/consumers/transactions/producers](#get-transactionsproducers)
+- [(GET)   ...:8080/api/consumers/transactions/producer](#get-transactionsproducer)
 - [(GET)   ...:8080/api/consumers/transactions/periodo](#get-transactionsperiodo)
 - [(GET)   ...:8080/api/consumers/transactions/fonte](#get-transactionsfonte)
 - [(GET)   ...:8080/api/producers/checkReservations](#get-checkreservations)
@@ -300,7 +300,7 @@ dove:
 quindi nel json riportato in esempio il server ritornerà tutte le emissioni prodotte dal 2022-07-19 alle ore 02:00 fino al 2022-07-21 alle ore 15:00.
 
 
-- ### (GET) .../transactions/producers
+- ### (GET) .../transactions/producer
 Rotta utilizzabile solamente dagli utenti consumers; filtra le transazioni effettuate da un utente: serve per ottenere la lista delle transazioni effettuate dal consumer attualmente loggato verso il producer specificato nel body.
 La richiesta necessita di un body con i seguenti dati:
 ```
